@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="这个好玩儿，图灵派">
+<meta property="og:type" content="article">
+<meta property="og:title" content="折腾 astrbot">
+<meta property="og:url" content="http://example.com/2026-1/03-20%E6%8A%98%E8%85%BEastrbot.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="这个好玩儿，图灵派">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-20T05:30:00.000Z">
+<meta property="article:modified_time" content="2026-03-20T05:38:00.203Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="Openclaw">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>折腾 astrbot - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="折腾 astrbot">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-03-20 13:30" pubdate>
+        2026年3月20日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">折腾 astrbot</h1>
+            
+            <div class="markdown-body">
+              <p>nanobot 我关心的 bug 死活不修，影响正常使用了，而且 token 耗的也快……我改成维护更久的 astrbot，这玩意儿 22 年就开始开发了，不过 LLM，主动推送等能力也是最近才开发的所以仍旧 buggy，但仍旧有如下的优点让我用它：</p>
+<ol>
+<li>有一个完善的前端页面可用，可以直接拿来看日志，十分舒适</li>
+<li>Skill，MCP，定时任务等功能都有（定时任务比 nanobot 好用，但对 QQ 适配器需要做一些处理）</li>
+<li>支持插件系统来帮助我热修改它的代码或增加功能（这让我把它某种程度上可以 openclaw 化）</li>
+<li>对 QQ 适配器的支持好，支持流式输出，文件、图像的上传下载，主动推送（定时任务等）……</li>
+<li>得益于轻量的系统提示词，astrbot 对 Token 的用量似乎很少</li>
+</ol>
+<p>我做了一些处理把 astrbot 去 openclaw 化，这里记一下。</p>
+<p>我是用官方的 docker compose 部署的（以安全为考虑），本来是打算同时部署 shipyard，但发现目前的版本对沙箱的配置不太好，对临时文件如上传的图像的 mount 没有处理好。我决定就走 local 了，反正是在 docker 容器里，按天备份就行了，掀不起大风浪。</p>
+<h1 id="工作区"><a href="#工作区" class="headerlink" title="工作区"></a>工作区</h1><p>执行<code>astrbot run</code>时，默认是把数据存在当前目录的 data 目录下，并在当前目录存一个<code>.astrbot</code>空文件作为标识。在 Docker 容器中，容器在<code>/Astrbot</code>目录下执行，因此 Docker 容器下，astrbot 自己的数据目录存在<code>/Astrbot/data</code>。</p>
+<p><strong>但这个数据目录东西比较多，如果都让 AI 访问的话我觉得有些噪音了</strong>。我的选择是：</p>
+<ol>
+<li>创建一个 workspace 目录，在提示词中强调 AI 以<code>/Astrbot/data/workspace</code>作为工作目录。提示词见下。</li>
+<li>（可选？我只是确保一致性，欣慰的是 astrbot 它能正确处理软链接）把<code>/Astrbot/data/skills</code>挪到工作区中，然后在<code>/Astrbot/data</code>中安排一个相对软链接供索引 <code>ln -r -s workspace/skills skills</code></li>
+</ol>
+<p>增加的人格系统提示词如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">工作区设定</span>&gt;</span><br>你的默认的工作区在 `/Astrbot/data/workspace`，如果你看到相对路径，以该绝对路径为基本路径。你尽量不要污染 workspace 以外的路径。<br><span class="hljs-tag">&lt;/<span class="hljs-name">工作区设定</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<h1 id="Git-备份工作区"><a href="#Git-备份工作区" class="headerlink" title="Git 备份工作区"></a>Git 备份工作区</h1><p>为<code>/Astrbot/data</code>创建一个私有仓库，创建 deploy key，然后在 config 中增加这些配置，mount 到 docker 容器中：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">Host github-astrbot-workspace<br>    HostName ssh.github.com<br>    <span class="hljs-keyword">User</span> <span class="hljs-title">git</span><br>    IdentityFile ~/.ssh/astrbot-workspace<br>    IdentitiesOnly yes  <span class="hljs-comment"># 只使用指定的密钥</span><br></code></pre></div></td></tr></table></figure>
+<p>然后远程仓库就设置成下面这样，就能直接对单独这个仓库用上这个密钥了：</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dsconfig"><span class="hljs-string">git</span> <span class="hljs-string">remote</span> <span class="hljs-built_in">set-url</span> <span class="hljs-string">origin</span> <span class="hljs-string">github-astrbot-workspace:USERNAME/</span><span class="hljs-string">REPO</span>.<span class="hljs-string">git</span><br></code></pre></div></td></tr></table></figure>
+<p>然后给 AI 一个定时任务，让她每天自己做备份，就这样。</p>
+<p>可以配置<code>.gitignore</code>减少仓库大小：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli"><span class="hljs-string">.clawhub/</span><br><br>plugins/*<br>!plugins/astrbot_plugin_naer_*<br>plugins.json<br><br>dashboard.zip<br>dist/<br>site-packages/<br>temp/<br><span class="hljs-string">.DS_Store</span><br><br><span class="hljs-comment"># SQLite temporary files</span><br>*<span class="hljs-string">.db-shm</span><br>*<span class="hljs-string">.db-wal</span><br>*<span class="hljs-string">.db-journal</span><br>__pycache__<br></code></pre></div></td></tr></table></figure>
+<h1 id="迁移-openclaw-的记忆能力"><a href="#迁移-openclaw-的记忆能力" class="headerlink" title="迁移 openclaw 的记忆能力"></a>迁移 openclaw 的记忆能力</h1><p>我直接拷贝了 <a target="_blank" rel="noopener" href="https://github.com/HKUDS/nanobot/blob/main/nanobot/skills/memory/SKILL.md">nanobot 的 memory 技能</a> 到工作区中。</p>
+<p>但这里有一个问题——<strong>Openclaw 中的长期记忆，它是直接将 <code>MEMORY.md</code> 的内容构造到 System Prompt 的，而 astrbot 并没有提供这样的能力，它只能自己读取 MEMORY skill 内容然后自己读 <code>MEMORY.md</code></strong>。</p>
+<p>但这并不保险，即使严肃提示，AI 还是会偷懒不读 <code>MEMORY.md</code>，所以能做到的话还是尽量希望能动态构造系统提示词。</p>
+<p>然而，you guess what？通过插件可以做到，参考文档 <a target="_blank" rel="noopener" href="https://docs.astrbot.app/dev/star/guides/listen-message-event.html#llm-请求时">接受消息事件时</a>，在这时直接操作系统提示词即可，我选择使用内置的<code>string.Template</code>进行变量插值。</p>
+<p>在<code>/Astrbot</code>目录下执行<code>astrbot plug new</code>去创建新插件，然后修改 <code>main.py</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> astrbot.api.event <span class="hljs-keyword">import</span> <span class="hljs-built_in">filter</span>, AstrMessageEvent, MessageEventResult<br><span class="hljs-keyword">from</span> astrbot.api.star <span class="hljs-keyword">import</span> Context, Star, register<br><span class="hljs-keyword">from</span> astrbot.api <span class="hljs-keyword">import</span> logger<br><span class="hljs-keyword">from</span> astrbot.core.utils.astrbot_path <span class="hljs-keyword">import</span> get_astrbot_data_path<br><span class="hljs-keyword">from</span> astrbot.api.provider <span class="hljs-keyword">import</span> ProviderRequest<br><span class="hljs-keyword">from</span> string <span class="hljs-keyword">import</span> Template<br><br><span class="hljs-meta">@register(<span class="hljs-params"><span class="hljs-string">&quot;helloworld&quot;</span>, <span class="hljs-string">&quot;YourName&quot;</span>, <span class="hljs-string">&quot;一个简单的 Hello World 插件&quot;</span>, <span class="hljs-string">&quot;1.0.0&quot;</span></span>)</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyPlugin</span>(<span class="hljs-title class_ inherited__">Star</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, context: Context</span>):<br>        <span class="hljs-built_in">super</span>().__init__(context)<br><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">initialize</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。&quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">terminate</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。&quot;&quot;&quot;</span><br><br><span class="hljs-meta">    @filter.on_llm_request(<span class="hljs-params">desc=<span class="hljs-string">&#x27;读取 workspace/memory/MEMORY.md，作为 $MEMORY 或 $&#123;MEMORY&#125; 插值到系统提示词&#x27;</span></span>)</span><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">my_custom_hook_1</span>(<span class="hljs-params">self, event: AstrMessageEvent, req: ProviderRequest</span>): <span class="hljs-comment"># 请注意有三个参数</span><br>        template = Template(req.system_prompt)<br>        memory_file_path = Path(get_astrbot_data_path())/<span class="hljs-string">&#x27;workspace&#x27;</span>/<span class="hljs-string">&#x27;memory&#x27;</span>/<span class="hljs-string">&#x27;MEMORY.md&#x27;</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> memory_file_path.exists():<br>            logger.info(<span class="hljs-string">f&#x27;文件 <span class="hljs-subst">&#123;memory_file_path&#125;</span> 不存在，未插值 $MEMORY&#x27;</span>)<br>            <span class="hljs-keyword">return</span><br>        result = template.safe_substitute(MEMORY=memory_file_path.read_text(<span class="hljs-string">&#x27;utf-8&#x27;</span>))<br>        req.system_prompt = result<br>        logger.debug(<span class="hljs-string">f&#x27;REPLACED SYSTEM_PROMPT: <span class="hljs-subst">&#123;req.system_prompt&#125;</span>&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+<p>然后，人格系统提示词中增加下面的内容：</p>
+<figure class="highlight dust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dust"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">记忆设定</span>&gt;</span></span><br><span class="language-xml">积极地使用memory skill以记忆和回忆重要信息，保证跨会话上下文一致。但**你无需自己读取长期记忆（MEMORY.md）内容，下面的`<span class="hljs-tag">&lt;<span class="hljs-name">长期记忆</span>&gt;</span>`会自动注入最新的MEMORY.md内容**。</span><br><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">长期记忆</span>&gt;</span></span><br><span class="language-xml">$</span><span class="hljs-template-variable">&#123;MEMORY&#125;</span><span class="language-xml"></span><br><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">长期记忆</span>&gt;</span></span><br><span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">记忆设定</span>&gt;</span></span><br></code></pre></div></td></tr></table></figure>
+<h1 id="一个-QQ-主动推送的-bug"><a href="#一个-QQ-主动推送的-bug" class="headerlink" title="一个 QQ 主动推送的 bug"></a>一个 QQ 主动推送的 bug</h1><p>参照我提的 <a target="_blank" rel="noopener" href="https://github.com/AstrBotDevs/AstrBot/issues/6599">issue</a> 和 <a target="_blank" rel="noopener" href="https://github.com/AstrBotDevs/AstrBot/pull/6604">pr</a>，因为这个改动可能会有未预期的影响，所以一时半会估计合并不进去，我自己做处理了。</p>
+<p>这里最整蛊的地方是，QQ官方解除了主动推送的限制，但被动回复的时间限制还在，结果导致居然移除<code>msg_id</code>反而就能让代码通过了，搞笑啊这。</p>
+<p>反正我就直接用插件打猴子补丁了，我自己先解决问题，官方想怎么干就怎么干吧。</p>
+<p>在插件初始化时执行下面的函数即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">override_qqofficial_post_c2c_message</span>():<br>    <span class="hljs-string">&quot;&quot;&quot;重写一个方法，永远地移除掉msg_id参数&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">from</span> astrbot.core.platform.sources.qqofficial.qqofficial_message_event <span class="hljs-keyword">import</span> QQOfficialMessageEvent<br>    old_method = QQOfficialMessageEvent.post_c2c_message<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">new_method</span>(<span class="hljs-params">self, *args, **kwargs</span>):<br>        kwargs.pop(<span class="hljs-string">&#x27;msg_id&#x27;</span>, <span class="hljs-literal">None</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> old_method(self, *args, **kwargs)<br>    QQOfficialMessageEvent.post_c2c_message = new_method<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Openclaw/">Openclaw</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-1/03-10nanobot%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E7%BB%93%E6%9E%84.html">
+                        <span class="hidden-mobile">nanobot 工作区的结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
