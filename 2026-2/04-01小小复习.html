@@ -1,0 +1,557 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于 Java 和后端开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小小复习">
+<meta property="og:url" content="http://example.com/2026-2/04-01%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A0.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="关于 Java 和后端开发">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-01T06:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-01T06:19:40.619Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>小小复习 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="小小复习">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-04-01 14:00" pubdate>
+        2026年4月1日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.5k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">小小复习</h1>
+            
+            <div class="markdown-body">
+              <p>趁这时间把过去所学过的东西全都过一次……</p>
+<h1 id="Java-本身"><a href="#Java-本身" class="headerlink" title="Java 本身"></a>Java 本身</h1><h2 id="集合类型"><a href="#集合类型" class="headerlink" title="集合类型"></a>集合类型</h2><p>ArrayList，Map，HashMap，LinkedHashMap，IdentityHashMap，HashSet，IdentityHashSet。</p>
+<p>LinkedHashMap 记录插入顺序，可以直接拿它实现 LRU 缓存——我删旧的然后重新插入。</p>
+<p>IdentityHashMap 先 hashcode 再 ==，HashMap 先 hashcode 再 equal</p>
+<h2 id="JVM-内存区域"><a href="#JVM-内存区域" class="headerlink" title="JVM 内存区域"></a>JVM 内存区域</h2><p>总之，每个线程都有自己的函数调用栈（具体分为虚拟机栈和本地方法栈）和程序计数器，而所有线程都能访问堆和方法区和直接内存。</p>
+<p>方法区存储常量啊编译后的代码啊（比如各种类信息）。但我们实际编程的时候一般就考虑两部分——堆和栈，一般来说本地的基础类型的变量存储在栈上，引用类型就只存储指针到栈上然后实际存在堆上。</p>
+<p>直接内存则只有使用 NIO 编程的时候才会接触到，它直接分配堆外内存以保证高效之类的，但我没有系统学习。</p>
+<h2 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h2><p>JVM 采用的不是引用计数而是可达性分析，去判断不再使用的对象。</p>
+<p>垃圾回收机制其实就是回收堆中不再使用的对象。JVM 的 GC 机制将堆分为两部分——新生代和老年代，新生代包括亚当区和两个 Survivor 区，对象一般首先分配在 Eden 区，一般来说多次垃圾回收后仍没被清除的对象的年龄计数会增加，最后进入老年代。GC 分为两种，Minor GC 和 Full GC，前者只回收新生代。</p>
+<p>新生代包括 Eden（亚当，意义不言而喻）区和两个 Survivor 区（称为 s0，s1，或 from，to 区）。对象一般首先在 Eden 区分配，在经过一次新生代垃圾回收后，如果对象还存活，则进入 s0，s1，年龄加 1（或初始年龄设为 1），年龄增长到一定程度则晋升到老年代。</p>
+<h2 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h2><p>双亲委派——其实该叫父类委派，即一个类优先递归地由自己的父加载器去加载，只有在父加载器无法处理地时候才自己加载。这保证用户无法篡改 Java 核心类等以保证安全，而用户仍旧有自己手动加载什么东西的能力。</p>
+<h2 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h2><p>并发编程其实就是关于如何处理临界区资源的问题，在业务代码中就是尽量保证访问的原子性，避免并发写等，手段包括使用 ThreadLocal 或者使用 CopyOnWrite 或者 Atomic 的类型，加乐观锁或悲观锁等，当然在有的情况下还得上分布式锁。</p>
+<p>然后并发访问的<strong>可变</strong>变量一般来说需要加 volatile 保证可见性，而不可变变量比如 Atomic 的或者 ConcurrentHashMap 就不需要加。实践上一般双重检查锁或者布尔的标志变量需要加。</p>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>线程池按任务分可以分为三个区域——核心线程，非核心线程，队列。核心线程是线程池中持久存活的线程，任务优先安排到核心线程，核心线程都在执行任务时则丢到队列里，队列满则创建非核心线程（<strong>注意是先队列再非核心线程</strong>，因为操作队列比创建线程轻量多了）。</p>
+<p>线程池的配置项：</p>
+<ul>
+<li>核心线程池大小 corePoolSize，总是至少有这些线程存活</li>
+<li>最大线程池大小 maximumPoolSize，队列满后会创建新线程，但线程总数不会超过这个数</li>
+<li>非核心线程空闲存活时间和这个时间的单位 keepAliveTime，unit，超出这个时间还没被使用过的非核心线程会被销毁</li>
+<li>工作队列 workQueue （一个阻塞队列，可以联想到消费者-生产者并发模式）</li>
+<li>线程的工厂 threadFactory，这个主要是用于修改线程的名称或者对线程本身做一些操作，比如不使用原生的线程而是</li>
+<li>拒绝策略 handler，队列满且线程池满时执行，默认行为是直接在调用者处抛出异常</li>
+</ul>
+<p>工作队列可以说可以分为 3 类：无界（LinkedBlockingQueue 默认就是无界），有界，空队列（SynchronousQueue），空队列即容量为 0，它用于直接的“移交”，放入队列的操作必须要等待移出队列的操作，反之亦然。</p>
+<p>拒绝策略则包括在调用者处抛异常，直接丢弃，让调用者执行，或丢弃队列中最老的任务。</p>
+<h3 id="Executors-包的问题"><a href="#Executors-包的问题" class="headerlink" title="Executors 包的问题"></a>Executors 包的问题</h3><p>Executors 的 4 个默认线程池都有问题：</p>
+<ul>
+<li>newFixedThreadPool：固定线程池大小（核心线程数等于最大线程数），无界队列<ul>
+<li>因为处理的线程数无法增加，所以如果任务提供太快会导致队列太长导致 OOM</li>
+</ul>
+</li>
+<li>newSingleThreadExecutor：单线程，无界队列<ul>
+<li>同上，</li>
+</ul>
+</li>
+<li>newCachedThreadPool：核心线程数为 0，队列大小也为 0（SyncgronousQueue）<ul>
+<li>会导致创建大量线程导致 OOM</li>
+</ul>
+</li>
+<li>newScheduledThreadPool：定时、周期任务（这个和上面的仨就不是同一套了）</li>
+</ul>
+<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ul>
+<li>迭代器模式：关于如何迭代一个容器，这 tm 已经是一般行为了，还用说？</li>
+<li>适配器模式：不是直接使用一个第三方类，而是使用一个（标准的）Adapter 接口去实现适配。适配器重在使用同一套接口适应不同的实现，其实这更多说是一种<strong>思想</strong>（这个设计模式的形式有点搞笑说实话）。就比如 OpenClaw 对各个 Channel 的抽象，那肯定是使用同一个接口去实现各个不同的“后端”，这也是一种适配器</li>
+<li>模板方法模式：<strong>父类调用子类</strong>的实现，这个其实也非常 trivial，但细说回来这其实也是一种控制反转。但要我说，能用模板方法的地方很多时候大概也可以用策略模式，父类直接持有子类的实现</li>
+<li>单例模式：饿汉，懒汉，双重检查锁</li>
+<li>工厂模式和抽象工厂模式：使用 new 时，客户端负责类的创建和使用，而工厂将客户端从类的创建中解放，只负责使用。<ul>
+<li>具体的我 pass，现在在业务中都没机会用这个了</li>
+</ul>
+</li>
+<li>原型模式：克隆（和基于原型的 OOP 不是一回事）</li>
+<li>建造者模式：没啥好说的</li>
+<li>策略模式：基于委托的，可替换的业务逻辑</li>
+<li>命令模式：作为数据的可以到处传的命令</li>
+<li>状态模式：将状态内化到类本身，通过修改自己来切换自己的逻辑</li>
+<li>访问者模式：扩展方法，也可做模式匹配</li>
+</ul>
+<p>其他的我都没学，我记得有享元，桥接，门面，导演等。</p>
+<h1 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h1><h2 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h2><p>SQL 语句执行顺序——FROM（表），WHERE（筛选），GROUP BY（分组），HAVING（组筛选），SELECT（字段选择和聚集），WINDOW（窗口函数（也是对各组去做窗口操作）），ORDER BY（排序）。</p>
+<p>SELECT 在分组后执行，在 WHERE 后执行，因此 WHERE 中不能利用 SELECT 的字段，因此 SELECT 可以有聚集函数，因此 WHERE 中不能有聚集函数，</p>
+<ul>
+<li>SELECT: <code>SELECT ... FROM tb WHERE ... GROUP BY ... HAVING ... ORDER BY ... LIMIT ...</code></li>
+<li>UPDATE: <code>UPDATE tb SET ... WHERE ...</code></li>
+<li>DELETE: <code>DELETE FROM tb WHERE ...</code></li>
+<li>INSERT: <code>INSERT INTO tb(...) VALUES ...</code></li>
+</ul>
+<h3 id="联表查询"><a href="#联表查询" class="headerlink" title="联表查询"></a>联表查询</h3><p>子查询和关联子查询，IN，EXISTS，JOIN。</p>
+<p>在大多数时候用 EXISTS 而非 IN 性能更好，这个还挺显著。</p>
+<p>我个人不习惯在无必要的情况下使用 JOIN。</p>
+<h2 id="调优（索引）"><a href="#调优（索引）" class="headerlink" title="调优（索引）"></a>调优（索引）</h2><p>索引独立于主表维护，提供根据特定字段的快速的访问。</p>
+<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><p>曾经使用过读写分离和按时间水平分表</p>
+<h1 id="Spring，Ruoyi，中间件"><a href="#Spring，Ruoyi，中间件" class="headerlink" title="Spring，Ruoyi，中间件"></a>Spring，Ruoyi，中间件</h1><h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>IoC，即我不用关心我所需要的对象的创建和依赖管理，控制权交给框架，我自己只需要关心使用。而 Spring 实现此是使用的依赖注入。</p>
+<h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>AOP 对于有接口的类使用 JDK 提供的代理模式实现，否则使用 CGLIB 创建动态代理因为这时候没法很方便地使用代理模式了。<strong>CGLIB 这时候生成目标类的子类</strong>。</p>
+<h2 id="Spring-Boot-自动配置"><a href="#Spring-Boot-自动配置" class="headerlink" title="Spring Boot 自动配置"></a>Spring Boot 自动配置</h2><p>使用@EnableAutoConfiguration 注解后，Spring Boot 会扫描 META-INF/spring.factories，这是一个 properties 格式的文件，Spring Boot 自动地将其中的 AutoConfiguration 类进行实例化，然后再根据它的 Conditional 注解去实例化它声明的类。</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>一般走注解式的事务管理。</p>
+<p>Spring 事务的传播有多种——沿用当前事务或新建事务，嵌套事务等。嵌套事务报错允许只回滚嵌套事务本身（但不管这个异常的话当然会扩散给父事务），它的提交则是和父事务一起提交。</p>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>常用数据类型：</p>
+<ul>
+<li>String 字符串和数字（key-&gt;value）</li>
+<li>Hash 键值对集合（key-&gt;field-&gt;value）</li>
+<li>List 双向链表</li>
+<li>Set 无序集合</li>
+<li>HyperLogLog PVUV 计数</li>
+</ul>
+<h2 id="Redis-分布式锁"><a href="#Redis-分布式锁" class="headerlink" title="Redis 分布式锁"></a>Redis 分布式锁</h2><h3 id="原生锁"><a href="#原生锁" class="headerlink" title="原生锁"></a>原生锁</h3><p>分布式锁一般来说使用的是使用 setnx 方法，set if not exists，如果设置成功就证明持有了锁。然后为了避免死锁会再设置一个超时时间。这里获取锁设设置超时时间如果使用 setnx 命令则需要两个命令，非原子，为了保证原子性用新版的 redis 的 set 命令，执行 nx 的同时也设置超时时间 <code>SET lock_key unique_id NX EX 30</code> 这样。</p>
+<p>同时设置锁需要保证客户端是自己，一般使用一个唯一标识符去标识特定客户端；解锁时需要 get 检查锁是否是自己的，再 del，这里需要使用 lua 脚本保证原子性。</p>
+<p>然后这么写是不可重入锁。</p>
+<p>获取锁时，可以使用简单的自旋，也可以依赖 Redis 的发布订阅机制配合 CountDownLatch（或者 SynchronousQueue）去保证及时性和性能。</p>
+<h2 id="redlock"><a href="#redlock" class="headerlink" title="redlock"></a>redlock</h2><p>简单来说就是向 N 个 Redis 实例同时加锁，加锁总耗时时间要小于锁过期时间，同时至少<code>N/2+1</code>个实例加锁成功，否则认为加锁失败，发送解锁请求。</p>
+<p>但 redlock 一般是没必要的。redisson 提供了对 redlock 的抽象，但我没用过。</p>
+<h2 id="Nacos-服务发现和配置中心"><a href="#Nacos-服务发现和配置中心" class="headerlink" title="Nacos 服务发现和配置中心"></a>Nacos 服务发现和配置中心</h2><p>NACOS 提供服务发现和配置中心功能，</p>
+<h2 id="RuoYi-Cloud"><a href="#RuoYi-Cloud" class="headerlink" title="RuoYi Cloud"></a>RuoYi Cloud</h2><p>RuoYi Cloud 架构——gateway，auth 依赖 system，业务 module。gateway 就是 spring gateway，大家都依赖 nacos 的配置中心和服务发现。</p>
+<h1 id="docker，K8S，监控"><a href="#docker，K8S，监控" class="headerlink" title="docker，K8S，监控"></a>docker，K8S，监控</h1><h2 id="k8s-概念"><a href="#k8s-概念" class="headerlink" title="k8s 概念"></a>k8s 概念</h2><p>k8s 是集群编排应用，提供高可用，不停机上线，横向拓展，负载均衡，容器调度，健康检查，错误恢复等功能。k8s 是容器化的，和 docker 联系紧密。</p>
+<p>k8s 中的物理机称为 Node，节点分为 Control Plane 和 Node，一般而言前者负责管理，后者负责运行容器。</p>
+<p>每个 node 都有 Kubelet 负责管理 node 并和 k8s 集群交互。</p>
+<p>Pod 是 k8s 的原子，调度的最小单位，Pod 类似 Docker 容器，但一个 Pod 可以包含多个 Docker 容器并共享同样的网络和存储资源。Pod 可以有状态，一个 Pod 可以包含同一个容器的多个实例。应用的横向扩容以 Pod 为原子。</p>
+<p>Deployment 和 StatefulSet 类似 Docker compose 的 service，无状态的应用用前者，有状态的如 nacos，mysql 用后者。</p>
+<p>Service 则用于暴露网络服务，它为各个 Pod 提供 DNS（ClusterIP），方便做负载均衡等。然后还有 NodePort（直接暴露在 Node 上供外部访问）。</p>
+<p>configMap 就是 k8s 中的环境变量，用于替代 bootstrap.yml</p>
+<h2 id="prometheus"><a href="#prometheus" class="headerlink" title="prometheus"></a>prometheus</h2><p>普罗米修斯用于监控，我学过它的表达式语言但也就仅此而已。</p>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p>PASS，牛客各个类型的题都刷了一些，找回节奏来了。</p>
+<h1 id="项目经历"><a href="#项目经历" class="headerlink" title="项目经历"></a>项目经历</h1><h2 id="大连华信"><a href="#大连华信" class="headerlink" title="大连华信"></a>大连华信</h2><h3 id="PVUV"><a href="#PVUV" class="headerlink" title="PVUV"></a>PVUV</h3><p>前端通用埋点，后端使用 hyperloglog 计数并定时落库。</p>
+<h3 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h3><p>当时研究了多种方案，binlog，第三方的 mysql 的数据同步框架……最终决定是自己使用消息队列去实现了，大部分地方使用的是注解，少部分地方被迫使用编程式。但这一套东西其实到最后也没用上去，没有搞幂等性也没有搞啥的。</p>
+<h2 id="区综治"><a href="#区综治" class="headerlink" title="区综治"></a>区综治</h2><h3 id="人口内存表"><a href="#人口内存表" class="headerlink" title="人口内存表"></a>人口内存表</h3><p>后端是 oracle，人口数据中有 80 万条数据且经常有非常复杂的链表查询走不了索引，因此使用 mysql 整了内存表，做一个宽表去囊括所有查询的字段，同步机制是每次启动时全量同步，然后有写操作时写一个日志表，内存表高频监听这个日志表并做增量同步。</p>
+<p>结果后面的一般查询的形式是先从内存表中查人口 ID 再从 oracle 中根据 ID 去查询，这引入了页内的排序问题，然后分页数据没带过去的问题，业内排序通过在 Java 内排序解决，当时我做了一个特殊的 Comparator 抽象去根据一个顺序去进行排序并将这个模式给记成笔记，然后分页信息就直接拷贝 PageInfo 的信息。</p>
+<h3 id="国密"><a href="#国密" class="headerlink" title="国密"></a>国密</h3><p>国密算法的抽象不是我做的。国密最头疼的是对代码侵入性的问题，我自己的话会倾向直接在 mysql 或者在哪里做处理，但当时项目经理权衡利弊后直接在代码中硬编码了，因为似乎只能这样因为加密的字段有大量联表操作，为此测了好久，还出现过好几次重复加密解密的问题。</p>
+<p>接口性能优化，性能差的接口大都是做了无必要的联表查询，这个也没有总结出明确的方法论，见仁见智。</p>
+<h2 id="柳州智慧派出所"><a href="#柳州智慧派出所" class="headerlink" title="柳州智慧派出所"></a>柳州智慧派出所</h2><p>这个没啥好说的，当时可以说只是一个技术验证。</p>
+<h2 id="天网"><a href="#天网" class="headerlink" title="天网"></a>天网</h2><h3 id="微服务架构迁移"><a href="#微服务架构迁移" class="headerlink" title="微服务架构迁移"></a>微服务架构迁移</h3><p>这个微服务迁移的代码迁移都是我做的，其实并非是必要的，迁到 kubernates 搞云原生是政治任务所以做的很草，业务只分出去一个边缘的部分并且没有分数据库，结果数据库仍旧是单点的，只是在很后期把数据库换成了主备架构（没做主从也没做读写分离啥的），没有走 k8s 而是用 Keepalived 去做了高可用。</p>
+<h2 id="矛盾纠纷多元化解"><a href="#矛盾纠纷多元化解" class="headerlink" title="矛盾纠纷多元化解"></a>矛盾纠纷多元化解</h2><h3 id="RuoYi-Cloud-1"><a href="#RuoYi-Cloud-1" class="headerlink" title="RuoYi-Cloud"></a>RuoYi-Cloud</h3><p>这个就没用 k8s，而是用的 docker-compose 去部署。</p>
+<p>工单流转逻辑本来打算用工作流引擎，但考虑到这个太过复杂且我们所有人都对工作流引擎不熟悉，结果还是去手写了。我自己牵头尝试集成 Mybatis Plus 和 Hibernate Validator，同步部分我则仍旧侵入了代码，但是是使用了 Spring 自己的本地消息总线以最小化侵入性。</p>
+<h1 id="GAP"><a href="#GAP" class="headerlink" title="GAP"></a>GAP</h1><h2 id="如何离开虹信的"><a href="#如何离开虹信的" class="headerlink" title="如何离开虹信的"></a>如何离开虹信的</h2><p>项目组改组，后端全裁了换成外包（现在估计要换成 AI 了）。</p>
+<h2 id="GAP-时干了什么"><a href="#GAP-时干了什么" class="headerlink" title="GAP 时干了什么"></a>GAP 时干了什么</h2><p>干眼症维持，全国旅游，然后主要时间是跑去学画画，同时去学了 Python，</p>
+<h1 id="既有问题"><a href="#既有问题" class="headerlink" title="既有问题"></a>既有问题</h1><h2 id="2-项目中有遇到-OOM-的场景嘛？怎么去解决的"><a href="#2-项目中有遇到-OOM-的场景嘛？怎么去解决的" class="headerlink" title="2. 项目中有遇到 OOM 的场景嘛？怎么去解决的"></a>2. 项目中有遇到 OOM 的场景嘛？怎么去解决的</h2><p>资源未释放倒是有，手动获取数据库连接（用于获取数据库类型供差异化SQL）后未释放</p>
+<h2 id="3-JVM-的内存模型"><a href="#3-JVM-的内存模型" class="headerlink" title="3.JVM 的内存模型"></a>3.JVM 的内存模型</h2><p>作为程序员直接看到的是堆和栈，堆内则按垃圾回收的需求分为新生代和老年代，然后还有堆外内存，包括 nio 编程中使用的直接内存以及方法区</p>
+<h2 id="4-线程池的核心参数"><a href="#4-线程池的核心参数" class="headerlink" title="4. 线程池的核心参数"></a>4. 线程池的核心参数</h2><p>核心线程数，最大线程数，非核心线程存活时间，阻塞队列，threadFactory，拒绝策略，</p>
+<h2 id="5-MySQL-的优化"><a href="#5-MySQL-的优化" class="headerlink" title="5.MySQL 的优化"></a>5.MySQL 的优化</h2><h3 id="表优化"><a href="#表优化" class="headerlink" title="表优化"></a>表优化</h3><p>从表上出发的话，我自己参与的项目中使用过 oracle 的内存表，然后使用过 mysql 的水平分表，按时间去水平分表</p>
+<h3 id="数据库优化"><a href="#数据库优化" class="headerlink" title="数据库优化"></a>数据库优化</h3><p>我自己没做过数据库优化，我参与的项目中有使用主备，按我知晓在架构上可以做读写分离，垂直分库。然后主要是在缓存上，调整连接数，线程数，innodb 缓存池大小……</p>
+<h2 id="6-MYSQL-实际开发中的索引失效的场景"><a href="#6-MYSQL-实际开发中的索引失效的场景" class="headerlink" title="6. MYSQL 实际开发中的索引失效的场景"></a>6. MYSQL 实际开发中的索引失效的场景</h2><p>我参加的业务中经常有模糊查询操作，然后还有排序使用非索引字段。</p>
+<h2 id="8-私有方法事务的一致性怎么解决"><a href="#8-私有方法事务的一致性怎么解决" class="headerlink" title="8. 私有方法事务的一致性怎么解决"></a>8. 私有方法事务的一致性怎么解决</h2><p>指的是内部调用？内部调用的话 this 总是没有走代理的，所以内部调用时切面无法生效，因此事务就无法生效，无论是 JDK 代理还是 CGLIB；我用的解决方法是自己注入自己，比如叫 self，然后用这个 self 去调用（这时候注入的是正常经过 AOP 的对象）。</p>
+<p>然后自己注入自己的话我尝试了一下会触发 Spring 的循环依赖的检查，需要加入 Lazy 注解或者使用 ObjectProvider 在运行时去注入（PostConstruct 中注入同样会触发循环依赖的检查）。但这里吊诡的是使用 Lazy 注释后会发现仍旧是可以注入的，Spring 也是屎山啊。</p>
+<h2 id="1-分布式锁的死锁怎么解决"><a href="#1-分布式锁的死锁怎么解决" class="headerlink" title="1. 分布式锁的死锁怎么解决"></a>1. 分布式锁的死锁怎么解决</h2><p>设置超时时间，同时要保证获取锁和设置超时时间这个过程是原子的。同时为了保证客户端活着时不超时可以有锁续期机制。如果可能会有自己等待自己的情况就使用重入锁。锁获取失败可以降级……</p>
+<h2 id="2-消息队列消费失败了怎么办"><a href="#2-消息队列消费失败了怎么办" class="headerlink" title="2. 消息队列消费失败了怎么办"></a>2. 消息队列消费失败了怎么办</h2><p>得区分，倘若是编程问题比如序列化反序列化失败，业务逻辑错误就修正。</p>
+<p>重试机制，死信队列，监控告警并人工干预。</p>
+<h2 id="2、Spring-中的-ioc-和-aop"><a href="#2、Spring-中的-ioc-和-aop" class="headerlink" title="2、Spring 中的 ioc 和 aop"></a>2、Spring 中的 ioc 和 aop</h2><p>IoC 就是控制反转，原本作为用户的话我需要自己创建我的依赖自己处理我的注入嘛，而有了 Spring 我就把创建和注入依赖这一步交给 Spring，Spring 自己去搞创建依赖然后维护依赖顺序之类，然后这也同时允许了基于注解的开发，因为 Spring 能知晓我某个类是用来干啥的比如 Controller，这样它就能在启动时给各个实例放到特殊的位置提供特殊的用途。然后因为 spring 附则创建依赖，它同时就也能对依赖本身去执行一定操作，而这就能实现 AOP，比如注解式事务就是用 AOP 实现的。</p>
+<h2 id="3、如何保证缓存数据一致性"><a href="#3、如何保证缓存数据一致性" class="headerlink" title="3、如何保证缓存数据一致性"></a>3、如何保证缓存数据一致性</h2><p>主要是<strong>缓存更新策略</strong>的问题。我在实际业务中只采取过旁路缓存模式。</p>
+<p>最常用<strong>旁路缓存模式</strong>（适用于读多写少）——读时先读缓存再读数据库然后设置缓存；写时删缓存。<strong>写数据库删缓存的时候可以延迟双删避免并发读时搞到脏数据</strong>。</p>
+<p>关于分布式缓存的一致性，考虑使用 redis 的发布订阅或者消息队列以保证能正确监听和主动让缓存失效，设置过期时间也非常重要。</p>
+<p>强一致性和最终一致性……既然要强一致性，那为何还要缓存？强一致性就必须得事务，同步双写，读时只读缓存因为缓存和数据库强一致。</p>
+<p>然后还有<strong>直写</strong>：写同时改缓存和 DB，读只读 DB，这能保证强一致性；此外还有异步回写——写只更新缓存，异步刷新数据库。</p>
+<h2 id="缓存问题"><a href="#缓存问题" class="headerlink" title="缓存问题"></a>缓存问题</h2><p>缓存穿透——数据库不存在的数据。</p>
+<p>缓存击穿——热点 KEY 过期后大量请求全打到数据库。</p>
+<p>缓存雪崩——大量 KEY 同时过期后大量请求全打到数据库。（雪崩是大量不同查询，击穿是大量相同查询）。</p>
+<p>关于缓存穿透——这种一般是恶意攻击之类的，可以使用参数校验，布隆过滤器，空值缓存，监控告警等。</p>
+<p>缓存击穿，因为这里所有请求访问的是同一个数据，这里可以使用互斥锁的方法保证只有一个线程更新缓存。</p>
+<p>至于缓存雪崩，一般来说要差异化过期时间，或者做多级缓存，熔断降级等。</p>
+<h2 id="6、JVM-调优"><a href="#6、JVM-调优" class="headerlink" title="6、JVM 调优"></a>6、JVM 调优</h2><p>JVM 调优的话得看具体情况，一般来说主要减少 Full GC 的频率最为重要，然后是降低 GC 停顿时间，提高吞吐量……</p>
+<p>主要调整的就是堆内存设置，GC 算法。</p>
+<figure class="highlight ldif"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ldif"><span class="hljs-comment"># 基础配置</span><br><span class="hljs-literal">-</span>Xms4g -Xmx4g            <span class="hljs-comment"># 初始堆=最大堆，避免动态调整</span><br><span class="hljs-literal">-</span>Xmn2g                   <span class="hljs-comment"># 新生代大小（建议占堆的 1/3~1/2）</span><br><span class="hljs-literal">-</span>XX:MetaspaceSize=256m   <span class="hljs-comment"># 元空间初始大小</span><br><span class="hljs-literal">-</span>XX:MaxMetaspaceSize=512m<br><br><span class="hljs-comment"># 老年代比例（默认 2:1）</span><br><span class="hljs-literal">-</span>XX:NewRatio=2           <span class="hljs-comment"># 新生代：老年代=1:2</span><br><span class="hljs-literal">-</span>XX:SurvivorRatio=8      <span class="hljs-comment"># Eden:Survivor=8:1:1</span><br></code></pre></div></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-1/03-21%E6%8A%98%E8%85%BEastrbot.html">
+                        <span class="hidden-mobile">折腾 astrbot</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
