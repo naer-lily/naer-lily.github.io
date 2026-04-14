@@ -1,0 +1,522 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="只是简述……提示词工程这回事儿还是要具体学习的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM 学习笔记 2——提示词工程，RAG，Tool">
+<meta property="og:url" content="http://example.com/2026-2/04-14LLM%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%EF%BC%8CRAG%EF%BC%8CTool.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="只是简述……提示词工程这回事儿还是要具体学习的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-14T08:40:00.000Z">
+<meta property="article:modified_time" content="2026-04-14T08:44:16.077Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>LLM 学习笔记 2——提示词工程，RAG，Tool - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="LLM 学习笔记 2——提示词工程，RAG，Tool">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-04-14 16:40" pubdate>
+        2026年4月14日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.4k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LLM 学习笔记 2——提示词工程，RAG，Tool</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Prompt-Engineering"><a href="#Prompt-Engineering" class="headerlink" title="Prompt Engineering"></a>Prompt Engineering</h1><p>提示词工程，如果说 LLM 是硬件的话，提示词就是软件了，是人类发光发热的地方。通过精心设计提示词让 AI 生成更符合需要的输出。</p>
+<h2 id="Prompt-基本结构"><a href="#Prompt-基本结构" class="headerlink" title="Prompt 基本结构"></a>Prompt 基本结构</h2><p>Prompt 的重点是——<strong>清晰、具体、结构化</strong>。</p>
+<p>核心原则——CRISP：</p>
+<ul>
+<li>Context：上下文，即对话的整个背景（可以说用户的背景也属于这个上下文）</li>
+<li>Role：角色，模型总是扮演一个特定的角色</li>
+<li>Instruction：指令，模型所扮演的角色要做什么</li>
+<li>Step：步骤，按步骤去思考或输出（一说是 Structure，即整个系统提示词的结构</li>
+<li>Parameters：参数，通过调参去配置它的风格，结构等</li>
+</ul>
+<h2 id="Few-shot-Zero-shot"><a href="#Few-shot-Zero-shot" class="headerlink" title="Few-shot / Zero-shot"></a>Few-shot / Zero-shot</h2><p>通过提供给它示例来规范它的行为，但术语上它叫“少样本学习”。</p>
+<h2 id="Chain-of-Thought"><a href="#Chain-of-Thought" class="headerlink" title="Chain-of-Thought"></a>Chain-of-Thought</h2><p>要求 AI 去主动输出自己的思维链条，而非直接输出答案，根据之前学习的 Transformer，我们知道 AI 是一个 Token 一个 Token 去预测的，且之前输出的东西会影响它之后的输出，而让 AI 输出思维链就能让它能真正分步骤地处理问题，但有时候也会让 AI 无限兜圈子）。</p>
+<h2 id="Benchmark"><a href="#Benchmark" class="headerlink" title="Benchmark"></a>Benchmark</h2><p>写 Prompt 就像写程序，它并非是一蹴而就的，而是反复根据 AI 的反馈去写的，同样地，没有一个通用的 Prompt，Prompt 总是任务相关的。</p>
+<p>Prompt 调优，重点是反馈——如何判断，是人判断还是机器判断……沿袭上面的 CRISP 框架，增加思维链，增加样本，就是某种调优了。</p>
+<p>调优有何自动化的工具？Promptfoo 似乎是一个，但我没用过。</p>
+<h2 id="Prompt-在工程中的约束设计"><a href="#Prompt-在工程中的约束设计" class="headerlink" title="Prompt 在工程中的约束设计"></a>Prompt 在工程中的约束设计</h2><ol>
+<li>配置和要求它使用 Json 输出并给定输出范式</li>
+<li>在客户端处使用类型校验库如 Pydantic 检验</li>
+<li>以工具调用而非 AI 直接响应的形式去收集 LLM 的结果</li>
+</ol>
+<h1 id="RAG（检索增强生成）"><a href="#RAG（检索增强生成）" class="headerlink" title="RAG（检索增强生成）"></a>RAG（检索增强生成）</h1><h2 id="RAG-整体流程"><a href="#RAG-整体流程" class="headerlink" title="RAG 整体流程"></a>RAG 整体流程</h2><p>RAG 有两种方式——直接拼接到上下文中，或者以 Tool 形式提供给 AI（Agentic RAG）。</p>
+<p>对前者，直接将用户输入的整段文本去做 Embedding，然后去在知识库（向量数据库）中进行查询，返回相近的知识库的片段（Document）。</p>
+<h2 id="文档嵌入流程"><a href="#文档嵌入流程" class="headerlink" title="文档嵌入流程"></a>文档嵌入流程</h2><p>加载，切分，Embedding，存储，查询。</p>
+<p>加载——无论是 PDF 还是 EPUB 还是什么，需要加载成一个一致的格式，称为文档。文档需要进行<strong>切分</strong>，切分后的结果是我们用于查询的原子。它们会被进行 Embedding，然后连带着原始文本去存储进向量数据库中。查询时，我们根据查询时的向量（来自于用户输入的 Embedding）去匹配合适的向量并使用 top_k 等方法去筛选，然后将这些向量对应的文本去插入到用户提示词中供 LLM 使用。</p>
+<p>这个检索的过程称为召回。</p>
+<p>存在诸多向量数据库（FAISS / Milvus），但我没有使用过。</p>
+<p>但对用户来说，一般不会提及这个“向量数据库”，提及“Embedding”，用户看到的只有“知识库”。</p>
+<h2 id="检索策略（top-k-rerank）"><a href="#检索策略（top-k-rerank）" class="headerlink" title="检索策略（top-k / rerank）"></a>检索策略（top-k / rerank）</h2><p>相似性或者最大边际相关性（MMR，maximum marginal relevance）——相似性直接匹配和输入相似的向量，MMR 则<strong>最小化结果之间的相似性</strong>。</p>
+<h2 id="关于召回不足"><a href="#关于召回不足" class="headerlink" title="关于召回不足"></a>关于召回不足</h2><p>关于召回不足，就是知识库里明显有这个内容却没有被召回，原因为：</p>
+<ol>
+<li>知识库本身的问题——Embedding 太差或 Chunk 没切好，或文档本身存在歧义</li>
+<li>LLM 和客户端的问题——查到了，塞进去了，但 LLM 无视，或者查到的东西有歧义让 AI 迷糊（噪音）</li>
+<li>用户的问题——用户的 Query 没写好</li>
+</ol>
+<p>对于知识库本身的问题，解决方案有：</p>
+<ol>
+<li>Embedding 换更好的，注意测试一下用的模型是否是支持中文的</li>
+<li>Chunk 切分优化，比如 API 文档就适合按接口去切分</li>
+<li>混合检索，既使用向量也使用关键词</li>
+</ol>
+<p>关于 LLM 和客户端的问题：</p>
+<ol>
+<li>使用 Reranking 重排，LLM 打分的方式重新明确“相关性”</li>
+<li>在 Prompt 中约束 LLM 必须像论文一样引用上下文</li>
+</ol>
+<p>关于用户的问题——在实际检索之前先让 AI 去扩展用户的查询或进一步明确用户的需求。</p>
+<h2 id="关于噪音和幻觉"><a href="#关于噪音和幻觉" class="headerlink" title="关于噪音和幻觉"></a>关于噪音和幻觉</h2><p>在 Prompt 中约束 LLM 必须像论文一样引用上下文，上下文中没有就说自己不知道。置信度，重新检查……</p>
+<h2 id="知识图谱"><a href="#知识图谱" class="headerlink" title="知识图谱"></a>知识图谱</h2><p>RAG 是使用知识库的手段，我们常说的和用户直接看到的，只有知识库——他们只管把文档丢进知识库，然后查就对了。</p>
+<p>其实 RAG 的英文是 retreival-augmented generation，augmented 就是乐理中的增，如增四度 Augmented 4th。</p>
+<p>而<strong>知识图谱，则是一种结构化（graph）的知识库</strong>，它的核心是三元组 <code>实体 - 关系 - 实体</code>，实体和实体之间就这样组成网状关系。</p>
+<p>知识图谱的应用：</p>
+<ol>
+<li>多跳推理——如 A 和 C 的关系，X 的依赖者</li>
+<li>复杂关系查询——如社交网络</li>
+<li>强一致性——每一个答案都要能追溯</li>
+</ol>
+<p>图谱重在<strong>可验证</strong>。</p>
+<h1 id="Agent-Tool-Calling（重点）"><a href="#Agent-Tool-Calling（重点）" class="headerlink" title="Agent / Tool Calling（重点）"></a>Agent / Tool Calling（重点）</h1><h2 id="Agent-基本概念"><a href="#Agent-基本概念" class="headerlink" title="Agent 基本概念"></a>Agent 基本概念</h2><p>在现在，从用户的视角来看，Agent 就是 LLM 加上系统提示词加上可选的工具、Skill、记忆、知识库……它和客户端协作，去解决特定领域的问题。</p>
+<h2 id="ReAct"><a href="#ReAct" class="headerlink" title="ReAct"></a>ReAct</h2><p>LLM 自己没有和外界交互的能力，LLM 只负责发起工具调用的请求，而客户端去负责工具的实际执行以及将执行结果反馈给 AI，AI 再去执行进一步操作。在没有 Tool Calling 的年代，需要使用 ReAct 模式，但现在大多数 LLM 都原生支持 Tool Calling 了（实际上它们也很大程度上是专门为此训练的），ReAct 已经不需要客户端去在系统提示词上去主动操心了。</p>
+<p>但从更偏向理论的角度来说，Agent 最重要的是所谓的 Agent Loop——控制循环——思考、决策、调用、观察结果。这就是 ReAct，Reasoning and Action</p>
+<h2 id="Tool-调用流程"><a href="#Tool-调用流程" class="headerlink" title="Tool 调用流程"></a>Tool 调用流程</h2><p>这里说的是 OpenAI 对话 API 工具调用流程。再次强调——LLM 只负责发送这个工具调用的“请求”，实际的执行者是客户端，客户端响应消息给 LLM。</p>
+<ol>
+<li>客户端在请求中带上可用的工具</li>
+<li>用户发送需要 AI 使用工具调用去解决的需求（一条 user 角色消息）</li>
+<li>AI 响应工具调用请求，其实际上是一个 assistant 角色的消息，content 为空，tool_calls 字段中存储工具调用请求</li>
+<li>客户端根据 tool_calls 字段去执行 tool，执行结果以 tool 角色消息响应给 AI</li>
+<li>AI 去继续进行生成（可能直接响应结果，也可能是进行进一步的工具调用）</li>
+</ol>
+<p>这里，user 的消息可以包含一个<code>tool_choice</code>字段，表示让模型是否自主决定调用工具或禁止调用工具，或者<strong>强制调用</strong>某工具。</p>
+<p>一个有趣的地方是，工具调用也支持流式输出！但这需要客户端去支持，我没用过。</p>
+<h2 id="MCP"><a href="#MCP" class="headerlink" title="MCP"></a>MCP</h2><p>MCP 协议即一种标准的工具协议，客户端可以连接 MCP 去使用它所提供的工具，MCP 支持标准输入输出流格式交互（这时候就是客户端直接起 MCP 服务），或者 Streamable-HTTP 或 SSE 协议去连接远程的 MCP 服务。</p>
+<p>MCP 协议包含三个角色——Tool，Resource 和 Prompt，Resource 其实就是只读的 Tool，而 Prompt 则是提供给 MCP 客户端（即用户）去使用的结构化的提示词，LLM 对它不可见。</p>
+<h2 id="Skill"><a href="#Skill" class="headerlink" title="Skill"></a>Skill</h2><p>Skill 其实就本质上来说是一种渐进式的提示词——LLM 客户端在系统提示词中塞入当前可用的 Skill 的名称，简单描述和<code>SKILL.md</code>，然后 LLM 自己去读取 SKILL 文件，去根据文件描述去进行进一步操作，如读取其他文件，执行技能同捆的程序脚本等。</p>
+<p>SKILL 有独特的结构——必须放到 skills 的一个子目录下，入口文件叫<code>SKILL.md</code>，它要以一个 YAML Formatter 去开头去明确自己的名称，描述……</p>
+<p>当然，我说的是 OpenClaw 语境下的 Skill。现在这玩意儿越来越花哨了。</p>
+<h2 id="SubAgent"><a href="#SubAgent" class="headerlink" title="SubAgent"></a>SubAgent</h2><p>分治，上下文隔离，控制能力边界。</p>
+<p>主 Agent 经常会上下文爆炸，特别是在进行联网搜索等情况的时候，搜索结果会直接把上下文撑满，比如这种时候就特别适合去使用 SubAgent 去执行联网搜索然后自己去做一个简单的总结给主 Agent 避免让主 Agent 的上下文充斥无意义的内容。同时不同的任务串在一起会让上下文很快串味。</p>
+<p>现在常见的 SubAgent 使用 Tool Calling 去实现，去包装成 tool 去将需求调用并等待它的结果。</p>
+<p>但还有一种工程化的方式，类似 Dify 或者 LangGraph，一个 SubAgent 是一个节点，有明确的输入、输出 Schema，但这种我没用过也没有研究过。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/LLM/">LLM</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/04-12LLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94Transformer.html">
+                        <span class="hidden-mobile">LLM 学习笔记 1——Transformer</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
