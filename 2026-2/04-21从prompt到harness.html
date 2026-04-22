@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="其实 Harness Engineering 也是一种上下文工程嘛">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 prompt 到 harness">
+<meta property="og:url" content="http://example.com/2026-2/04-21%E4%BB%8Eprompt%E5%88%B0harness.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="其实 Harness Engineering 也是一种上下文工程嘛">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-21T09:40:00.000Z">
+<meta property="article:modified_time" content="2026-04-22T08:57:48.755Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>从 prompt 到 harness - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="从 prompt 到 harness">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-04-21 17:40" pubdate>
+        2026年4月21日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">从 prompt 到 harness</h1>
+            
+            <div class="markdown-body">
+              <p>关于提示词工程的演进。</p>
+<p>提示词工程 prompt engineering，上下文工程 context engineering，驾驭工程 harness engineering，概念一个接一个，但其实我是觉得很 trivial。但 trivial 的东西中涌现出让人惊掉下巴的魔法，LLM 发展历程自己就已经给我们展示过了……</p>
+<p>按我自己的理解，harness 其实就是自动化地监督 AI 的行为（比如读一个文件太多次就用提示词去警告它，比如代码实现后强制性的检查流程），自动化地改进 AI 的上下文，比如分析过去的对话，找出错误，得出总结，并记录下来。</p>
+<h1 id="Prompt-vs-Context"><a href="#Prompt-vs-Context" class="headerlink" title="Prompt vs Context"></a>Prompt vs Context</h1><p>从结构上做简单区分的话，提示词工程，就是通过<strong>静态</strong>去构造<strong>单条</strong>提示词（主要指的是首条系统提示词）去约束模型的行为，比如告知 AI 你是 Python 专家，你是 AI 猫娘……然后用户随心所欲去输入啥东西，即这条提示词以外的，剩下的对话历史就全是用户和 AI 的对话；而上下文工程，则是<strong>动态</strong>去构造<strong>整个上下文</strong>而非是仅仅单条提示词都动态去构建，SillyTavern 是这方面的典型，Naive RAG 也是类似。</p>
+<p>上面的<strong>静态</strong>和<strong>动态</strong>，可以说是从 LLM 客户端来看的。<strong>静态</strong>，指的是 LLM 客户端在开始对话前只需构造这个系统提示词一次，之后客户端便不再去执行业务逻辑，而是单纯地服务于用户和 AI 的对话，去不断地扩展当前上下文；而<strong>动态</strong>，指的则是 LLM 客户端每次都会完全<strong>重新</strong>拼接，构造整个上下文，比如 Naive RAG，SillyTavern 中的绿灯世界书……</p>
+<p>这里的重点在于，上下文工程将上下文去视为一个动态的，可灵活构造的东西，而提示词工程则是将上下文视作单纯的 chat history。</p>
+<p>从行为上来说，提示词工程则是对单条提示词去进行修修补补，去让这条上下文更好地起作用，而上下文工程则是调整整个上下文的构造方式。</p>
+<p>但上述论述其实没啥意义，提示词工程和上下文工程，其实更多是心智上的说法，其实一切都是上下文，<strong>问题在于我改的是某一段 prompt 还是 prompt 之间的关系</strong>。</p>
+<p>不过按我说，智能体编排也可说是上下文工程——只是我在构建这个上下文的时候顺便也调了其他 agent 而已。</p>
+<h1 id="Harness-之前的问题"><a href="#Harness-之前的问题" class="headerlink" title="Harness 之前的问题"></a>Harness 之前的问题</h1><p>参考了 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1C9QuBZEKz">https://www.bilibili.com/video/BV1C9QuBZEKz</a>。</p>
+<p>A 社的工程师总结的常见三个问题：</p>
+<ol>
+<li>One-Shot：试图在一次 session 中解决问题，结果就是上下文耗尽（而压缩带来心智上的损耗），重启时因为文档缺失 AI 只能靠猜，方向走歪</li>
+<li>Premature Completion：完成核心功能后 AI 就开摆说做完了，todo-list 都给你勾上</li>
+<li>False Completion：错误地标记功能完成，不测试不验证</li>
+</ol>
+<p>还有一个风险——AI 会忠实地复制原有代码库里的代码风格、模式，无论好坏，这会快速积累技术债。</p>
+<p>Harness 试图解决这些问题。</p>
+<p>（不是，这个我感觉我看到有其他人提出过解决方案啊……？把软件工程的思路套用上来那种）</p>
+<h1 id="Harness-engineering"><a href="#Harness-engineering" class="headerlink" title="Harness engineering"></a>Harness engineering</h1><p>其实 Harness engineering……我怎么看它似乎都该说是一种思想，是属于上下文工程的，它不能拔高到上下文工程这个层级。</p>
+<p>Harness 分为 4 部分：</p>
+<ol>
+<li>Context Engineering，该说是一个指导思想吧，要求指令不能太多以挤占文档，代码等内容的注意力，它提出 AGENTS.md 要小巧，最好小于 60 行，AI 去按需检索。<ol>
+<li><strong>这里指的应该是优化提示词</strong>……提示词里要专门写模型不会的东西，模型会的不要重复</li>
+</ol>
+</li>
+<li>Architecture Constraints，架构约束，最核心的部分，<strong>用确定性去取代模糊指令</strong>。这里具体指的是去做一个严格的分层架构——<code>Types-&gt;Config-&gt;Repo-&gt;Service-&gt;Runtime-&gt;UI</code>，绝不能反向依赖，<strong>而且这里使用的是 linter 去机械化地做而非使用 Prompt</strong>。约束永远比指令更有效</li>
+<li>Feedback Loop，代码审查，<strong>Agent 审 Agent</strong>，在 AI 完成编写后回应之前（Checklist 拦截）让它自己去进行检查，Build &amp; Self-Verify。规划、构建、（对照最初需求）验证、修复。（这 TM 不是 PDCA 吗）</li>
+<li>Entropy Management，熵管理，OpenAI 称为 GC——定期用 Agent 扫描文档、架构、代码风格不一致并进行修改</li>
+</ol>
+<p>LangChain 提出了更多实操建议：</p>
+<ol>
+<li>Trace Analyzer，提出这个 skill 去让 AI 能去分析过去的上下文去找到 AI 犯的错误并记录下来</li>
+<li>LocalContextMiddleware……将执行环境的上下文准确丢给 AI</li>
+<li>LoopDetectionMiddleware……操作同一个文件过多次后在上下文中提醒 AI 换方法</li>
+</ol>
+<p>Vercel 提出精简工具——更少的工具会更少地混淆 AI。</p>
+<p>行吧，没有新东西，但确实是有了新 idea，我觉得我得尝试去用 dify 或者 langflow 去搭点什么东西才能有更多感性经验去用来理解它。</p>
+<p>视频中提到，OpenAI 工程师说，<strong>每当你发现 Agent 犯了一个错误，你就花时间去工程化一个解决方案，让它再也不会犯同样的错</strong>，这话确实不赖，得 mark。</p>
+<p>视频中提到的参考材料：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://blog.langchain.com/improving-deep-agents-with-harness-engineering/">LangChain Blog. <em>“Improving Deep Agents with Harness Engineering”</em>. Feb 17, 2026</a></li>
+<li><a target="_blank" rel="noopener" href="https://news.qq.com/rain/a/20260322A02XZ900">AGIHunt. <em>“模型不是关键，Harness 才是”</em>. 腾讯新闻，2026-03-22</a></li>
+<li><a target="_blank" rel="noopener" href="https://openai.com/zh-Hans-CN/index/harness-engineering/">OpenAI Codex Team. <em>“Coding Agent 百万行代码实验报告”</em>. 2026 年 2 月。【工程技术：在智能体优先的世界中利用 Codex | OpenAI】</a></li>
+</ol>
+<p>或许可以说，Harness 不止是构造上下文——它<strong>改进</strong>上下文，让 Agent 去手动或自动地去迭代。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/LLM/">LLM</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/04-14LLM%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02%E2%80%94%E2%80%94%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%EF%BC%8CRAG%EF%BC%8CTool.html">
+                        <span class="hidden-mobile">LLM 学习笔记 2——提示词工程，RAG，Tool</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
