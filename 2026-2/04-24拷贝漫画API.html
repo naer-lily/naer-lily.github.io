@@ -1,0 +1,974 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="结果移动端没有加密……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拷贝漫画移动端 API">
+<meta property="og:url" content="http://example.com/2026-2/04-24%E6%8B%B7%E8%B4%9D%E6%BC%AB%E7%94%BBAPI.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="结果移动端没有加密……">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-24T09:20:00.000Z">
+<meta property="article:modified_time" content="2026-04-24T09:21:33.318Z">
+<meta property="article:author" content="那尔">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>拷贝漫画移动端 API - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="拷贝漫画移动端 API">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-04-24 17:20" pubdate>
+        2026年4月24日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.2k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">拷贝漫画移动端 API</h1>
+            
+            <div class="markdown-body">
+              <p>来自 Claude Opus 4.6。</p>
+<h1 id="拷贝漫画（CopyManga）API-接口文档"><a href="#拷贝漫画（CopyManga）API-接口文档" class="headerlink" title="拷贝漫画（CopyManga）API 接口文档"></a>拷贝漫画（CopyManga）API 接口文档</h1><blockquote>
+<p>基于第三方客户端 <a target="_blank" rel="noopener" href="https://github.com/fumiama/copymanga">fumiama/copymanga</a> 源码逆向整理</p>
+</blockquote>
+<hr>
+<h2 id="1-基础配置"><a href="#1-基础配置" class="headerlink" title="1. 基础配置"></a>1. 基础配置</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API 主域名</td>
+<td><code>api.2024manga.com</code></td>
+</tr>
+<tr>
+<td>代理域名</td>
+<td><code>copymanga.azurewebsites.net</code></td>
+</tr>
+<tr>
+<td>API 版本</td>
+<td>v3（所有接口路径均以 <code>/api/v3/</code> 开头）</td>
+</tr>
+<tr>
+<td>平台标识</td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td>应用包名</td>
+<td><code>com.manga2020.app</code></td>
+</tr>
+<tr>
+<td>应用版本</td>
+<td><code>2024.4.28</code></td>
+</tr>
+<tr>
+<td>协议</td>
+<td>HTTPS</td>
+</tr>
+<tr>
+<td>默认分页大小</td>
+<td>21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="2-公共请求头"><a href="#2-公共请求头" class="headerlink" title="2. 公共请求头"></a>2. 公共请求头</h2><p>所有 API 请求均携带以下 HTTP Headers（部分可配置开关）：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user-agent</code></td>
+<td><code>Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 Edg/141.0.0.0</code></td>
+<td>可自定义</td>
+</tr>
+<tr>
+<td><code>x-requested-with</code></td>
+<td><code>com.manga2020.app</code></td>
+<td>来源包名标识</td>
+</tr>
+<tr>
+<td><code>authorization</code></td>
+<td><code>Token &#123;token&#125;</code> 或 <code>Token</code>（未登录）</td>
+<td>认证令牌</td>
+</tr>
+<tr>
+<td><code>platform</code></td>
+<td><code>3</code></td>
+<td>平台标识（可关闭）</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>2024.4.28</code></td>
+<td>应用版本号（可关闭）</td>
+</tr>
+<tr>
+<td><code>webp</code></td>
+<td><code>1</code></td>
+<td>WebP 支持标识（可关闭）</td>
+</tr>
+<tr>
+<td><code>accept</code></td>
+<td><code>application/json</code></td>
+<td>JSON 格式（可关闭）</td>
+</tr>
+<tr>
+<td><code>accept-encoding</code></td>
+<td><code>gzip</code></td>
+<td>Gzip 压缩（可关闭）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="3-认证机制"><a href="#3-认证机制" class="headerlink" title="3. 认证机制"></a>3. 认证机制</h2><h3 id="3-1-登录"><a href="#3-1-登录" class="headerlink" title="3.1 登录"></a>3.1 登录</h3><ul>
+<li><strong>接口</strong>: <code>POST /api/v3/login?platform=&#123;platform&#125;</code></li>
+<li><strong>Content-Type</strong>: <code>application/x-www-form-urlencoded;charset=utf-8</code></li>
+<li><strong>请求体参数</strong>:</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>username</code></td>
+<td>string</td>
+<td>用户名（URL 编码）</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>Base64 编码的 <code>&#123;明文密码&#125;-&#123;salt&#125;</code></td>
+</tr>
+<tr>
+<td><code>salt</code></td>
+<td>int</td>
+<td>随机盐值</td>
+</tr>
+<tr>
+<td><code>platform</code></td>
+<td>string</td>
+<td>平台标识，固定 <code>3</code></td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>应用版本号 <code>2024.4.28</code></td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>string</td>
+<td>固定 <code>Official</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>密码编码逻辑</strong>（Kotlin）:<br><figure class="highlight kotlin"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> pwdEncoded = Base64.encode(<span class="hljs-string">&quot;<span class="hljs-variable">$pwd</span>-<span class="hljs-variable">$salt</span>&quot;</span>.toByteArray(), Base64.DEFAULT).decodeToString()<br></code></pre></div></td></tr></table></figure></p>
+<p><strong>响应结构</strong>:<br><figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">200</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;results&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;token&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;认证令牌&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;user_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;用户 ID&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;用户名&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;nickname&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;昵称&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;avatar&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;头像 URL&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure></p>
+<h3 id="3-2-Token-使用"><a href="#3-2-Token-使用" class="headerlink" title="3.2 Token 使用"></a>3.2 Token 使用</h3><p>登录成功后，所有后续请求通过 <code>authorization</code> Header 携带 Token：<br><figure class="highlight gauss"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gauss">authorization: <span class="hljs-built_in">Token</span> &#123;<span class="hljs-built_in">token</span> 值&#125;<br></code></pre></div></td></tr></table></figure></p>
+<hr>
+<h2 id="4-API-接口列表"><a href="#4-API-接口列表" class="headerlink" title="4. API 接口列表"></a>4. API 接口列表</h2><h3 id="4-1-系统接口"><a href="#4-1-系统接口" class="headerlink" title="4.1 系统接口"></a>4.1 系统接口</h3><h4 id="获取-API-节点列表"><a href="#获取-API-节点列表" class="headerlink" title="获取 API 节点列表"></a>获取 API 节点列表</h4><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">GET <span class="hljs-regexp">/api/</span>v3<span class="hljs-regexp">/system/</span>network2?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>platform</code></td>
+<td>string</td>
+<td>平台标识</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>响应</strong>: 返回可用 API 主机列表，客户端自动轮换失败节点。<br><figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">200</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;results&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;api&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;host1&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;host2&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span> ...<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;share&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;host3&quot;</span><span class="hljs-punctuation">,</span> ...<span class="hljs-punctuation">]</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure></p>
+<hr>
+<h3 id="4-2-首页与发现"><a href="#4-2-首页与发现" class="headerlink" title="4.2 首页与发现"></a>4.2 首页与发现</h3><h4 id="首页数据"><a href="#首页数据" class="headerlink" title="首页数据"></a>首页数据</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">GET /api/v3/h5/homeIndex?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="推荐列表"><a href="#推荐列表" class="headerlink" title="推荐列表"></a>推荐列表</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3/recs?<span class="hljs-attr">pos</span><span class="hljs-operator">=</span><span class="hljs-number">3200102</span><span class="hljs-variable">&amp;limit</span>=<span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pos</code></td>
+<td>int</td>
+<td>推荐位标识，固定 <code>3200102</code></td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="最新更新"><a href="#最新更新" class="headerlink" title="最新更新"></a>最新更新</h4><figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-keyword">GET</span> /api/v3/<span class="hljs-keyword">update</span>/newest?<span class="hljs-keyword">limit</span>=<span class="hljs-number">21</span>&amp;<span class="hljs-keyword">offset</span>=&#123;<span class="hljs-keyword">offset</span>&#125;&amp;platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h3 id="4-3-排行榜"><a href="#4-3-排行榜" class="headerlink" title="4.3 排行榜"></a>4.3 排行榜</h3><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3/ranks?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;date_type</span>=<span class="hljs-punctuation">&#123;</span>date_type<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;audience_type</span>=<span class="hljs-punctuation">&#123;</span>audience_type<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移</td>
+</tr>
+<tr>
+<td><code>date_type</code></td>
+<td>string</td>
+<td>时间类型（如 <code>day</code>/<code>week</code>/<code>month</code>）</td>
+</tr>
+<tr>
+<td><code>audience_type</code></td>
+<td>string</td>
+<td>受众类型</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h3 id="4-4-搜索"><a href="#4-4-搜索" class="headerlink" title="4.4 搜索"></a>4.4 搜索</h3><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3<span class="hljs-keyword">/search/</span>comic?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;q</span>=<span class="hljs-punctuation">&#123;</span>query<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;q_type</span>=<span class="hljs-punctuation">&#123;</span>q_type<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>string</td>
+<td>搜索关键词</td>
+</tr>
+<tr>
+<td><code>q_type</code></td>
+<td>string</td>
+<td>搜索类型</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h3 id="4-5-分类与筛选"><a href="#4-5-分类与筛选" class="headerlink" title="4.5 分类与筛选"></a>4.5 分类与筛选</h3><h4 id="获取标签列表"><a href="#获取标签列表" class="headerlink" title="获取标签列表"></a>获取标签列表</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">GET /api/v3/h5/filterIndex/comic/tags?<span class="hljs-built_in">type</span>=1&amp;platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="分类浏览（通用）"><a href="#分类浏览（通用）" class="headerlink" title="分类浏览（通用）"></a>分类浏览（通用）</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3/comics?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;ordering</span>=<span class="hljs-punctuation">&#123;</span>ordering<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;theme</span>=<span class="hljs-punctuation">&#123;</span>theme<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;top</span>=<span class="hljs-punctuation">&#123;</span>top<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移</td>
+</tr>
+<tr>
+<td><code>ordering</code></td>
+<td>string</td>
+<td>排序方式</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td>string</td>
+<td>题材/标签</td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td>string</td>
+<td>分类（如 <code>finish</code> 表示已完结）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="按作者筛选"><a href="#按作者筛选" class="headerlink" title="按作者筛选"></a>按作者筛选</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3/comics?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;ordering</span>=<span class="hljs-punctuation">&#123;</span>ordering<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;author</span>=<span class="hljs-punctuation">&#123;</span>author<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<h4 id="按题材筛选"><a href="#按题材筛选" class="headerlink" title="按题材筛选"></a>按题材筛选</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3/comics?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;ordering</span>=<span class="hljs-punctuation">&#123;</span>ordering<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;theme</span>=<span class="hljs-punctuation">&#123;</span>theme<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<h4 id="已完结漫画"><a href="#已完结漫画" class="headerlink" title="已完结漫画"></a>已完结漫画</h4><figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-built_in">GET</span> /api/v3/comics?<span class="hljs-attribute">limit</span>=21&amp;offset=&#123;offset&#125;&amp;ordering=&#123;ordering&#125;&amp;<span class="hljs-attribute">top</span>=finish&amp;platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h3 id="4-6-漫画详情"><a href="#4-6-漫画详情" class="headerlink" title="4.6 漫画详情"></a>4.6 漫画详情</h3><h4 id="获取漫画信息"><a href="#获取漫画信息" class="headerlink" title="获取漫画信息"></a>获取漫画信息</h4><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">GET <span class="hljs-regexp">/api/</span>v3<span class="hljs-regexp">/comic2/</span>&#123;path_word&#125;?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path_word</code></td>
+<td>string</td>
+<td>漫画路径标识（URL path 参数）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="查询用户收藏状态"><a href="#查询用户收藏状态" class="headerlink" title="查询用户收藏状态"></a>查询用户收藏状态</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">GET /api/v3/comic2/&#123;path_word&#125;/query?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h3 id="4-7-章节"><a href="#4-7-章节" class="headerlink" title="4.7 章节"></a>4.7 章节</h3><h4 id="获取章节列表（按分组）"><a href="#获取章节列表（按分组）" class="headerlink" title="获取章节列表（按分组）"></a>获取章节列表（按分组）</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">GET /api/v3/comic/&#123;path_word&#125;/group/&#123;group_path_word&#125;/chapters?<span class="hljs-built_in">limit</span>=100&amp;offset=&#123;offset&#125;&amp;platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path_word</code></td>
+<td>string</td>
+<td>漫画路径标识</td>
+</tr>
+<tr>
+<td><code>group_path_word</code></td>
+<td>string</td>
+<td>分组路径标识</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移（每页 100）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="获取章节内容（漫画页面）"><a href="#获取章节内容（漫画页面）" class="headerlink" title="获取章节内容（漫画页面）"></a>获取章节内容（漫画页面）</h4><figure class="highlight dust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dust"><span class="language-xml">GET /api/v3/comic/</span><span class="hljs-template-variable">&#123;path_word&#125;</span><span class="language-xml">/chapter</span><span class="hljs-template-variable">&#123;version&#125;</span><span class="language-xml">/</span><span class="hljs-template-variable">&#123;chapter_uuid&#125;</span><span class="language-xml">?platform=</span><span class="hljs-template-variable">&#123;platform&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>path_word</code></td>
+<td>string</td>
+<td>漫画路径标识</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>string</td>
+<td>版本号：v2+ 填数字如 <code>2</code>，v1 留空（路径变为 <code>/chapter/</code>）</td>
+</tr>
+<tr>
+<td><code>chapter_uuid</code></td>
+<td>string</td>
+<td>章节 UUID</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h3 id="4-8-专题"><a href="#4-8-专题" class="headerlink" title="4.8 专题"></a>4.8 专题</h3><h4 id="获取专题信息"><a href="#获取专题信息" class="headerlink" title="获取专题信息"></a>获取专题信息</h4><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">GET <span class="hljs-regexp">/api/</span>v3<span class="hljs-regexp">/topic/</span>&#123;path_word&#125;?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="获取专题内容"><a href="#获取专题内容" class="headerlink" title="获取专题内容"></a>获取专题内容</h4><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">GET /api/v3/topic/&#123;path_word&#125;/contents?<span class="hljs-built_in">type</span>=&#123;<span class="hljs-built_in">type</span>&#125;&amp;<span class="hljs-built_in">limit</span>=21&amp;offset=&#123;offset&#125;&amp;platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>int</td>
+<td>内容类型</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>分页偏移</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h3 id="4-9-用户相关（需登录）"><a href="#4-9-用户相关（需登录）" class="headerlink" title="4.9 用户相关（需登录）"></a>4.9 用户相关（需登录）</h3><h4 id="获取用户信息"><a href="#获取用户信息" class="headerlink" title="获取用户信息"></a>获取用户信息</h4><figure class="highlight tcl"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tcl">GET /api/v3/member/<span class="hljs-keyword">info</span>?<span class="hljs-keyword">platform</span>=&#123;<span class="hljs-keyword">platform</span>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="浏览历史"><a href="#浏览历史" class="headerlink" title="浏览历史"></a>浏览历史</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3<span class="hljs-keyword">/member/</span>browse/comics?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<h4 id="收藏列表"><a href="#收藏列表" class="headerlink" title="收藏列表"></a>收藏列表</h4><figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">GET <span class="hljs-keyword">/api/</span>v3<span class="hljs-keyword">/member/</span>collect/comics?<span class="hljs-attr">limit</span><span class="hljs-operator">=</span><span class="hljs-number">21</span><span class="hljs-variable">&amp;offset</span>=<span class="hljs-punctuation">&#123;</span>offset<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;free_type</span>=<span class="hljs-number">1</span><span class="hljs-variable">&amp;ordering</span>=<span class="hljs-punctuation">&#123;</span>ordering<span class="hljs-punctuation">&#125;</span><span class="hljs-variable">&amp;platform</span>=<span class="hljs-punctuation">&#123;</span>platform<span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>free_type</code></td>
+<td>int</td>
+<td>固定 <code>1</code></td>
+</tr>
+<tr>
+<td><code>ordering</code></td>
+<td>string</td>
+<td>排序方式</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="添加收藏"><a href="#添加收藏" class="headerlink" title="添加收藏"></a>添加收藏</h4><figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle">POST <span class="hljs-regexp">/api/</span>v3<span class="hljs-regexp">/member/</span><span class="hljs-keyword">collect</span>/comic?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<p><strong>Content-Type</strong>: <code>application/x-www-form-urlencoded;charset=utf-8</code></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>comic_id</code></td>
+<td>string</td>
+<td>漫画 ID</td>
+</tr>
+<tr>
+<td><code>is_collect</code></td>
+<td>int</td>
+<td>固定 <code>1</code></td>
+</tr>
+<tr>
+<td><code>authorization</code></td>
+<td>string</td>
+<td><code>Token+&#123;token&#125;</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="删除收藏"><a href="#删除收藏" class="headerlink" title="删除收藏"></a>删除收藏</h4><figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle"><span class="hljs-keyword">DELETE</span> <span class="hljs-regexp">/api/</span>v3<span class="hljs-regexp">/member/</span><span class="hljs-keyword">collect</span>/comics?platform=&#123;platform&#125;<br></code></pre></div></td></tr></table></figure>
+<p><strong>Content-Type</strong>: <code>application/x-www-form-urlencoded;charset=utf-8</code></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ids</code></td>
+<td>int</td>
+<td>收藏 ID（可多个，重复 <code>ids=</code> 参数）</td>
+</tr>
+<tr>
+<td><code>authorization</code></td>
+<td>string</td>
+<td><code>Token+&#123;token&#125;</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="5-响应格式"><a href="#5-响应格式" class="headerlink" title="5. 响应格式"></a>5. 响应格式</h2><h3 id="5-1-通用响应结构"><a href="#5-1-通用响应结构" class="headerlink" title="5.1 通用响应结构"></a>5.1 通用响应结构</h3><figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">200</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;响应消息&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li><code>code</code> 为 <code>200</code> 表示成功</li>
+<li>错误时 <code>detail</code> 字段包含错误描述</li>
+</ul>
+<h3 id="5-2-错误处理"><a href="#5-2-错误处理" class="headerlink" title="5.2 错误处理"></a>5.2 错误处理</h3><ul>
+<li>HTTP 状态码 &gt;= 400 时，从 <code>errorStream</code> 读取响应</li>
+<li>优先解析 JSON 中的 <code>detail</code> 字段作为错误信息</li>
+<li>非 JSON 响应视为异常</li>
+</ul>
+<hr>
+<h2 id="6-代理与加密机制"><a href="#6-代理与加密机制" class="headerlink" title="6. 代理与加密机制"></a>6. 代理与加密机制</h2><h3 id="6-1-API-代理"><a href="#6-1-API-代理" class="headerlink" title="6.1 API 代理"></a>6.1 API 代理</h3><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>copymanga.azurewebsites.net<span class="hljs-regexp">/api/</span>api?code=&#123;proxy_code&#125;&amp;url=&#123;encoded_api_url&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>匹配正则：<code>^https://(api|www)\.(copymanga|mangacopy|copy-manga|copy20)\.\w+/api/</code></li>
+<li>需要配置 <code>proxy_code</code></li>
+</ul>
+<h3 id="6-2-图片代理"><a href="#6-2-图片代理" class="headerlink" title="6.2 图片代理"></a>6.2 图片代理</h3><figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">https:<span class="hljs-regexp">//</span>copymanga.azurewebsites.net<span class="hljs-regexp">/api/img</span>?code=&#123;proxy_code&#125;&amp;url=&#123;encoded_img_url&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>匹配正则：<code>^https://[0-9a-z-]+\.mangafun[a-z]\.(xyz|fun)/</code></li>
+</ul>
+<h3 id="6-3-反向代理"><a href="#6-3-反向代理" class="headerlink" title="6.3 反向代理"></a>6.3 反向代理</h3><ul>
+<li>可配置自定义反向代理地址替代官方 API 主机</li>
+<li>配置后跳过 API 节点发现，直接使用反向代理</li>
+</ul>
+<h3 id="6-4-响应解密（libcomancry-so）"><a href="#6-4-响应解密（libcomancry-so）" class="headerlink" title="6.4 响应解密（libcomancry.so）"></a>6.4 响应解密（libcomancry.so）</h3><ul>
+<li>通过 API 代理获取的响应需要用 <code>libcomancry.so</code> 原生库解密</li>
+<li>接口：<code>decrypt(sourceDir: String, data: ByteArray): String?</code></li>
+<li><code>sourceDir</code> 为 APK 安装目录</li>
+</ul>
+<h3 id="6-5-网络增强（libcomandy-so）"><a href="#6-5-网络增强（libcomandy-so）" class="headerlink" title="6.5 网络增强（libcomandy.so）"></a>6.5 网络增强（libcomandy.so）</h3><ul>
+<li>可选的原生网络库，替代 <code>HttpURLConnection</code></li>
+<li>请求封装为 <code>ComandyCapsule</code> JSON 结构：<figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;method&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;GET&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;url&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;https://...&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;headers&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span> <span class="hljs-attr">&quot;key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;value&quot;</span> <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Base64 编码的请求/响应体&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h2 id="7-API-节点容错"><a href="#7-API-节点容错" class="headerlink" title="7. API 节点容错"></a>7. API 节点容错</h2><ol>
+<li>启动时调用 <code>/api/v3/system/network2</code> 获取可用节点列表</li>
+<li>请求失败时自动移除失败节点，尝试下一个</li>
+<li>所有节点失败时回退到配置的默认主机 <code>api.2024manga.com</code></li>
+<li>支持配置反向代理地址完全绕过节点发现</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026-2/04-29%E5%AD%A6%E4%B9%A0Python%E7%9A%84%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8CIPC%E6%9C%BA%E5%88%B6.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">学习 Python 的多进程和 IPC 机制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/04-21%E4%BB%8Eprompt%E5%88%B0harness.html">
+                        <span class="hidden-mobile">从 prompt 到 harness</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>

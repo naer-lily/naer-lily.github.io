@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="来点古法编程！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习 Python 的多进程和 IPC 机制">
+<meta property="og:url" content="http://example.com/2026-2/04-29%E5%AD%A6%E4%B9%A0Python%E7%9A%84%E5%A4%9A%E8%BF%9B%E7%A8%8B%E5%92%8CIPC%E6%9C%BA%E5%88%B6.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="来点古法编程！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-29T08:20:00.000Z">
+<meta property="article:modified_time" content="2026-04-29T08:42:37.573Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>学习 Python 的多进程和 IPC 机制 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="学习 Python 的多进程和 IPC 机制">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-04-29 16:20" pubdate>
+        2026年4月29日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.9k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">学习 Python 的多进程和 IPC 机制</h1>
+            
+            <div class="markdown-body">
+              <p>Python 的 IPC 相关的东西以前没接触过，最近碰到一个需求，就是想用 MCP 去包装 botpy（QQ 官方的机器人框架），这让有必要去研究一下 Python 的 IPC 以让我能看懂它们究竟是咋交互的。实际上 Python 中很多框架都是直接阻塞当前线程的，而又有很多东西，比如展示托盘，GUI，它们的业务逻辑需要运行在主线程中，这就使得在使用多个框架的时候，多进程成为必要的东西。</p>
+<h1 id="一些例子"><a href="#一些例子" class="headerlink" title="一些例子"></a>一些例子</h1><p>先用两个例子来给出一点感性经验。</p>
+<h2 id="使用-pywebview-和-pystray"><a href="#使用-pywebview-和-pystray" class="headerlink" title="使用 pywebview 和 pystray"></a>使用 pywebview 和 pystray</h2><p><a target="_blank" rel="noopener" href="https://pywebview.flowrl.com/examples/pystray_icon.html">https://pywebview.flowrl.com/examples/pystray_icon.html</a></p>
+<p>这是第一次惊到我的例子，但细看会发现它非常 trivial——两个进程之间没有交互，只有主进程启动子进程，但这个确实让我有一个启发，对多进程的意义有了一窥。但下面的代码没啥可以解释的——它们几乎没有交互。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process <span class="hljs-comment"># 多进程</span><br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><span class="hljs-keyword">from</span> pystray <span class="hljs-keyword">import</span> Icon, Menu, MenuItem<br><br><span class="hljs-keyword">import</span> webview<br><br>webview_process = <span class="hljs-literal">None</span><br><br><span class="hljs-comment"># 子进程的逻辑</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_webview</span>():<br>    webview.create_window(<span class="hljs-string">&#x27;Webview&#x27;</span>, <span class="hljs-string">&#x27;https://pywebview.flowrl.com/hello&#x27;</span>)<br>    webview.start()<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">start_webview_process</span>():<br>        <span class="hljs-keyword">global</span> webview_process<br>        webview_process = Process(target=run_webview)<br>        webview_process.start()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_open</span>(<span class="hljs-params">icon, item</span>):<br>        <span class="hljs-keyword">global</span> webview_process<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> webview_process.is_alive():<br>            start_webview_process()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_exit</span>(<span class="hljs-params">icon, item</span>):<br>        icon.stop()<br><br>    start_webview_process()<br><br>    image = Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;assets/logo.png&#x27;</span>)<br>    menu = Menu(MenuItem(<span class="hljs-string">&#x27;Open&#x27;</span>, on_open), MenuItem(<span class="hljs-string">&#x27;Exit&#x27;</span>, on_exit))<br>    icon = Icon(<span class="hljs-string">&#x27;Pystray&#x27;</span>, image, menu=menu)<br>    icon.run()<br><br>    webview_process.terminate()<br></code></pre></div></td></tr></table></figure>
+<h2 id="使用-FastMCP-和-botpy"><a href="#使用-FastMCP-和-botpy" class="headerlink" title="使用 FastMCP 和 botpy"></a>使用 FastMCP 和 botpy</h2><p>这个是我的一个现实需求了：</p>
+<ol>
+<li>botpy 底层跑一个事件循环，有心跳、回调机制，但同时也允许主动触发发送消息</li>
+<li>FastMCP 底层跑一个事件循环，我需要暴露出一个工具去触发发送消息</li>
+</ol>
+<p>我测试了一下，在同一个进程中时，莫名其妙 botpy 不太工作，原因未知（我盲猜是 botpy 内部的实现问题，可能有莫名其妙的<strong>忙等</strong>，配合 GIL 让所有线程全都饿死，连 Ctrl+C 都不能让它退出来），但我让 AI 去改成多进程后就能工作了。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><span class="hljs-keyword">import</span> multiprocessing<br><br><span class="hljs-keyword">import</span> botpy<br><span class="hljs-keyword">from</span> botpy.message <span class="hljs-keyword">import</span> C2CMessage<br><span class="hljs-keyword">from</span> fastmcp <span class="hljs-keyword">import</span> FastMCP<br><br>OPEN_ID = <span class="hljs-string">&#x27;XXX&#x27;</span><br>APP_ID = <span class="hljs-string">&#x27;XXX&#x27;</span><br>SECRET = <span class="hljs-string">&#x27;XXX&#x27;</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClient</span>(botpy.Client):<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_ready</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;机器人连接成功后会触发该回调&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">pass</span><br><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_c2c_message_create</span>(<span class="hljs-params">self, message: C2CMessage</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;机器人接受到用户私聊时会触发这个回调&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">await</span> self.api.post_c2c_message(<br>            openid=message.author.user_openid,<br>            msg_type=<span class="hljs-number">0</span>,<br>            content=<span class="hljs-string">f&quot;Hi, You are \n<span class="hljs-subst">&#123;message.author.user_openid&#125;</span>&quot;</span><br>        )<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">botpy_process_biz</span>(<span class="hljs-params">queue: multiprocessing.Queue</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;子进程入口：运行 Botpy 客户端并监听队列中的发送请求&quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>        <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> MyClient(intents=botpy.Intents(public_messages=<span class="hljs-literal">True</span>)) <span class="hljs-keyword">as</span> client:<br>            loop = asyncio.get_running_loop()<br><br>            <span class="hljs-comment"># 后台任务：从队列获取消息并发送</span><br>            <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">listen_queue</span>():<br>                <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>                    <span class="hljs-comment"># 在默认线程池中执行阻塞的 queue.get</span><br>                    <span class="hljs-comment"># 事件循环有自己的线程池！run_in_executor 表示把这个任务丢到线程池里去执行</span><br>                    data = <span class="hljs-keyword">await</span> loop.run_in_executor(<span class="hljs-literal">None</span>, queue.get)<br>                    content = data[<span class="hljs-string">&#x27;content&#x27;</span>]<br>                    <span class="hljs-keyword">await</span> client.api.post_c2c_message(<br>                        openid=OPEN_ID,<br>                        msg_type=<span class="hljs-number">2</span>,<br>                        markdown=&#123;<span class="hljs-string">&#x27;content&#x27;</span>: content&#125;<br>                    )<br><br>            asyncio.create_task(listen_queue())<br>            <span class="hljs-comment"># 启动客户端（持续运行）</span><br>            <span class="hljs-keyword">await</span> client.start(appid=APP_ID, secret=SECRET)<br><br>    asyncio.run(main())<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    <span class="hljs-comment"># 主进程：启动子进程并运行 FastMCP 服务</span><br>    queue = multiprocessing.Queue()<br>    botpy_process = multiprocessing.Process(target=botpy_process_biz, args=(queue,))<br>    botpy_process.start()<br><br>    mcp = FastMCP(<span class="hljs-string">&#x27;qq_message_deliver&#x27;</span>)<br><br><span class="hljs-meta">    @mcp.tool</span><br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">deliver_qq_message</span>(<span class="hljs-params">content: <span class="hljs-built_in">str</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        向用户投递一条 QQ 消息。消息可采用 markdown 语法。</span><br><span class="hljs-string">        你 **应当且仅应当** 在用户要求使用 QQ 投递消息时调用该工具。</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        queue.put(&#123;<span class="hljs-string">&#x27;content&#x27;</span>: content&#125;) <span class="hljs-comment"># 其实这里更优雅的话也应当 run_in_executor 避免阻塞，虽然这个生产者消费者模式其实跑的挺快的</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Succesfully delivered&#x27;</span><br><br>    <span class="hljs-keyword">try</span>:<br>        mcp.run() <br>    <span class="hljs-keyword">finally</span>:<br>        botpy_process.terminate() <span class="hljs-comment"># 用户 Ctrl+C 时，把子进程也杀掉</span><br>        botpy_process.join()<br>        queue.close()        <span class="hljs-comment"># 关闭队列，通知后台线程退出</span><br>        queue.join_thread()  <span class="hljs-comment"># 等待后台 feeder 线程结束</span><br></code></pre></div></td></tr></table></figure>
+<p>这个实现其实很 trivial——父进程创建一个 Queue（多进程共享，原理后面写），<del>这个 Queue 大小为 0，即它是一个 Java 语境中的<code>SynchronousQueue</code>，生产者必须等待消费者<strong>当场</strong>取，消费者必须等待生产者<strong>当场</strong>给</del>。这个 Queue 大小为无穷（Python 中没有 Java 语境下的<code>SynchronousQueue</code>），用这个 Queue 去做一个<strong>单向</strong>管道，将主进程的请求发给子进程。</p>
+<p>那问题来了——双向呢？如果想要一个返回值呢？这时候明显就需要使用两个 Queue 了，而且需要某种同步手段；最简单的方法是使用某种锁去保证生产者先发后取（原子地），消费者先取后发（原子地），但这个是单向的，某种程度上来说是同步的，复杂点就可以做一个异步的，比如每个请求都做个标识，在响应中找到标识后将响应导回原本的请求者……当然，我没看过工程实践具体该咋整。</p>
+<h1 id="创建-Process-时发生了啥"><a href="#创建-Process-时发生了啥" class="headerlink" title="创建 Process 时发生了啥"></a>创建 Process 时发生了啥</h1><p>Process（后面称子进程），有三种启动方法——fork，spawn 和 forkserver，这里只说 fork 和 spawn。</p>
+<ul>
+<li>fork：linux 的默认启动方法，仅限、<em>unix，利用操作系统提供的 fork 函数实现子进程。它会 CopyOnWrite 地复用父进程的一切资源然后执行自己的逻辑。<em>*fork 不推荐使用！因为它只会复制当前线程的资源（Python 虚拟机是多线程的，第三方依赖也经常引入自己的线程），且同步工具如锁的状态也会被复制，这极容易造成后台的死锁等问题！</em></em></li>
+<li>spawn：windows 和 macos 的默认启动方法，真正地创建新的 Python 解释器，<strong>使用模块导入的方式</strong>（因此执行当前文件时，<code>__name__</code>不是<code>__main__</code>）导入当前代码并执行操作。spawn 是更<strong>推荐</strong>的。</li>
+</ul>
+<p>这里不提 fork（fork 的好处是性能更高，启动更快，不需要序列化反序列化，但我认为这个好处可以由进程池去替代），建议工程代码中始终使用  spawn 放在最前头：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> multiprocessing<br>multiprocessing.set_start_method(<span class="hljs-string">&#x27;spawn&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+<p>后面的学习也以 spawn 为主。</p>
+<p>启动子进程时，注意到会传递给子进程一个函数和相应参数，<strong>这个函数和这些参数会被 pickle 序列化</strong>，然后在子进程处反序列化并进行调用。这时候就要问了——既然函数也序列化了，为何 spawn 还需要导入这个模块？原因在于，<strong>函数的 pickle 序列化只是序列化成一个引用该函数的路径（如<code>__main__.hello</code>）而不包含函数逻辑</strong>。因此匿名函数和非顶层的函数都无法被序列化，而子进程需要 import 这个模块，并根据这个函数引用和参数去执行这个函数。</p>
+<p>子进程需要使用模块导入该模块，这要求父进程的创建子进程的代码必须在<code>if __name__ == &#39;__main__&#39;</code>中执行，不然的话就会导致无限循环了（实际上会直接报错）。</p>
+<p>还有一点需要提及：spawn 在脚本打包成可执行文件后会无法工作，需要在主进程的开头增加一行代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> multiprocessing <span class="hljs-keyword">import</span> Process, freeze_support<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">f</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;hello world!&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    freeze_support() <span class="hljs-comment"># !</span><br>    Process(target=f).start()<br></code></pre></div></td></tr></table></figure>
+<h1 id="IPC-同步工具"><a href="#IPC-同步工具" class="headerlink" title="IPC 同步工具"></a>IPC 同步工具</h1><p>pickle 序列化，这才是魔法所在之处——多进程模块中，提供了诸多同步工具用于主进程和子进程进行交互。它们的 pickle 序列化都经过设计——<strong>在反序列化前后会引用同一个文件描述符或句柄或随便叫什么名字，总之是操作系统级别的，使得其反序列化前后可以认为是同一个对象，使得不同进程可以用其进行交互</strong>。</p>
+<p>这些同步工具和多线程的工具类似，也是老熟人了（毕竟都合了并发编程理论），但问题在于，多线程里的各种同步原语可以说是 Java 或 Python 虚拟机自己抽象的，和操作系统交互极少，主要是在用户态，而多进程同步必须依赖操作系统，在内核态里打转，非常昂贵。</p>
+<p>这里只是列一下（底层的同步原语我大概是没有机会去用到的）。</p>
+<p>首先是数据传输类：</p>
+<ul>
+<li>Queue：多生产者多消费者队列，线程安全+进程安全，可以 join</li>
+<li>SimpleQueue：简化版的 Queue，只有 get 和 put，性能高，无界</li>
+<li>Pipe：双向管道，Queue 底层其实也使用了 Pipe<ul>
+<li>一个问题是 Pipe 很底层——它是操作系统的管道的直接包装，它不线程安全（对某一端的连接的并发 send 或并发 recv 会导致乱码（两端连接同时 send 或 recv 则线程安全，即全双工）），有缓冲区大小限制（64KB 似乎）。如果并非性能有极端需求，还是直接用俩 Queue 吧。</li>
+</ul>
+</li>
+</ul>
+<p>然后是同步原语类：</p>
+<ul>
+<li>Lock，RLock：互斥锁和可重入锁，just like old times</li>
+<li>Condition：wait-notify 模式</li>
+<li>Semaphore：信号量，经典了（计数器，acquire-1（到 0 阻塞），release+1）</li>
+<li>Event：布尔标志位，set-wait（wait 等待该标志位为真，set 设置该标志位为真，clear 设置该标志位为假）</li>
+</ul>
+<p>最后是共享状态类（使用内存映射文件之类的技术）：</p>
+<ul>
+<li>Value：单个值</li>
+<li>Array：多个同类型值</li>
+<li>Manager：使用代理模式共享复杂对象</li>
+</ul>
+<hr>
+<p>但说到底学上面的这么多东西很大程度上是没啥意义的 hhh，我感觉我如果平常只是造轮子，比如把 pystray 和 botpy 和 fastMCP 用多进程组到一起这样，我很可能只需要实现简单的 RPC 就行了。</p>
+<p>我们应当关心的是具体问题——如何调用一个同步的进程的一个方法得到返回值，和如何调用一个异步的进程（即主线程跑事件循环）的一个方法，去得到返回值。而这时候具体该怎么办呢……？而其实上面的例子就直接有了——直接上 Pipe 或 Queue。</p>
+<p>关于 IPC，其实我以前也是有接触过的……Electron 的 IPC，它也是完全按 RPC 去做的……所以就这样吧。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/04-24%E6%8B%B7%E8%B4%9D%E6%BC%AB%E7%94%BBAPI.html">
+                        <span class="hidden-mobile">拷贝漫画移动端 API</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
