@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于 HashMap，GC，Spring 底层的复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小小复习 2">
+<meta property="og:url" content="http://example.com/2026-2/05-05Java%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A02.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="关于 HashMap，GC，Spring 底层的复习">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-05T15:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-05T15:19:32.680Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>小小复习 2 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="小小复习 2">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-05-05 23:00" pubdate>
+        2026年5月5日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.2k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">小小复习 2</h1>
+            
+            <div class="markdown-body">
+              <p>再来一次。</p>
+<h1 id="Java-自己"><a href="#Java-自己" class="headerlink" title="Java 自己"></a>Java 自己</h1><h2 id="HashMap-底层"><a href="#HashMap-底层" class="headerlink" title="HashMap 底层"></a>HashMap 底层</h2><p>HashMap 是拉链表——首先是数组+链表的结构；在某个特定槽位的链表大小到达一定后，<strong>这个槽位的链表</strong>转变为红黑树结构。</p>
+<p>HashMap 初始容量为 16，自定义初始容量时，容量会被调整为<strong>大于等于它的最小二次幂</strong>，如配置初始容量为 10 时实际容量为 16。<strong>这个初始容量指的是 bucket 的数量，因为这里的限制，bucket 的数量永远是二的幂</strong>。</p>
+<p>关于扩容，扩容发生在总大小大于扩容阈值时，扩容阈值为 <code>加载因子 * capacity</code>，默认加载因子为 <code>0.75</code>时。</p>
+<p><strong>扩容要求重新进行哈希</strong>，Java 8 有过一些优化，但重新哈希总的来说时必要的。</p>
+<p>关于转树，当某个链表 bucket 大于 8 的时候，这个链表会被转换成红黑树。但这里有一个特殊情况——<strong>当哈希表当前容量小于 64 的时候，会优先执行扩容而非转树</strong>。</p>
+<p>HashMap 索引时，先通过 HashCode 去哈希找到 bucket，再通过 equals 判等。</p>
+<p>IdentityHashMap，则通过<code>System.IdentityHashCode</code>去哈希找到 bucket，再通过<code>==</code>去判等。其中<code>System.IdentityHashCode</code>可以认为是一种对对象<strong>本身</strong>标识符的哈希（可能会碰撞）。</p>
+<p>LinkedHashMap——等于是一个 HashMap 加上一个双向链表，HashMap 索引到链表，链表再索引到实际元素，每次访问操作时都要修改这个双向链表来始终维持 LRU 的这个访问顺序。</p>
+<h2 id="Synchronized-锁升级"><a href="#Synchronized-锁升级" class="headerlink" title="Synchronized 锁升级"></a>Synchronized 锁升级</h2><p>Java 的每个对象都持有一个锁供我们使用 synchronized 块去使用（一个有趣的手段是通过<code>String.intern</code> 去按字符串作为 ID 去获得锁的实例，等于是把字符串池当成锁池了）。</p>
+<p>但这里不说这个。总之 Java 做了优化，<strong>保证在无竞争、轻度竞争的情况时，让使用锁尽量高效</strong>。锁从轻量级到重量级称为锁的<strong>升级</strong>，锁的升级是不可逆的。</p>
+<p>每个对象头都有一个 Mark Word，它包含锁标志位和相应内容：</p>
+<ul>
+<li>无锁：表示未锁定，可偏向</li>
+<li>偏向锁：通过 CAS 将当前线程 ID 写入 Mark Word，后续重入、退出时不需要任何同步操作<ul>
+<li>偏向锁明显适用于轻竞争的情况——主要只有一个线程在玩花活，它根本就不需要做任何同步操作。</li>
+<li>在一个线程（原线程）持有偏向锁，而另一个线程（竞争线程）尝试获取偏向锁的时候，这时候原线程在<strong>安全点</strong>暂停，锁升级成轻量级锁，原线程仍旧持有锁，竞争线程<strong>自旋</strong></li>
+<li>JDK 15 之后偏向锁默认禁用，上来就是轻量级锁，因为现代高并发应用中偏向锁反而更昂贵</li>
+</ul>
+</li>
+<li>轻量级锁：在当前线程栈帧中创建一个 Lock Record 去备份……blablabla，总之，这时候竞争线程仍旧是<strong>自旋</strong></li>
+<li>重量级锁：对应操作系统级别的互斥量 Mutex，内核态直到这时候才出场。</li>
+</ul>
+<p><strong>其实锁的升级就是一个从假装没有锁（偏向锁）到乐观锁到悲观锁，从用户态自旋到内核态阻塞的过程，低并发时，乐观锁，用户态自旋性能更好，高并发时，悲观锁，内核态阻塞性能更好</strong>。</p>
+<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p>我不学实现，只要知道它的常用 API 和使用 pattern 即可。</p>
+<p>ConcurrentHashMap 即线程安全的支持高并发的 HashMap。它的存储的数据结构同 HashMap，但通过 CAS+synchronized 去实现了线程安全，同时保证<strong>写操作只锁一个桶，读操作无锁</strong>，并发扩容。</p>
+<p>ConcurrentHashMap 包含 HashMap 的常用操作，但<strong>它提供了很多 CAS 操作</strong>以原子地进行某种操作。如：</p>
+<ul>
+<li>putIfAbsent：不存在时放入</li>
+<li>remove(k, v) ：只有 v 匹配时才删除 k</li>
+<li>replace(k, oldV, newV)：只有 v 匹配时才替换</li>
+<li>computeIfAbsent，不存在时计算和放入</li>
+<li>computeIfPresent：存在时计算和放入（返回 null 时删除）</li>
+<li>compute：计算和放入（可能不存在，返回 null 时删除）</li>
+<li>merge(k, newV, mergeFn)：key 不存在时直接放入 newV，否则通过 mergeFn 执行合并后放入</li>
+</ul>
+<p>ConcurrentHashMap 支持并行的迭代，但迭代时是弱一致性，可能看到过期数据。</p>
+<p>关于 ConcurrentHashMap 使用的常见 pattern：</p>
+<ul>
+<li>线程安全的本地缓存：直接 computeIfAbsent 去原子地设置缓存</li>
+<li>多线程计数器：value 直接用基础类型或 Atomic 类型或 LongAdder</li>
+</ul>
+<p>注意——<strong>ConcurrentHashMap 不支持 null 的键和值</strong>！</p>
+<p>ConcurrentHashMap 偶尔仍旧需要外部的同步逻辑，这时候使用外部的锁，不要锁 ConcurrentHashMap 的实例。</p>
+<h2 id="volatile，DCL"><a href="#volatile，DCL" class="headerlink" title="volatile，DCL"></a>volatile，DCL</h2><p>volatile 禁止指令重排序，保证多线程下的可见性——通过内存屏障保证对它的修改马上写回主存并保证其他线程从主存加载数据，一个线程修改了一个 volatile 的值，其他线程马上就能看到改变。但 volatile 不保证原子性。</p>
+<p>DCL 即双重检查锁，必须依赖 volatile 变量，以保证对变量的设值马上被看见，且避免指令重排。</p>
+<p>关于避免指令重排，比如懒汉式单例中，<strong>单例可能还未初始化完成时就已经赋值了</strong>（new 有三步，赋值可能出现在实际初始化之前——注意外层的 if 可是不在锁里面的！），导致其他线程误以为初始化完成。</p>
+<p>DCL 的模式很简单——我先检查是否满足，不满足我就先锁，<strong>但我检查和我锁这两部分的间隔里，可能已经有人先动过手脚了，而在我锁了之后没人能动手脚</strong>，所以锁完后我得再检查一下当前是否满足。</p>
+<p>为什么要双重检查锁？因为要避免无意义的锁定，在真正要执行操作的时候才去进行锁定。</p>
+<p>我在两个场景下使用过 DCL：</p>
+<ul>
+<li>懒汉式单例：判空-锁-判空-初始化</li>
+<li>在进行一个远程 HTTP 调用前检查是否需要更新 access token：判断是否需要更新-锁-判断是否需要更新-获取和设置 token</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (cond) &#123;<br>    <span class="hljs-keyword">synchronized</span> (lock) &#123;<br>        <span class="hljs-keyword">if</span> (cond) &#123;<br>            <span class="hljs-built_in">this</span>.data = doSomething();<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.data;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>当然，单例模式还有静态内部类的写法，利用 JVM 的内部类延迟加载的方式（IODH，Initialization-On-Demand-Holder），这个我也使用过。</p>
+<h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p>ThreadLocal，其实就是<strong>线程特定的全局变量</strong>，常用在设置 session 信息中，比如 Spring MVC，底下的 Filter 看请求来了读取用户信息然后保存到 ThreadLocal 变量中供后续客户端代码使用，偶尔也可以真的在自己的业务中拿来当全局变量——在多个函数中共享一个参数。</p>
+<p>ThreadLocal 本身不存储值，它只是一个引用 ThreadLocalMap 的工具类，<strong>而这个 ThreadLocalMap，它存在于 Thread 对象中</strong>。ThreadLocal 用自己当 key 去从 ThreadLocalMap 中做索引。</p>
+<p>ThreadLocalMap 对 ThreadLocal 是弱引用的，这让 ThreadLocal 可以被 GC 掉——显然这发生在使用局部的 ThreadLocal 的时候。但 ThreadLocal 所存储的值是被<code>Entry-&gt;ThreadLocalMap-&gt;Thread</code>强引用的，所以只要 Thread 还活着它存储的值就是持久的。这会出现问题——Spring MVC 中，处理用户请求的是一个线程池，某个线程在上个请求中如果没有清空数据，会导致下一次请求时仍看到这个数据，所以必须 remove。</p>
+<h2 id="线程池-7-4"><a href="#线程池-7-4" class="headerlink" title="线程池 7 + 4"></a>线程池 7 + 4</h2><p>这个之前复习过了，我想想……线程池先丢到核心线程，再非核心线程，再阻塞队列，再拒绝……非核心线程在空闲一定时间后会被杀掉……</p>
+<p>所以参数有：核心线程数，最大线程数，阻塞队列，拒绝策略，线程工厂，非核心线程存活时间和单位。</p>
+<p>拒绝策略有 4 种：本线程执行，本线程抛异常，直接丢弃，丢弃队列中最老任务。</p>
+<h2 id="利用线程池的生产者-消费者模式"><a href="#利用线程池的生产者-消费者模式" class="headerlink" title="利用线程池的生产者-消费者模式"></a>利用线程池的生产者-消费者模式</h2><p>要实现经典的生产者-消费者模式，且允许我们精确控制消费过程，我们需要自己创建阻塞队列而非使用线程池内部的。</p>
+<p>我们使用一个 BlockingQueue 供生产者消费者通信，消费者使用一个<code>Executors.newFixedThreadPool</code>去维护——注意到它如何符合我们的要求：<strong>固定核心线程数</strong>，我们实际上是使用这个线程池去<strong>管理</strong>这一批消费者线程，<strong>仅仅是管理而已——这些线程的逻辑永远不会退出</strong>。</p>
+<p>一个简单示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.concurrent.BlockingQueue;<br><span class="hljs-keyword">import</span> java.util.concurrent.ExecutorService;<br><span class="hljs-keyword">import</span> java.util.concurrent.Executors;<br><span class="hljs-keyword">import</span> java.util.concurrent.LinkedBlockingDeque;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Hello</span> &#123;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">SUPPLIER_COUNT</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">CONSUMER_COUNT</span> <span class="hljs-operator">=</span> <span class="hljs-number">3</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">QUEUE_SIZE</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br>        <br>        BlockingQueue&lt;Integer&gt; queue = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedBlockingDeque</span>&lt;&gt;(QUEUE_SIZE);<br>        <span class="hljs-type">ExecutorService</span> <span class="hljs-variable">executor</span> <span class="hljs-operator">=</span> Executors.newFixedThreadPool(CONSUMER_COUNT);<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; CONSUMER_COUNT; i++) &#123;<br>            <span class="hljs-comment">// consumers</span><br>            executor.execute(() -&gt; &#123;<br>                <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        <span class="hljs-type">Integer</span> <span class="hljs-variable">task</span> <span class="hljs-operator">=</span> queue.take(); <span class="hljs-comment">// 无任务时阻塞</span><br>                        System.out.printf(<span class="hljs-string">&quot;消费者 %s 处理任务 %d%n&quot;</span>, Thread.currentThread().getName(), task);<br>                        Thread.sleep(<span class="hljs-number">200</span>); <span class="hljs-comment">// 模拟处理</span><br>                    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                        Thread.currentThread().interrupt();<br>                    &#125;;<br>                &#125;<br>            &#125;);<br>        &#125;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; SUPPLIER_COUNT; i++) &#123;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">producerId</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>;<br>            <span class="hljs-comment">// 一般来说 supplier 都是 HTTP 请求线程</span><br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">5</span>; j++) &#123;<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        <span class="hljs-type">int</span> <span class="hljs-variable">task</span> <span class="hljs-operator">=</span> producerId * <span class="hljs-number">100</span> + j;<br>                        queue.put(task); <span class="hljs-comment">// 队列满时阻塞</span><br>                        System.out.printf(<span class="hljs-string">&quot;生产者 %d 放入任务 %d%n&quot;</span>, producerId, task);<br>                        Thread.sleep(<span class="hljs-number">50</span>); <span class="hljs-comment">// 模拟生产间隔</span><br>                    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                        Thread.currentThread().interrupt();<br>                    &#125;<br>                &#125;<br>            &#125;).start();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="JVM-内存区域和-GC-和-JVM-调优"><a href="#JVM-内存区域和-GC-和-JVM-调优" class="headerlink" title="JVM 内存区域和 GC 和 JVM 调优"></a>JVM 内存区域和 GC 和 JVM 调优</h2><p>关于内存区域，全局的有——堆，元空间，直接内存；线程本地的有栈，PC 等。</p>
+<p>简单来说，堆就是 Java 的对象实际存放的地方，元空间则包含各种静态的元数据，常量池（只存符号引用和基础类型的字面量）等；直接内存是 NIO 编程中直接分配的内存块；线程的栈则是函数调用栈，实际上还有一个 native 方法栈。</p>
+<p>包装对象的缓存池，和字符串常量池（来自<code>String.intern</code>），都存在堆中。元空间的常量池为每个类的常量池在运行时的表示，它<strong>只存储符号引用和基础类型的字面量</strong>，倘若变量引用的是对象，则对象本身还是在堆里。</p>
+<p>但这里不需要拎那么清楚。</p>
+<p>关于 GC（又来啦……）。</p>
+<p>从 GC 的视角来看，堆不再是一块单纯的大内存，而是一套按<strong>对象存活时间</strong>来划分区域的回收系统。</p>
+<p>GC 有一个核心假设——<strong>绝大部分对象都是朝生夕灭，那些活得久的对象将会活得久</strong>（需要回收的可能性更低）。</p>
+<p>所以 GC 将堆进行所谓的分代——年轻代（Young Gen）和老年代（Old Gen），<strong>年轻代高频 Minor GC，存放新对象，老年代低频 Full GC，活得久的对象会被移动到老年代</strong>。</p>
+<p>而年轻代进一步细分——Eden 和 Survivor；Survivor 是双缓冲区结构，两块缓冲区分别叫 from 和 to（相对的名字）。新对象分配到 Eden，每次 Minor GC 时，Eden 和 from Suvrivor 复制到 to Survivor，然后两个 Survivor 角色互换。</p>
+<p>Survivor 的双缓冲保证不产生内存碎片（每次 GC 都是直接将全部活对象都放到 to Survivor，而非是简单地从一块内存中清掉一部分，留下一个孔），而且速度够快（年轻代存活的对象一般少），<strong>代价是空间浪费一倍</strong>。</p>
+<p>一个对象的一生——分配后进入 Eden，Minor GC 时在 Survivor 区来回倒腾；年龄超过一个阈值后送入老年代，老年代满后做 Full GC。</p>
+<p>进行 GC 的那个实体叫所谓<strong>收集器</strong>。一般来说，收集器对 Minor GC（年轻代）的 GC 算法是复制，Full GC（老年代）的 GC 算法是标记-整理。这是因为：</p>
+<ul>
+<li>年轻代存活率低，超过 90%的对象可回收，复制代价低且无碎片</li>
+<li>老年代存活率高，复制不划算，但需要解决碎片问题</li>
+</ul>
+<p>现代 GC 算法则主要是<strong>在逻辑上分代</strong>，物理上是混合的，如 G1 算法，这个就不表了。</p>
+<p>关于 JVM 调优，JVM 调优的主要目的是<strong>减少 Full GC 的频率</strong>，次要的则是降低 GC 停顿时间，提高吞吐量……</p>
+<p>主要配置的是堆内存设置，GC 算法：</p>
+<figure class="highlight ldif"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ldif"><span class="hljs-literal">-</span>XX:+UseG1GC             <span class="hljs-comment"># G1 算法</span><br><span class="hljs-literal">-</span>Xms4g -Xmx4g            <span class="hljs-comment"># 初始堆=最大堆，避免动态调整</span><br><br><span class="hljs-comment"># 要么是直接配置新生代大小，要么是去配置比例，二选一</span><br><span class="hljs-literal">-</span>Xmn2g                   <span class="hljs-comment"># 新生代大小（建议占堆的 1/3~1/2）</span><br><span class="hljs-literal">-</span>XX:NewRatio=2           <span class="hljs-comment"># 新生代：老年代=1:2</span><br><br><span class="hljs-literal">-</span>XX:MetaspaceSize=256m   <span class="hljs-comment"># 元空间初始大小</span><br><span class="hljs-literal">-</span>XX:MaxMetaspaceSize=512m <span class="hljs-comment"># 元空间最大大小</span><br><span class="hljs-literal">-</span>XX:SurvivorRatio=8      <span class="hljs-comment"># 新生代中 Survivor 的比例 Eden:Survivor=8:1:1</span><br></code></pre></div></td></tr></table></figure>
+<h2 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h2><p>双亲委派——子加载器加载的时候优先委托父加载器去加载，父加载器不存在或找不到类定义的时候，才让子加载器去加载。<strong>其实就是父加载器优先</strong>。</p>
+<p>为何要双亲委派？为了安全——Java 内置的各种类要让父加载器去加载以避免被用户自定义的加载器所篡改，另一个原因是<strong>避免重复加载</strong>：子加载器不能加载与父加载器所加载的同名的类型，如<code>java.lang.String</code>，这个同样也可以说是防篡改。</p>
+<h1 id="Spring-底层"><a href="#Spring-底层" class="headerlink" title="Spring 底层"></a>Spring 底层</h1><h2 id="Autowired-和-Resource"><a href="#Autowired-和-Resource" class="headerlink" title="Autowired 和 Resource"></a>Autowired 和 Resource</h2><p>Autowired 是 by type 注入，Resource 是 by name 注入。</p>
+<p>实际使用时它们很多时候是可以互换的——Resource 名字没找到会退化为类型查找；而对某个类型有多个 Bean 对应时，这时候才会有部分的抽象泄漏，此时 Autowired 需要加 Qualifier，而 Resource 可以用变量名字去匹配。</p>
+<p>反正平常一直用 Autowired 就行了。</p>
+<h2 id="Bean-生命周期"><a href="#Bean-生命周期" class="headerlink" title="Bean 生命周期"></a>Bean 生命周期</h2><p>我们一般使用的都是单例 Bean。Bean 一般的生命周期是：</p>
+<ol>
+<li>Spring 容器时加载 BeanDefinition，仅仅是注册定义</li>
+<li>实例化原始对象，一般通过反射调用构造器、Configuration 的 @Bean 方法，然后 FactoryBean。</li>
+<li>依赖注入（必须注入代理后的对象）</li>
+<li>各种 Aware 接口</li>
+<li>BeanPostProcessor 前置处理<ol>
+<li>BeanPostProcessor 是自定义的前后置 Bean 处理器，postProcessBeforeInitialization 是前置处理</li>
+<li>CommonAnnotationBeanPostProcessor 在此处处理 @PostConstruct 方法</li>
+</ol>
+</li>
+<li>初始化，调用 afterPropertiesSet()，然后 init-method</li>
+<li>BeanPostProcessor 后置处理<ol>
+<li>postProcessAfterInitialization 是后置处理</li>
+<li><strong>AOP 代理在此时完成</strong></li>
+</ol>
+</li>
+<li>丢到单例池中（标志着 Bean 就绪）</li>
+<li>Bean 销毁时调用 destroy</li>
+</ol>
+<h2 id="三级缓存和循环依赖"><a href="#三级缓存和循环依赖" class="headerlink" title="三级缓存和循环依赖"></a>三级缓存和循环依赖</h2><p>Bean 的初始化过程简述是：</p>
+<ol>
+<li>实例化原始对象</li>
+<li>依赖注入（必须注入代理后的对象）</li>
+<li>@PostConstruct 方法</li>
+<li>创建 AOP 代理</li>
+</ol>
+<p>这个生命周期要求使用三级缓存，以保证只有循环依赖，即这个生命周期无法解决的情况时，能在循环依赖的部分<strong>临时地违背</strong>这个生命周期。</p>
+<p>最佳答案——避免循环依赖，循环依赖很坏！除了内部调用时依赖自己，这个没啥可说的。要注入自己，使用 Lazy 注解或使用 ObjectProvider，或在运行时通过 SpringUtils 之类的方法去动态获取。</p>
+<p>Spring 初始化时有三级缓存，解决单例 bean 循环依赖的问题（面试考这个是否有毛病……）。</p>
+<p>显然——循环依赖时只能通过字段和 setter 注入，构造器注入是不能的。</p>
+<p><strong>倘若没有 AOP，其实只需要两级缓存——一级存成品（依赖已经注入完成），一级存半成品（PostConstruct 未调用……）</strong>，比如 A，B 互相依赖，这时候 A 和 B 都先放到二级缓存，然后互相注入对方后再放到成品……可惜我们有 AOP，而且</p>
+<p><strong>注意——AOP 代理是在依赖注入之后创建的</strong>，而依赖注入必须要求注入代理后的依赖，这个矛盾两级缓存解决不了：</p>
+<ol>
+<li>实例化 A，将 A 丢进二级缓存</li>
+<li>依赖注入 A，发现要注入 B（的代理）<ol>
+<li>实例化 B，将 B 丢进二级缓存</li>
+<li>依赖注入 B，发现要注入 A 的代理（此时还未创建）</li>
+<li>我们退出来重新实例化 A 并过早地先生成 A 的代理？（不存在的，算法太复杂）</li>
+</ol>
+</li>
+</ol>
+<p>而三级缓存时，我们实际上不是先实例化 A，而是先创建一个生产 A 的工厂，提供 A 的生成的功能——三级缓存时，A 其实并没有实际实例化出来：</p>
+<p>要走三级缓存，需要设置 <code>allowEarlyReference=true</code>，这个参数就是允许循环依赖的参数。</p>
+<ol>
+<li>实例化 A，将 A 的工厂丢进三级缓存</li>
+<li>检查 A 的依赖，发现要注入 B（的代理）<ol>
+<li>实例化 B，将 B 的工厂丢进三级缓存</li>
+<li>依赖注入 B，发现要注入 A（的代理），而 A 在三级缓存里</li>
+<li>据此执行获取 A 的逻辑——<strong>工厂 A 根据 A 的实例并提早创建 AOP 代理</strong>，将 A 的代理换到二级缓存</li>
+<li>将 B 丢到二级缓存（注意 B 的工厂从未被使用过）</li>
+<li>将 A 注入 B，执行 B 的后处理（PostConstruct 和 AOP），得到 B 的成品，换到一级缓存 </li>
+</ol>
+</li>
+<li>将 B 注入 A，执行 A 的剩余后处理（A 已经提早创建代理了，现在要执行其他处理），将 A 的代理换到一级缓存</li>
+</ol>
+<p>明显可以发现——A 和 B 循环依赖时，A 或者 B 在自己初始化时必然其中某一个会看到没有完全初始化完成的对方。</p>
+<h2 id="Spring-Boot-自动配置"><a href="#Spring-Boot-自动配置" class="headerlink" title="Spring Boot 自动配置"></a>Spring Boot 自动配置</h2><p>导入一个新 jar 包时，在包名不匹配扫描配置的时候，Spring Boot 是怎么动态加载知晓它和加载它的？</p>
+<p>首先启动类要标上 EnableAutoConfiguration 注解以让 Spring Boot 这套花活起起来。</p>
+<p>通过 jar 包的<code>resources/META-INF/spring.factories</code>，它是一个 properties 格式文件，Spring 会自动加载所有 jar 包下的该文件的<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration</code>，这个字段保存为 Spring 需要去加载的一系列 Configuration 类，Spring 会实例化它们。</p>
+<p>AutoConfiguration 本质上仍旧是 Configuration。</p>
+<p>Configuration 支持条件装配，一系列 ConditionalOn 注解等，我记得我玩过一些花活在 @Bean 里做判断。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/05-04%E5%9C%A8Krita%E4%B8%AD%E6%A8%A1%E6%8B%9F%E4%B8%AD%E7%A9%BA%E7%AC%94%E5%88%B7/index.html">
+                        <span class="hidden-mobile">在Krita中模拟中空笔刷</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
