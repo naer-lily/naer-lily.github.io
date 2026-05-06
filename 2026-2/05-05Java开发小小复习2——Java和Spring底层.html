@@ -20,19 +20,19 @@
   
     <meta name="description" content="关于 HashMap，GC，Spring 底层的复习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="小小复习 2">
-<meta property="og:url" content="http://example.com/2026-2/05-05Java%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A02.html">
+<meta property="og:title" content="Java开发小小复习2——Java和Spring底层">
+<meta property="og:url" content="http://example.com/2026-2/05-05Java%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A02%E2%80%94%E2%80%94Java%E5%92%8CSpring%E5%BA%95%E5%B1%82.html">
 <meta property="og:site_name" content="那尔">
 <meta property="og:description" content="关于 HashMap，GC，Spring 底层的复习">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-05T15:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-05T15:19:32.680Z">
+<meta property="article:modified_time" content="2026-05-06T03:49:49.085Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>小小复习 2 - 那尔</title>
+  <title>Java开发小小复习2——Java和Spring底层 - 那尔</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -193,7 +193,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="小小复习 2">
+            <span class="h2" id="subtitle" title="Java开发小小复习2——Java和Spring底层">
               
             </span>
 
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      8.2k 字
+      9.9k 字
     </span>
   
 
@@ -245,7 +245,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">小小复习 2</h1>
+            <h1 style="display: none">Java开发小小复习2——Java和Spring底层</h1>
             
             <div class="markdown-body">
               <p>再来一次。</p>
@@ -401,6 +401,72 @@
 <p>通过 jar 包的<code>resources/META-INF/spring.factories</code>，它是一个 properties 格式文件，Spring 会自动加载所有 jar 包下的该文件的<code>org.springframework.boot.autoconfigure.EnableAutoConfiguration</code>，这个字段保存为 Spring 需要去加载的一系列 Configuration 类，Spring 会实例化它们。</p>
 <p>AutoConfiguration 本质上仍旧是 Configuration。</p>
 <p>Configuration 支持条件装配，一系列 ConditionalOn 注解等，我记得我玩过一些花活在 @Bean 里做判断。</p>
+<h1 id="监控和测试"><a href="#监控和测试" class="headerlink" title="监控和测试"></a>监控和测试</h1><h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><p>Java 自己提供的命令：</p>
+<ul>
+<li>jps：查看所有 JVM <strong>进程</strong></li>
+<li>jstat：查看类加载，GC，JIT 等<strong>统计</strong>信息</li>
+<li>jstack：打印线程<strong>堆栈</strong>信息，用于分析死锁、阻塞等</li>
+<li>jmap：生成<strong>堆 dump</strong>，查看堆内对象（map 可以认为指的是内存映射之类的）</li>
+<li>jcmd：发送诊断命令</li>
+<li>jinfo：查看、修改运行时 <strong>JVM 参数</strong></li>
+</ul>
+<p>此外，还有 linux 常用的一些命令（以前没有梳理过，这时候也梳理一下）：</p>
+<ul>
+<li>top：CLI 的任务管理器</li>
+<li><code>free -h</code>：简单查看内存和交换空间的占用情况</li>
+<li><code>df -h</code>：查看各文件系统使用情况</li>
+<li><code>du -h</code>：查看当前工作目录及递归子目录大小</li>
+<li>tail：查看文件尾部，可跟踪</li>
+<li>grep：文件内筛选有相应内容的行</li>
+<li>netstat：查看活跃网络连接</li>
+</ul>
+<p>JVM 提供了 JMX——标准管理和监控接口，<strong>允许远程连接</strong>和查看，但需要增加相应启动参数。jconsole，jvisualvm 等可以连接 JMX，去支持上面的各种命令的功能。</p>
+<p>再然后就是自己玩的花活了——借助 micrometer 框架去暴露 prometheus 格式的 metric，这里还支持<strong>自定义指标</strong>。</p>
+<p>然后，上面的 JMX 也有相应的 exporter，这要求 JVM 启动时使用相应的 javaagent。</p>
+<p>再更外层，就是 cAdvisor（容器）和 node exporter（宿主机）了。</p>
+<h2 id="并发性能核心术语"><a href="#并发性能核心术语" class="headerlink" title="并发性能核心术语"></a>并发性能核心术语</h2><p>其实当我们说性能的时候，我们说的就是并发性能。</p>
+<p>关于并发性能的核心术语包括：</p>
+<ul>
+<li>吞吐量 Throughput：单位时间内处理的请求数，单位是<strong>每秒查询数 QPS</strong>，<strong>每秒事务数 TPS</strong>。</li>
+<li>响应时间 Latency：请求从发起到完成的时间，关注平均值和 P99/P999<ul>
+<li>P99/P999，指的是将请求响应时间从小到大排序后，第 99 百分位数 和 第 99.9 百分位数的请求的响应时间。<strong>平均值会被毛刺（少量的超慢请求）扭曲</strong>，一般来说 P99 代表绝大多数的情况，P999 则适用于高可用、支付等严苛场景</li>
+</ul>
+</li>
+<li>并发数 Concurrency：同时处理的请求数/线程数，CPU 核数、IO 模型对此影响很大，从 BIO 到 NIO 再到异步事件循环那一套（Python 异步编程，nodejs），并发数可以提高很多</li>
+<li>STW（Stop-The-World）：GC 过程中应用线程全部暂停的时间，对延迟的贡献显著</li>
+</ul>
+<h2 id="并发性能指标"><a href="#并发性能指标" class="headerlink" title="并发性能指标"></a>并发性能指标</h2><p>指标上分为三个部分——系统层、JVM 层、应用层，系统层先不论。</p>
+<p>关于 JVM 本身，主要是看堆内存和 GC 的情况，如果使用 netty 的话还得关注直接内存部分。</p>
+<p>JVM 层包括：</p>
+<ul>
+<li>堆内存使用率：大于 85% 时需警惕</li>
+<li>GC 耗时和频率：最好 P99 小于 100ms</li>
+<li>GC 吞吐量：非 GC 时间占比，即 <code>（运行时间-OC 时间）/运行时间</code>，一般期望大于 99%</li>
+<li>晋升失败：老年代空间不足导致 Full GC，可能是老年代空间设置问题或者内存泄漏等</li>
+<li>元空间使用率：……？这个还会动？</li>
+<li>直接内存/缓冲区池：netty 等会使用</li>
+</ul>
+<p>其实数据库也可以单独测一测……</p>
+<p>然后线程情况，主要是为了检查阻塞情况和是否有线程泄漏：</p>
+<ul>
+<li>活跃线程数：持续增长说明线程泄漏</li>
+<li>阻塞线程数：高代表锁竞争严重</li>
+<li>等待线程数：过多证明 IO 端（数据库主要）等待过久</li>
+</ul>
+<p>然后应用层：</p>
+<ul>
+<li>QPS/TPS</li>
+<li>响应时间分布，avg，p50，p95，p99，p999，max</li>
+<li>错误率</li>
+<li>最大并发数：在 SLA（指定的响应时间，如 <code>P99 &lt; 500ms</code>） 下能承载的并发用户、连接数</li>
+</ul>
+<p>SLA 即 Service Level Agreement，即系统所承诺的性能目标</p>
+<h2 id="吞吐量和响应时间"><a href="#吞吐量和响应时间" class="headerlink" title="吞吐量和响应时间"></a>吞吐量和响应时间</h2><script type="math/tex; mode=display">
+\text{并发数}(N) = \text{吞吐量}(X) \times \text{系统延迟}(R)</script><p><strong>一般而言，吞吐量和响应时间需要权衡</strong>，尤其是在系统饱和后，两者是对立的——提高吞吐会让单个请求的等待时间增加，降低延迟则要降低吞吐量。</p>
+<p>但系统未饱和时，可以做到提升吞吐量并降低延迟。</p>
+<p>想象关于延迟、吞吐的一个函数图像，吞吐为 X 轴；吞吐从零开始增加时，延迟几乎不变，直到某个<strong>拐点</strong>后，延迟突然开始急剧上升，而吞吐量难以再增长甚至下降。就像一个朝上的二次方函数，但往右走着走着居然往回拐了。</p>
+<h2 id="压测"><a href="#压测" class="headerlink" title="压测"></a>压测</h2><p>工具有 wrk，JMeter 等。</p>
+<p>压测主要是<strong>为了得到最大并发量</strong>。主要使用<strong>阶梯加压法</strong>——逐渐增加并发线程（连接数），直到 QPS 不再上升或响应时间超过 SLA，这时候的拐点就是最大并发能力。</p>
 
             </div>
             <hr>
