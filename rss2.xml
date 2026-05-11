@@ -15,8 +15,29 @@
     <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>あなたからもらったなにもかも，道しるべにしてきたよ</description>
-    <pubDate>Wed, 06 May 2026 03:49:49 GMT</pubDate>
+    <pubDate>Mon, 11 May 2026 13:37:27 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>pip 的构建隔离</title>
+      <link>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html</link>
+      <guid>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html</guid>
+      <pubDate>Fri, 08 May 2026 13:00:00 GMT</pubDate>
+      
+      <description>只有当出问题的时候才意识到下面有门道，this is abstraction</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p>久违地去在 docker 里搭建 ML 项目，结果遇上好多坑，值得记一下。</p><h1 id="CUDA-in-docker"><a href="#CUDA-in-docker" class="headerlink" title="CUDA in docker"></a>CUDA in docker</h1><p>关于在 docker 中使用 CUDA，要保证：</p><ol><li>WSL 版本最新<ol><li>不要相信 WSL 的自动更新，直接从官方 git 仓库的 release 下 <a href="https://github.com/microsoft/WSL/releases/">https://github.com/microsoft/WSL/releases/</a></li><li>它安装可能失败说对某注册表没有修改权限，直接给丫的删了</li><li>安装后重启电脑</li></ol></li><li>更新 WSL 后，docker 也重装</li><li>保持显卡驱动最新</li><li>安装 CUDA toolkit（？存疑，我记得我之前尝试的时候并未安装这玩意儿）</li><li>按照 <a href="https://docs.docker.com/desktop/features/gpu/">https://docs.docker.com/desktop/features/gpu/</a> 去检查当前 GPU 在容器中是否可用</li></ol><h1 id="pip-的构建隔离"><a href="#pip-的构建隔离" class="headerlink" title="pip 的构建隔离"></a>pip 的构建隔离</h1><p>pip 安装许多包（尤其是 ML 相关的）时候，需要检查<strong>所安装的包的 pyproject</strong> 去进行<strong>构建</strong>操作，这个我们都知道，但我以前不知道的是，<strong>这个构建操作中，pip 会在临时目录启动一个轻量的，干净的虚拟 python 环境，然后在线从 PyPI 中（仍旧走镜像源如果配置）下载符合 pyproject 中限定的版本的 setuptools，wheel 依赖，并使用它们去在虚拟环境中进行构建</strong>。</p><p>这个构建隔离选项，可以通过<code>--no-build-isolation</code>去关闭，但一般不推荐关闭，因为系统的 Python 环境远远称不上干净，会带来别的奇怪问题。</p><p>为什么在今天突然提到这个构建隔离？因为安装 CosyVoice 的依赖时，它依赖了 openai-whisper 的旧版本，而安装它会直接失败，and here’s why：</p><ol><li>CosyVoice 依赖的是 openai-whisper==20231117，它下载这个版本的 whl 并试图编译</li><li>openai-whisper 的 pyproject.toml 中写着（它似乎就没改过）require：setuptools&gt;=61.2 </li><li>pip 默认<strong>升级友好</strong>，即认为高版本总是向前兼容，所以 pip 安装了最新的 setuptools，版本大概大于 82</li><li>然而该旧版本 openai-whisper 用了一个所谓的 pkg_resources 包，而这个包，在 setuptools 中的 82 版本及其之后被移除</li><li>于是旧版本的这个 openai-whisper build 的时候就直接报错了</li></ol><p>解决方案是，直接从 requirements.txt 移除 openai-whisper 的版本约束……要不然就只能做花活儿——专门把 openai-whisper 挑出来使用<code>--no-build-isolation</code>去安装，或者直接 fork 下来修改版本号再安装了。</p><p>顺便，只有 setup.py 的项目会设置一个 setuptools&gt;40.8.0 的约束，同样会打到当前最高版本……</p><h2 id="pyproject-toml-vs-setup-py-vs-requirements-txt"><a href="#pyproject-toml-vs-setup-py-vs-requirements-txt" class="headerlink" title="pyproject.toml vs setup.py vs requirements.txt"></a>pyproject.toml vs setup.py vs requirements.txt</h2><p>正好碰到了就再深入一下——pyproject.toml，setup.py，requirements.txt。这仨的区别在于：</p><ul><li>setup.py：用于构建包的 python 脚本，<strong>基本已经弃用</strong>，由 pyproject.toml 替代</li><li>pyproject.toml：描述用于构建包的元信息的配置文件，<strong>当前主流标准</strong>；它是<strong>配置文件</strong>，因此可以更换用来解释和执行它的后端</li><li>requirements.txt：用于 pin 运行时依赖，用于开发和生产环境，<strong>与包的构建无关</strong></li></ul><p>setuptools，poetry 都是 pyproject.toml 的后端。</p><p>requirements.txt 的功能其实相当单纯，使用 pyproject.toml 也可直接声明依赖并让 pip 去安装。</p>]]></content:encoded>
+      
+      
+      
+      <category domain="http://example.com/tags/Python/">Python</category>
+      
+      
+      <comments>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>Java开发小小复习2——Java和Spring底层</title>
@@ -36,27 +57,6 @@
       
       
       <comments>http://example.com/2026-2/05-05Java%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A02%E2%80%94%E2%80%94Java%E5%92%8CSpring%E5%BA%95%E5%B1%82.html#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>Java开发小小复习2——Java和Spring底层</title>
-      <link>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html</link>
-      <guid>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html</guid>
-      <pubDate>Tue, 05 May 2026 15:00:00 GMT</pubDate>
-      
-      <description>关于 HashMap，GC，Spring 底层的复习</description>
-      
-      
-      
-      <content:encoded><![CDATA[<p>久违地去在 docker 里搭建 ML 项目，结果遇上好多坑，值得记一下。</p><h1 id="CUDA-in-docker"><a href="#CUDA-in-docker" class="headerlink" title="CUDA in docker"></a>CUDA in docker</h1><p>关于在 docker 中使用 CUDA，要保证：</p><ol><li>WSL 版本最新<ol><li>不要相信 WSL 的自动更新，直接从官方 git 仓库的 release 下 <a href="https://github.com/microsoft/WSL/releases/">https://github.com/microsoft/WSL/releases/</a></li><li>它安装可能失败说对某注册表没有修改权限，直接给丫的删了</li><li>安装后重启电脑</li></ol></li><li>更新 WSL 后，docker 也重装</li><li>保持显卡驱动最新</li><li>安装 CUDA toolkit（？存疑，我记得我之前尝试的时候并未安装这玩意儿）</li><li>按照 <a href="https://docs.docker.com/desktop/features/gpu/">https://docs.docker.com/desktop/features/gpu/</a> 去检查当前 GPU 在容器中是否可用</li></ol><h1 id="pip-的构建隔离"><a href="#pip-的构建隔离" class="headerlink" title="pip 的构建隔离"></a>pip 的构建隔离</h1><p>pip 安装许多包（尤其是 ML 相关的）时候，需要检查<strong>所安装的包的 pyproject</strong> 去进行<strong>构建</strong>操作，这个我们都知道，但我以前不知道的是，<strong>这个构建操作中，pip 会在临时目录启动一个轻量的，干净的虚拟 python 环境，然后在线从 PyPI 中（仍旧走镜像源如果配置）下载符合 pyproject 中限定的版本的 setuptools，wheel 依赖，并使用它们去在虚拟环境中进行构建</strong>。</p><p>这个构建隔离选项，可以通过<code>--no-build-isolation</code>去关闭，但一般不推荐关闭，因为系统的 Python 环境远远称不上干净，会带来别的奇怪问题。</p><p>为什么在今天突然提到这个构建隔离？因为安装 CosyVoice 的依赖时，它依赖了 openai-whisper 的旧版本，而安装它会直接失败，and here’s why：</p><ol><li>CosyVoice 依赖的是 openai-whisper==20231117，它下载这个版本的 whl 并试图编译</li><li>openai-whisper 的 pyproject.toml 中写着（它似乎就没改过）require：setuptools&gt;=61.2 </li><li>pip 默认<strong>升级友好</strong>，即认为高版本总是向前兼容，所以 pip 安装了最新的 setuptools，版本大概大于 82</li><li>然而该旧版本 openai-whisper 用了一个所谓的 pkg_resources 包，而这个包，在 setuptools 中的 82 版本及其之后被移除</li><li>于是旧版本的这个 openai-whisper build 的时候就直接报错了</li></ol><p>解决方案是，直接从 requirements.txt 移除 openai-whisper 的版本约束……要不然就只能做花活儿——专门把 openai-whisper 挑出来使用<code>--no-build-isolation</code>去安装，或者直接 fork 下来修改版本号再安装了。</p><p>顺便，只有 setup.py 的项目会设置一个 setuptools&gt;40.8.0 的约束，同样会打到当前最高版本……</p><h2 id="pyproject-toml-vs-setup-py-vs-requirements-txt"><a href="#pyproject-toml-vs-setup-py-vs-requirements-txt" class="headerlink" title="pyproject.toml vs setup.py vs requirements.txt"></a>pyproject.toml vs setup.py vs requirements.txt</h2><p>正好碰到了就再深入一下——pyproject.toml，setup.py，requirements.txt。这仨的区别在于：</p><ul><li>setup.py：用于构建包的 python 脚本，<strong>基本已经弃用</strong>，由 pyproject.toml 替代</li><li>pyproject.toml：描述用于构建包的元信息的配置文件，<strong>当前主流标准</strong>；它是<strong>配置文件</strong>，因此可以更换用来解释和执行它的后端</li><li>requirements.txt：用于 pin 运行时依赖，用于开发和生产环境，<strong>与包的构建无关</strong></li></ul><p>setuptools，poetry 都是 pyproject.toml 的后端。</p><p>requirements.txt 的功能其实相当单纯，使用 pyproject.toml 也可直接声明依赖并让 pip 去安装。</p>]]></content:encoded>
-      
-      
-      
-      <category domain="http://example.com/tags/Java/">Java</category>
-      
-      
-      <comments>http://example.com/2026-2/05-08pip%E7%9A%84%E6%9E%84%E5%BB%BA%E9%9A%94%E7%A6%BB.html#disqus_thread</comments>
       
     </item>
     
