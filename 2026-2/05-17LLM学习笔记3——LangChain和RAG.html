@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="事情正在起变化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM 学习笔记 3——LangChain 和 RAG">
+<meta property="og:url" content="http://example.com/2026-2/05-17LLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94LangChain%E5%92%8CRAG.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="事情正在起变化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-17T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-17T03:10:27.650Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>LLM 学习笔记 3——LangChain 和 RAG - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="LLM 学习笔记 3——LangChain 和 RAG">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-05-17 11:00" pubdate>
+        2026年5月17日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      12k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LLM 学习笔记 3——LangChain 和 RAG</h1>
+            
+            <div class="markdown-body">
+              <p>写的很流水，因为它忠实地反映了我的复习（和学习……因为变了太多）的顺序 XD。</p>
+<h1 id="关于-LangChain-当前的架构"><a href="#关于-LangChain-当前的架构" class="headerlink" title="关于 LangChain 当前的架构"></a>关于 LangChain 当前的架构</h1><p>自从 v1（25-10-20）版本后，LangChain 已经完全转向——可以说，LangChain 是一个完全围绕于 <code>create_agent</code> 这个<strong>特殊的</strong> StateGraph（来自 LangGraph） 去组织的框架。</p>
+<p>LangChain 已经不再期待我们直接去使用 ChatModel，ChatModel 现在在概念上成为了 agent 的“推理引擎”。</p>
+<p>实际上，在当前的 LangChain 的架构下我们要是还去用 create_agent，那我们就做不了 2-step RAG 了——没有入口让我们去改写 prompt（其实有，有相应中间件提供动态 prompt 功能），得自己写新 Graph。</p>
+<p>但 LangChain 为 create_agent 这个特殊的图，相对于普通的 StateGraph 提供一些额外的机制，主要是中间件</p>
+<ul>
+<li>tool 装饰器以及对 tool 的动态维护</li>
+<li>中间件（这里花活儿可多了）</li>
+</ul>
+<p><strong>所以，现在 langchain 依赖 langgraph（以前不依赖），而 langgraph 依赖 langchain-core</strong>。</p>
+<h1 id="LangChain"><a href="#LangChain" class="headerlink" title="LangChain"></a>LangChain</h1><p>LangChain——一个 LLM 框架，它应该是最流行的那一批。</p>
+<p>LangChain，LangGraph，Chain 是链表，这个跑完将其结果用来跑下一个，如同 FP 的 compose，而 Graph 则是一整个<strong>图</strong>，中间还能带逻辑的（而且还不是树逻辑），这是说，LangGraph 确实有 LangChain 实现不了的东西。</p>
+<h2 id="Runnable"><a href="#Runnable" class="headerlink" title="Runnable"></a>Runnable</h2><p>LangChain 第一眼看下来，会发现它首先可以当成 openai_client 去用——每种 Message 抽象成类，同步、异步都支持，全部返回和流式返回都支持——invoke，ainvoke，stream，astream。此外还有 batch 和 abatch——并行 invoke、ainvoke。</p>
+<p>LangChain 是按继承那一套去抽象的，看着头疼。Runnable 是一个重要的抽象基类，上面的 invoke，stream，batch 都是来自于 Runnable 的…但倘若大家都按 Runnable 去要求自己的参数的话，事情其实反而会变简单起来。</p>
+<p>一般来说，原子的 Runnable 是无状态的，但如 CompiledStateGraph 它也是 Runnable，但他是有状态的。</p>
+<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Agent 在本质上是一个 StateGraph，看名字就知道了，有状态的图；我该不该吐槽这 LangChain 的例子，上来就创建 LangGraph 里的东西？</p>
+<p>实际上观察 <a target="_blank" rel="noopener" href="https://docs.langchain.com/oss/python/langchain/philosophy">langchain 的文档的 Philosophy 部分</a>，在 25 年 10 月 langchain 搞了一个重大的升级，现在的 chain 和 agent 确实都切换到了 langggraph 了……</p>
+<p>官方示例提了两个 agent——<code>langchain.agents.create_agent()</code>和<code>deepagents.create_deep_agent()</code>（一个另外的包），前者是一个普通的 Agent，只能用你提供的工具，而后者则自带一些常用工具，包括文件访问，todo 工具，且自己就能创建子 agent，deep agent 等于是一个控制台的 Agent 了。（这个 deepagents 是 26 年 3 月才增加的）</p>
+<p>我注意到一个重要的事实——以前的 create_react_agent，ReAct 这个词就直接消失掉了。这也能看出一个脉络了——以前 ReAct 还是一种提示词工程的 pattern，现在则已经被各大 LLM 直接内化了，它们从准备训练集的时候就考虑了 ReAct。结果这个词就已经不需要再提了，成常识了。</p>
+<p>agent 的模式其实非常简单——<code>input[-reasoning-action-observation]-output</code>。这里 reasoning-action-observation 是可以循环执行的，直到 AI 认为已经足够，就是过去的 ReAct。</p>
+<h2 id="Tool"><a href="#Tool" class="headerlink" title="Tool"></a>Tool</h2><p>LangChain，它的 agent…没有实现为 class 而是只是一个普通的 StateGraph……但他并非那么普通，它支持中间件去向其中做一些操作……好吧，agent 的 StateGraph 究竟是长什么样，我瞧了一下 create_agent 的 graph 的图片表示，发现它和 create_react_agent 的结构是一样的。</p>
+<p>我们学的其实是这个<strong>具体</strong>的 StateGraph 呗？但它也是一个上下文工程的例子了。</p>
+<p>（LangChain 的）Agent 的工具可以静态注入——启动时注入，也可以动态注入——通过中间件，中间件需要处理工具的注册（即塞到请求里）和工具的实际执行。我能够设想——中间件是每次请求的时候都要执行的，就像 HTTP 框架的中间件。</p>
+<p><strong>middleware 机制，是专属于 create_agent 创建的这个特殊的图的</strong>。</p>
+<h3 id="题外话：流式工具调用和并行工具调用"><a href="#题外话：流式工具调用和并行工具调用" class="headerlink" title="题外话：流式工具调用和并行工具调用"></a>题外话：流式工具调用和并行工具调用</h3><p>openai API 工具调用的具体流程：</p>
+<ol>
+<li>AI 请求工具调用——同步时，tool_cools 塞工具调用数据（数组形式），包括这次工具调用的 id（供返回工具调用时做结果的索引），要调用的函数名，参数（用纯文本传 json）；流式时，以 delta 增量传，同一个 index 代表同一个工具调用。</li>
+<li>agent 客户端执行工具调用，然后以 tool 的 role，包含着 tool_call_id 去把调用结果返给 AI，每个工具调用一个消息</li>
+<li>AI 再根据上面的工具调用的结果去做操作。</li>
+</ol>
+<p>流式工具调时，它一般会增量地传 arguments，需要 agent 客户端后续去做 json parse，如下面的 chunk 的结构（它并非原始 SSE 结构，原始 SSE 结构总是 <code>data: &#123;...&#125;</code>，</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">chunk</span> <span class="hljs-number">1</span>: delta.tool_calls[<span class="hljs-number">0</span>] = &#123;index: <span class="hljs-number">0</span>, id: <span class="hljs-string">&quot;call_1&quot;</span>, function: &#123;name: <span class="hljs-string">&quot;查天气&quot;</span>&#125;&#125;<br><span class="hljs-attribute">chunk</span> <span class="hljs-number">2</span>: delta.tool_calls[<span class="hljs-number">0</span>] = &#123;index: <span class="hljs-number">0</span>, function: &#123;arguments: <span class="hljs-string">&quot;&#123;\&quot;ci&quot;</span>&#125;&#125;<br><span class="hljs-attribute">chunk</span> <span class="hljs-number">3</span>: delta.tool_calls[<span class="hljs-number">0</span>] = &#123;index: <span class="hljs-number">0</span>, function: &#123;arguments: <span class="hljs-string">&quot;ty\&quot;:&quot;</span>&#125;&#125;<br><span class="hljs-attribute">chunk</span> <span class="hljs-number">4</span>: delta.tool_calls[<span class="hljs-number">0</span>] = &#123;index: <span class="hljs-number">0</span>, function: &#123;arguments: <span class="hljs-string">&quot;\&quot;北京、&quot;</span>&#125;<span class="hljs-string">&quot;&#125;&#125;</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="并行工具调用"><a href="#并行工具调用" class="headerlink" title="并行工具调用"></a>并行工具调用</h3><p>langchain 专门提及有个所谓的 reducer，提出在工具更新（图的）状态变量的时候应当定义它。所以它是关于图的状态变量的。这实际上就是说对图的状态变量的更新是纯的——我总是直接<strong>覆盖</strong>了旧值（这是默认行为），因此这里需要一个 reducer，去将旧值和新值进行 reduce 合并成最终结果，reducer 是 <code>(T, T) =&gt; T</code>。</p>
+<p>但其实在这里提这一嘴有点莫名其妙。</p>
+<h3 id="runtime"><a href="#runtime" class="headerlink" title="runtime"></a>runtime</h3><p>工具调用时，LangChain 能够<strong>通过参数名称</strong>进行依赖注入（因此工具的实际参数不能和它们重名），依赖注入有两个参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@langchain.tools.tool</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_account_info</span>(<span class="hljs-params">config: RunnableConfig, runtime: ToolRuntime</span>) -&gt; <span class="hljs-built_in">str</span>: ...<br></code></pre></div></td></tr></table></figure>
+<p>config 是更静态的信息，关于整个图的（TODO 大概？），runtime 是当前工具的一些运行时的信息，它会很常用。</p>
+<p>runtime 有两个泛型参数——上下文 Context 和状态 State，它们：</p>
+<ul>
+<li>上下文是调用时传递的不可变的相对静态的配置数据，比如当前 session 相关信息，用户信息……（TODO 调用时指的是什么？？我猜测是当前 session 创建时带来的信息）通过<code>runtime.context</code>获取（这里的 context 指的不是对话历史，对话历史那就是 history 之类的）。</li>
+<li>状态是<strong>短期记忆</strong>——即<strong>当前 session</strong> 的所存储的可变的状态。</li>
+</ul>
+<p>我猜测 context 必须被客户端最开始主动构造，状态则是由 LLM 维护。注意维护状态的时候好像有特殊操作……whatever，这没啥关系。</p>
+<p>然后它还能访问其他的：最重要的是<strong>长期记忆 Store</strong>，它提供跨会话的记忆。TODO 这个咋实现的呢……？</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@dataclass</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserContext</span>:<br>    user_id: <span class="hljs-built_in">str</span><br><br><span class="hljs-meta">@tool </span><span class="hljs-comment"># langchain 的，不是 fastmcp 的</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_account_info</span>(<span class="hljs-params">runtime: ToolRuntime[UserContext]</span>) -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;Get the current user&#x27;s account information.&quot;&quot;&quot;</span><br>    user_id = runtime.context.user_id<br>    <span class="hljs-keyword">if</span> user_id <span class="hljs-keyword">in</span> USER_DATABASE:<br>        user = USER_DATABASE[user_id]<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Account holder: <span class="hljs-subst">&#123;user[<span class="hljs-string">&#x27;name&#x27;</span>]&#125;</span>\nType: <span class="hljs-subst">&#123;user[<span class="hljs-string">&#x27;account_type&#x27;</span>]&#125;</span>\nBalance: $<span class="hljs-subst">&#123;user[<span class="hljs-string">&#x27;balance&#x27;</span>]&#125;</span>&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;User not found&quot;</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomState</span>(<span class="hljs-title class_ inherited__">AgentState</span>):<br>    user_name: <span class="hljs-built_in">str</span><br><br><span class="hljs-meta">@tool</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">set_user_name</span>(<span class="hljs-params">new_name: <span class="hljs-built_in">str</span>, runtime: ToolRuntime[<span class="hljs-literal">None</span>, CustomState]</span>) -&gt; Command:<br>    <span class="hljs-string">&quot;&quot;&quot;Set the user&#x27;s name in the conversation state.&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> Command(<br>        update=&#123;<br>            <span class="hljs-string">&quot;user_name&quot;</span>: new_name,<br>            <span class="hljs-string">&quot;messages&quot;</span>: [<br>                ToolMessage(<br>                    content=<span class="hljs-string">f&quot;User name set to <span class="hljs-subst">&#123;new_name&#125;</span>.&quot;</span>,<br>                    tool_call_id=runtime.tool_call_id,<br>                )<br>            ],<br>        &#125;<br>    )<br></code></pre></div></td></tr></table></figure>
+<p>关于Agent实际上长什么样，我们把LangGraph过一遍再说。</p>
+<h1 id="Chain-old-version"><a href="#Chain-old-version" class="headerlink" title="Chain (old version)"></a>Chain (old version)</h1><p>让我们瞧瞧旧版本的 Chain。</p>
+<p>Chain——其实就是 Runnable 重写了按位或运算符，让 Runnable 可以互相组合，就像 Haskell 中的<code>.</code>但顺序相反，或者像 unix 管道操作符——<code>f | g = lambda x: g(f(x))</code>。我们可以设想，在 invoke 时，langchain 先用输入去执行 f 的 invoke，再把结果拿去执行 g 的 invoke；在 stream 时，事情则会变得更诡异一些——这个流式是且只能是半流式——提示词必须构造完才能传给向量数据库，向量数据库必须检索完和改完提示词才能把它传给 AI，但 AI 这之后就能够流式地把输出塞给用户了。</p>
+<p>Chain 使得 Runnable 之间可以互相组合，Runnable 也可以和普通的函数组合（trivial），但这里存在一定局限——<strong>在 chain 中使用普通函数的话，stream 会失效，即 langchain 会等前面整个流处理完毕之后再去把完整结果传递给该函数</strong>，如果还想要保持流式处理，就用生成器函数。下面实现一个流式翻译，因为使用了生成器函数，所以事情会变得不那么 trivial——生成器接受的是一个迭代器去表示整个输入的流。</p>
+<p>但它的实现我认为有一点诡异——我下意识会认为，invoke 是通过 stream 去实现的，背后会 reduce 成 invoke 的结果，这样明显更加优雅（虽然我们需要到处提供 reducer），结果 tmd invoke 和 stream 在 langchain 中就不是一回事。</p>
+<p>然后，异步就必须全异步，同步就必须全同步…这倒是不错啦。当然，真要做这种抽象，就自己实现一个 Runnable 而非是用这样 trivial 的函数或者生成器，这样明显是 ad-hoc 的操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Iterator<br><br><span class="hljs-keyword">from</span> langchain.chat_models <span class="hljs-keyword">import</span> init_chat_model<br><span class="hljs-keyword">from</span> langchain.messages <span class="hljs-keyword">import</span> AIMessage, AIMessageChunk<br><span class="hljs-keyword">from</span> langchain_core.prompts <span class="hljs-keyword">import</span> ChatPromptTemplate<br><span class="hljs-keyword">from</span> langchain_core.runnables <span class="hljs-keyword">import</span> RunnableSerializable<br><br>model = init_chat_model(<span class="hljs-string">&quot;deepseek-v4-flash&quot;</span>)<br><br><span class="hljs-comment"># 一个很鬼畜的地方是这里如果使用 SystemMessaage 和 HumanMessage 类型，langchain 就不会插值了，我觉得这是完全没必要的</span><br>prompt_template = ChatPromptTemplate([<br>    (<span class="hljs-string">&#x27;system&#x27;</span>, <span class="hljs-string">&#x27;你是一个 AI 翻译助手，你负责把用户输入的内容从 &#123;input_lang&#125; 翻译成 &#123;output_lang&#125;。你**直接输出，且仅直接输出**你的翻译结果，**绝对不要**增加任何描述文字，如“好的，这是你的翻译结果：”，“翻译结果如下：”。&#x27;</span>),<br>    (<span class="hljs-string">&#x27;human&#x27;</span>, <span class="hljs-string">&#x27;&#123;text&#125;&#x27;</span>)<br>])<br><br><span class="hljs-comment"># 调用 invoke 时，这里传来的是 Iterator[AIMessage] 且长度为 1，调用 stream 时，这里传来的是 Iterator[AIMessageChunk]</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">extract_content</span>(<span class="hljs-params">chunk_iterator: Iterator[AIMessage] | Iterator[AIMessageChunk]</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;$$$$&#x27;</span>, <span class="hljs-built_in">type</span>(chunk_iterator))<br>    <span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> chunk_iterator:<br>        <span class="hljs-keyword">if</span> chunk.content:<br>            <span class="hljs-keyword">yield</span> chunk.content<br><br>chain: RunnableSerializable[<span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">str</span>], <span class="hljs-built_in">str</span>] = prompt_template | model | extract_content<br><br><span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> chain.stream(&#123;<br>    <span class="hljs-string">&#x27;input_lang&#x27;</span>: <span class="hljs-string">&#x27;Chinese&#x27;</span>,<br>    <span class="hljs-string">&#x27;output_lang&#x27;</span>: <span class="hljs-string">&#x27;English&#x27;</span>,<br>    <span class="hljs-string">&#x27;text&#x27;</span>: <span class="hljs-string">&#x27;你好，世界！&#x27;</span><br>&#125;):<br>    <span class="hljs-built_in">print</span>(c, sep=<span class="hljs-string">&#x27;&#x27;</span>, end=<span class="hljs-string">&#x27;&#x27;</span>)<br>    <br><span class="hljs-built_in">print</span>(chain.invoke(&#123;<br>    <span class="hljs-string">&#x27;input_lang&#x27;</span>: <span class="hljs-string">&#x27;Chinese&#x27;</span>,<br>    <span class="hljs-string">&#x27;output_lang&#x27;</span>: <span class="hljs-string">&#x27;English&#x27;</span>,<br>    <span class="hljs-string">&#x27;text&#x27;</span>: <span class="hljs-string">&#x27;你好，世界！&#x27;</span><br>&#125;)) <br></code></pre></div></td></tr></table></figure>
+<h1 id="RAG（LangChain-中的）"><a href="#RAG（LangChain-中的）" class="headerlink" title="RAG（LangChain 中的）"></a>RAG（LangChain 中的）</h1><p>那还是 LLM 的蛮荒时代，RAG 被以为是什么时髦的东西。LangChain 为 RAG 做了原生的支持，将任何用于 RAG 的原子去抽象为 Document。</p>
+<p>但现在 RAG 在 langchain 中已经成为很次要的东西了……半天找不到 RAG 的教程在哪里就。以前人们期待 LLM 成为有据可循的问答机器人，现在人们期待 LLM 能完成一切人类能完成的事情。但 RAG 在企业内部开发中可能仍旧重要，所以去回顾一下。</p>
+<p>以前的那种 RAG 我之前管它叫 naive RAG，langchain 管它叫 2-step RAG，即先检索再生成，当前聚焦于 agent 的 langchain 已经无法直接实现 2-step RAG 了（但也不是不行……可以使用中间件去勾进去提示词部分）。</p>
+<p>RAG 的经典过程——转换、切分、嵌入向量化，入库、查询（称为召回，因为我们的最终目的是得到原始文档的片段，从查询文本“召回”相应文档），其实就是把文档分块，为每块做倒排索引罢了，只不过这里索引用的不是关键字，而是嵌入向量化得到的每块的所谓语义向量。为什么要分块？因为一整个文档太大，语义信息太杂，不分块的话查询结果会有很多噪音（而且把上下文也给你挤爆）。</p>
+<p>这里就重新抓一下 LangChain 关于 RAG 的抽象，它们每个角色是什么：</p>
+<ul>
+<li>Document：所谓“文档”，它是语义查询的原子。Document 没有“chunk”——文档切分前是 Document，切分后还是 Document</li>
+<li>Document Loader：加载各种类型文件的数据来源为 Document。一个文件可能对应一个 Document 也可能对应多个，全看 Loader 怎么实现（因为反正后面有切分步骤，这里随意）</li>
+<li>Splitter：Document 切分器，接受 Document 列表，返回 Document 列表<ul>
+<li>一个一般用途的切分器是 RecursiveCharacterTextSplitter，它递归地将 Document 按换行符去拆分（或者合并）直到所有块到达合适大小</li>
+<li>此外还有定长的切分器 CharacterTextSplitter</li>
+<li>还有基于 Document <strong>结构</strong>的一些切分器，这类通常适用于结构化文本，如 markdown，html，json，乃至代码</li>
+</ul>
+</li>
+<li>Embedding：嵌入模型的抽象，这里需要意识到——每种嵌入模型生成的嵌入向量是不同的，所以每次更换嵌入向量的时候，cherry studio 等 LLM 客户端要求重新索引整个知识库</li>
+<li>Vector Store：向量数据库抽象，能更换向量数据库的实现，langchain 自己提供了内存向量数据库。<strong>Vector Store 必须依赖 Embedding——它提供的接口遮蔽了 Embedding 的细节，直接操作 Document，插入 Document，查询 Document，但 Vector Store 的任何操作和具体的 Embedding 都是密不可分的</strong>。<ul>
+<li>向量数据库支持多种查询策略——相似性，最大边际相关性（MMR），MMR 让所查询的结果之间的相关性更小以提升多样性</li>
+<li>向量数据库支持直接使用文本或嵌入向量进行查询（怎么这时候抽象泄漏了……？）</li>
+<li>注意——<strong>向量数据库并非是 Runnable</strong>，估计是因为向量数据库本身功能复杂，不能用一个 Runnable 直接替代，但它提供了另一幅面孔——</li>
+</ul>
+</li>
+<li>Retriever：直接来自 Vector Store，将 Vector Store 的查询功能包装成 Runnable（参数显然需要从创建时给定），它接受文本，返回 Document 列表</li>
+<li>Document Compressor：根据查询去对 Document 列表进行压缩和转换，一般应用于重排序。Compressor 不是 Runnable（其实也可以是）</li>
+</ul>
+<p><strong>重排序</strong>——对 Vector Store 查询出来的所有 Document（数量会很多，远大于 top_k，比如 50-100 条之类的），对它们进行重新排序再去选出 top_k，排序方法有：</p>
+<ul>
+<li><strong>交叉编码器</strong>：（一般是）使用一个更精确，更慢的 Transformer 架构的模型，将这些 Document 进行向量化并<strong>分别和 query 拼接，计算每个 Document 和 query 互相之间的注意力（注意力高则表明相关）</strong>，选出 top_k 再拼到提示词里。</li>
+<li>LLM 排序：让 LLM 去评分和排序</li>
+<li>……</li>
+</ul>
+<p>能发现——重排序并不 trivial，它和 embedding 走的不是同一个路子，embedding 模型底层也可以是 transformer 架构，但 embedding 时我们不关心什么注意力，我们要的只是最后的反映这个句子的语义信息的嵌入向量，而一般来说这样得来的精确度必然没有交叉编码器高，因此这引入了重排序的必要性。</p>
+<p>我们用一个例子把全流程跑通——“刻意练习”这个 PDF，读取、切分，选一个轻量级的嵌入模型，将文档嵌入和插入内存向量数据库中，选一个重排序的 Compressor，把整个 chain 搭好——retrieve -&gt; rerank 混合生成一个包含重排序逻辑的 retriever，再转换成一个 agument prompt 的 Runnable，把它和 LLM 连起来，bingo。</p>
+<p>然而，我找不到马上就能跑起来的本地的 reranker……就这样了，把代码撂在这里：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> textwrap <span class="hljs-keyword">import</span> dedent<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Iterator<br><br><span class="hljs-keyword">from</span> langchain.chat_models <span class="hljs-keyword">import</span> init_chat_model<br><span class="hljs-keyword">from</span> langchain.embeddings <span class="hljs-keyword">import</span> Embeddings<br><span class="hljs-keyword">from</span> langchain.messages <span class="hljs-keyword">import</span> AIMessage, AIMessageChunk<br><span class="hljs-keyword">from</span> langchain_core <span class="hljs-keyword">import</span> cross_encoders, document_loaders<br><span class="hljs-keyword">from</span> langchain_core.documents <span class="hljs-keyword">import</span> compressor<br><span class="hljs-keyword">from</span> langchain_core.prompts <span class="hljs-keyword">import</span> ChatPromptTemplate, PromptTemplate<br><span class="hljs-keyword">from</span> langchain_core.runnables <span class="hljs-keyword">import</span> RunnableSerializable, chain<br><span class="hljs-keyword">from</span> langchain_community.document_loaders <span class="hljs-keyword">import</span> PyPDFLoader<br><span class="hljs-keyword">from</span> langchain_core.stores <span class="hljs-keyword">import</span> BaseStore, InMemoryBaseStore<br><span class="hljs-keyword">from</span> langchain_core.vectorstores <span class="hljs-keyword">import</span> InMemoryVectorStore, VectorStore<br><span class="hljs-keyword">from</span> langchain_ollama <span class="hljs-keyword">import</span> OllamaEmbeddings<br><span class="hljs-keyword">from</span> langchain_text_splitters <span class="hljs-keyword">import</span> RecursiveCharacterTextSplitter<br><br>model = init_chat_model(<span class="hljs-string">&quot;deepseek-v4-flash&quot;</span>)<br><br><span class="hljs-comment">##### 初始化数据过程——加载，切分，入库（嵌入和插入）</span><br><br><span class="hljs-comment"># 很多 Loader 都在 community 包下面</span><br>loader = PyPDFLoader(Path(__file__).parent/<span class="hljs-string">&#x27;刻意练习。pdf&#x27;</span>)<br><br>documents = loader.load_and_split(<br>    RecursiveCharacterTextSplitter()<br>) <span class="hljs-comment"># 556 个 Document</span><br><br><span class="hljs-comment"># 一个有趣的地方是 LangChain 连 KV 数据库都做了抽象——BaseStore，你们不觉得你们闲的慌吗……？</span><br><br><span class="hljs-comment"># 我们用一个 ollama 的 Embedding，用内存向量数据库以方便</span><br>vs = InMemoryVectorStore(OllamaEmbeddings(model=<span class="hljs-string">&#x27;nomic-embed-text&#x27;</span>))<br><br><span class="hljs-comment"># 嵌入，插入数据（显然地，不止是嵌入向量，原始 Document 也被插入进去了以供“召回”）</span><br>vs.add_documents(documents)<br><br><span class="hljs-comment">##### 召回过程——检索，重排序，增强，生成</span><br><br><span class="hljs-comment"># 简单搜一下，k 表示 top_k，找出前 k 个最大相关性的</span><br>search_result = vs.search(<span class="hljs-string">&#x27;伦敦出租车司机&#x27;</span>, <span class="hljs-string">&#x27;similarity&#x27;</span>, k=<span class="hljs-number">30</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(search_result), search_result[<span class="hljs-number">0</span>], <span class="hljs-string">&#x27;\n\n\n&#x27;</span>)<br><br><span class="hljs-comment"># 我们先把增强弄出来——</span><br><br><span class="hljs-comment"># 将 vs 包装成一个 retriever（Runnable）</span><br><span class="hljs-comment"># 其实 retriever 自己也提供了 add_document 方法，直接 delegate 给 vs</span><br>retriever = vs.as_retriever(search_type=<span class="hljs-string">&#x27;similarity&#x27;</span>, k=<span class="hljs-number">50</span>)<br><br><span class="hljs-comment"># 然而，ollama 并没有提供交叉编码器适用的模型，我们得从其他地方拉</span><br><span class="hljs-comment"># ……实际上我们随便选一种吧，不强求交叉编码器</span><br><br><span class="hljs-comment"># from langchain_community.document_compressors import LLMLinguaCompressor</span><br><span class="hljs-comment"># compressor = LLMLinguaCompressor()</span><br><br><span class="hljs-comment"># 悲讯——ContextualCompressionRetriever 被挪到 classic 包了，这里不用它了，自己 rerank</span><br><span class="hljs-meta">@chain</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">augment_query</span>(<span class="hljs-params">query: <span class="hljs-built_in">str</span></span>):<br>    docs = retriever.invoke(query)<br>    <span class="hljs-comment"># reranked_docs = compressor.compress_documents(docs, query)</span><br>    <br>    reranked_docs = docs[:<span class="hljs-number">5</span>]<br>    content = <span class="hljs-string">&#x27;\n\n --- \n\n&#x27;</span>.join(i.page_content <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> reranked_docs)<br>    <span class="hljs-built_in">print</span>(content)<br>    <br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-string">&#x27;context&#x27;</span>: content,<br>        <span class="hljs-string">&#x27;query&#x27;</span>: query<br>    &#125;<br>    <br>prompt = ChatPromptTemplate([<br>    (<span class="hljs-string">&#x27;system&#x27;</span>, dedent(<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        你是一个基于给定资料进行问答的助手。请严格根据以下提供的资料回答问题。</span><br><span class="hljs-string">        如果资料中没有足够信息，请直接回复“根据现有资料无法回答”。</span><br><span class="hljs-string"></span><br><span class="hljs-string">        资料：</span><br><span class="hljs-string">        &#123;context&#125;</span><br><span class="hljs-string"></span><br><span class="hljs-string">        问题：</span><br><span class="hljs-string">        &#123;query&#125;</span><br><span class="hljs-string">    &quot;&quot;&quot;</span>.strip()))<br>])<br><br>chain = augment_query | prompt | model<br><span class="hljs-comment"># 这是个单轮的 RAG，多轮的话就是增强这一次 UserMessage 了</span><br><span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> chain.stream(<span class="hljs-string">&#x27;说说伦敦的出租车司机的大脑&#x27;</span>):<br>    <span class="hljs-built_in">print</span>(step.content, sep=<span class="hljs-string">&#x27;&#x27;</span>, end=<span class="hljs-string">&#x27;&#x27;</span>, flush=<span class="hljs-literal">True</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">它输出：</span><br><span class="hljs-string"></span><br><span class="hljs-string">根据提供的资料，伦敦出租车司机的大脑表现出明显的可塑性：他们经过长期训练和记忆伦敦复杂街道布局后，海马体后部区域的脑灰质会显著增加。研究显示，刚开始接受培训的出租车司机与普通人相比，海马体后部大小并无差别，但通过测试并获得许可的司机，其海马体后部会变大。此外，一旦出租车司机停止日常的导航训练（如退休），这种大脑改变会逐渐消失，但他们的海马体后部灰质仍比从未当过出租车司机的人多。</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></div></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/AI/">AI</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/05-15%E6%89%8B%E5%86%99OpenAI%E5%AE%A2%E6%88%B7%E7%AB%AF1%E2%80%94%E2%80%94API%EF%BC%8CSSE%E5%92%8C%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8.html">
+                        <span class="hidden-mobile">手写 OpenAI 客户端 1——API，SSE和工具调用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
