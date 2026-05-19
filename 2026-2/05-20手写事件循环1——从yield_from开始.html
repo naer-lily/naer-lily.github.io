@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="只实现SLEEP一个原语，让我的实现被SLEEP的特殊性带跑了，我没有抓住一个更广泛的东西——对事件的抽象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写事件循环1——从 yield from 开始">
+<meta property="og:url" content="http://example.com/2026-2/05-20%E6%89%8B%E5%86%99%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF1%E2%80%94%E2%80%94%E4%BB%8Eyield_from%E5%BC%80%E5%A7%8B.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="只实现SLEEP一个原语，让我的实现被SLEEP的特殊性带跑了，我没有抓住一个更广泛的东西——对事件的抽象">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-19T17:30:00.000Z">
+<meta property="article:modified_time" content="2026-05-19T17:39:48.451Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>手写事件循环1——从 yield from 开始 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="手写事件循环1——从 yield from 开始">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-05-20 01:30" pubdate>
+        2026年5月20日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.5k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">手写事件循环1——从 yield from 开始</h1>
+            
+            <div class="markdown-body">
+              <p>24 年的时候学过协程（原始笔记贴在下面），最近重新回顾一下，顺便把自己推到更远。我们会做：</p>
+<ol>
+<li>在 javascript 中通过生成器实现简单事件循环</li>
+<li>在 python 中通过生成器实现简单事件循环，只实现 SLEEP 原语</li>
+<li>为事件循环增加 FUTURE 原语</li>
+<li>抽象出一个一般的 EVENT 原语（event loop 的 loop），重新实现 SLEEP 和 FUTURE</li>
+<li>整蛊：异步生成器怎么说？</li>
+<li>实战：使用上面的思想将事件循环“寄生”在 Qt 的事件循环中实现异步编程</li>
+<li>手写 asyncio</li>
+</ol>
+<p>我们一步一步来，先实现基于生成器的简单事件循环，这里与其说是事件循环，不如说是<strong>定时</strong>循环。<strong>这一步里，我们先实现 1 和 2</strong>。</p>
+<h1 id="回顾协程"><a href="#回顾协程" class="headerlink" title="回顾协程"></a>回顾协程</h1><p>我们调用函数时，控制权被暂时转给函数，函数执行完成后，控制权又被还给我，我继续执行。<strong>函数是一种非对称协程</strong>——调用者将控制权丢给被调用者，被调用者的控制权只能返回给调用者。</p>
+<p><strong>但生成器呢？其实它也是非对称协程</strong>，但<em>稍微更对称一些</em>——控制权可以从调用者-被调用者来回倒，被调用者还能 yield from 给其他生成器……但归根结底，这里的被调用者的链条终究要回到初始的调用者（就像有个栈，实际上也有个栈）。即使是事件循环，事件之间也需要一个公共的调用者——事件循环。</p>
+<p>考虑某个协程 A，A yield from B，B yield from C，<strong>这每一次 yield from，控制权实际上都回到了调用 A 的那个人</strong>，而这恰好符合我们的需求——我们确实需要它正好回到最初的调用者处，因为我要在这里做花活儿呢，而这里的最初的调用者，它就是事件循环了。事件循环调度 A，然后从 C 处返回出来，但我们看到的实际上仍旧是这里的 A 的一个“实例”，只是栈顶当前是 C……no，栈顶不是 C，栈顶必然是我们的<strong>原语</strong>，如后面要实现的 SLEEP 和 FUTURE。</p>
+<p>考虑下面的这个流程（要对 yield from 有一个恰当的心智模型才好理解）：</p>
+<ol>
+<li><code>event_loop.run(A())</code>, 我们的事件循环 run 一个协程（生成器）A 的<strong>实例</strong></li>
+<li>事件循环执行 <code>next(A)</code>，它会执行生成器直到他 yield 一个值</li>
+<li>生成器 A yield from 生成器 B，这时候的语义可以说 A <strong>委托</strong> B 去<strong>对事件循环</strong>进行响应</li>
+<li>生成器 B 的逻辑开始执行，它 yield from 生成器 C，所以 B 又委托 C 去<strong>对事件循环</strong>进行相应</li>
+<li>生成器 C yield from 我们的原语 sleep（为了保证一致性，我们的原语通过 <code>def sleep(ms): yield SLEEP(ms)</code> 的形式去暴露，这样生成器 C 这里也是 yield from；但实际上这里等价于直接 yield SLEEP(ms)</li>
+<li>上面终于看到一个真正的 yield 了！因此 <code>SLEEP(ms)</code> 被返回给了事件循环，事件循环把我们协程的实例去注册相应事件，如定时器事件</li>
+<li>定时器事件到达后，事件循环重新调度这个协程——通过 send 把事件的结果发给协程顺便调度它（因此使用<code>send</code>而非<code>next</code>）。</li>
+</ol>
+<p>这里有趣的地方在于，任意的“业务代码”如 ABC，它们通过 yield from，控制权终究会<strong>直接回到</strong>事件循环，这实际上就很符合我们的需求——任意一个协程要等待什么东西的时候，我们正好需要控制权回到事件循环让我们去做其他调度。更酷的是，就连函数调用栈都能被维持下来，这让异步代码的 debug 变得和同步代码一样简单。</p>
+<h1 id="js-实现事件循环"><a href="#js-实现事件循环" class="headerlink" title="js 实现事件循环"></a>js 实现事件循环</h1><p>这种花活儿其实以前就有过，在 js 生态里。我突然想起我大一写 js 的时候，试图在 while 里等待一个状态的改变，很 funny。</p>
+<p>js 因为原本就有事件循环和定时器事件，所以实现它就非常 trivial，<strong>反而不够典型</strong>了，但我们从中能看到一些东西。</p>
+<figure class="highlight js"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs js"><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SLEEP_SYMBOL</span> = <span class="hljs-title class_">Symbol</span>(<span class="hljs-string">&#x27;SLEEP&#x27;</span>)<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@typedef</span> &#123;<span class="hljs-type">&#123;type: typeof SLEEP_SYMBOL, ms: number</span>&#125;&#125; AsyncPrimitive</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">number</span>&#125; ms </span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">function</span>* <span class="hljs-title function_">sleep</span>(<span class="hljs-params">ms</span>) &#123;<br>    <span class="hljs-keyword">yield</span> &#123;<span class="hljs-attr">type</span>: <span class="hljs-variable constant_">SLEEP_SYMBOL</span>, ms&#125;<br>&#125;<br><br><span class="hljs-keyword">function</span>* <span class="hljs-title function_">someAsyncFn</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">yield</span>* <span class="hljs-title function_">sleep</span>(<span class="hljs-number">200</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">42</span><br>&#125;<br><br><span class="hljs-keyword">function</span>* <span class="hljs-title function_">hello</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;hello&#x27;</span>)<br>    <span class="hljs-keyword">yield</span>* <span class="hljs-title function_">sleep</span>(<span class="hljs-number">200</span>)<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;world&#x27;</span>)<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-keyword">yield</span>* <span class="hljs-title function_">someAsyncFn</span>())<br>    <span class="hljs-keyword">yield</span> <span class="hljs-number">123</span> <span class="hljs-comment">// illegal operation</span><br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * thread-local!</span><br><span class="hljs-comment"> */</span><br><span class="hljs-variable constant_">EVENT_LOOP</span> = (<span class="hljs-function">()=&gt;</span>&#123;<br>    <span class="hljs-keyword">return</span> &#123;<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * run a coroutine without waiting it&#x27;s response</span><br><span class="hljs-comment">         * <span class="hljs-doctag">@param</span> &#123;<span class="hljs-type">Generator</span>&#125; co </span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-title function_">run</span>(<span class="hljs-params">co</span>) &#123;<br>            <span class="hljs-keyword">const</span> ret = co.<span class="hljs-title function_">next</span>() <br>            <span class="hljs-keyword">if</span>(ret.<span class="hljs-property">done</span>) &#123;<br>                <span class="hljs-comment">// the coroutine returned，we do nothing cause it returns directly to event loop, we ignore it</span><br>                <span class="hljs-keyword">return</span><br>            &#125;<br><br>            <span class="hljs-comment">// check whether the result is PRIMITIVE or not</span><br>            <span class="hljs-keyword">if</span> (ret.<span class="hljs-property">value</span>?.<span class="hljs-property">type</span> != <span class="hljs-variable constant_">SLEEP_SYMBOL</span>) &#123;<br>                <span class="hljs-comment">// illegal——PRIMITIVE is the only thing that coroutine can yield to EVENT_LOOP </span><br>                <span class="hljs-comment">// we throw the Exception to coroutine to clearify the problem&#x27;s position</span><br>                co.<span class="hljs-keyword">throw</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Illegal yield, only PRIMITIVE is allowed to be yielded&#x27;</span>))<br>                <span class="hljs-comment">// and... what can we do? we can directly exit cause it&#x27;s almost a &quot;compile error&quot;</span><br>            &#125;<br>            <span class="hljs-keyword">const</span> &#123;ms&#125; = ret.<span class="hljs-property">value</span><br><br>            <span class="hljs-comment">// for SLEEP primitive, we add it to a queue</span><br>            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>                <span class="hljs-variable constant_">EVENT_LOOP</span>.<span class="hljs-title function_">run</span>(co)<br>            &#125;, ms)<br>        &#125;<br>    &#125;<br>&#125;)()<br><br><span class="hljs-variable constant_">EVENT_LOOP</span>.<span class="hljs-title function_">run</span>(<span class="hljs-title function_">hello</span>())<br></code></pre></div></td></tr></table></figure>
+<p>这个示例简单过头以至于好多东西没有抓住了，但形式有了——发现是一个 SLEEP 原语，我们就把它暂存下来，<strong>等到特定事件到来</strong>后，再去调度它。</p>
+<p>这里或者也可以说，<strong>把事件和等待这个事件的协程相绑定</strong>，等事件到来了就去执行这个事件对应的所有协程，这就是事件循环的实质。</p>
+<p>我们用 python 再写一次。</p>
+<h1 id="python-实现事件循环"><a href="#python-实现事件循环" class="headerlink" title="python 实现事件循环"></a>python 实现事件循环</h1><p>python 里，我们就先不挂靠在某个既有的事件循环上了（you guess what？我最开始尝试研究这个是在 Qt 的环境下，结果我发现可以直接依赖 Qt 的事件循环，通过 QTimer 去实现我自己的事件循环，等于是将我们的事件循环寄生在 Qt 中了，但你别说，可读性和性能其实都有保证），我们直接以一个最简单的方式去操作——轮询应当去执行的协程。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> threading<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Callable</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">IDENTIFIER</span>:<br>    SLEEP = <span class="hljs-built_in">object</span>()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">sleep</span>(<span class="hljs-params">ms: <span class="hljs-built_in">int</span></span>):<br>    <span class="hljs-keyword">yield</span> IDENTIFIER.SLEEP, ms<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">async_fun</span>(<span class="hljs-params">i = <span class="hljs-number">5</span></span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;hello <span class="hljs-subst">&#123;i&#125;</span>&#x27;</span>)<br>    <span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> sleep(<span class="hljs-number">2000</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;world <span class="hljs-subst">&#123;i&#125;</span>&#x27;</span>)<br>    <span class="hljs-keyword">if</span> i &gt; <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> async_fun(i - <span class="hljs-number">1</span>)<br>    <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyEventLoop</span>(threading.local):<br>    _instance_holder = threading.local()<br>    <br><span class="hljs-meta">    @classmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_event_loop</span>(<span class="hljs-params">cls</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">hasattr</span>(cls._instance_holder, <span class="hljs-string">&#x27;ins&#x27;</span>):<br>            cls._instance_holder.ins = cls()<br>        <span class="hljs-keyword">return</span> cls._instance_holder.ins<br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.schedule_coroutines: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">tuple</span>[<span class="hljs-built_in">int</span>, <span class="hljs-built_in">any</span>]] = [] <span class="hljs-comment"># timestamp and cb</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_do_loop</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">for</span> timestamp, coroutine <span class="hljs-keyword">in</span> self.schedule_coroutines:<br>            <span class="hljs-comment"># find first coroutine which needs to be scheduled</span><br>            <span class="hljs-keyword">if</span> time.time() * <span class="hljs-number">1000</span> &gt;= timestamp:<br>                <span class="hljs-keyword">break</span><br>        <span class="hljs-keyword">else</span>: <br>            <span class="hljs-keyword">return</span><br>        <br>        self.schedule_coroutines.remove((timestamp, coroutine))<br>        <span class="hljs-keyword">try</span>:<br>            v = <span class="hljs-built_in">next</span>(coroutine)<br>        <span class="hljs-keyword">except</span> StopIteration:<br>            <span class="hljs-comment"># it ends directly；这个在正常情况下 **只能意味着这个协程已经结束执行**</span><br>            <span class="hljs-keyword">return</span><br>        <span class="hljs-keyword">except</span>:<br>            ... <span class="hljs-comment"># TODO 这说明抛了个异常直接抛到事件循环这里了……咋整？或许直接打印点东西然后 return</span><br><br>        <span class="hljs-keyword">match</span> v:<br>            <span class="hljs-keyword">case</span> (IDENTIFIER.SLEEP, ms):<br>                <span class="hljs-comment"># ...</span><br>                self.schedule_coroutines.append((time.time() * <span class="hljs-number">1000</span> + ms, coroutine))<br>            <span class="hljs-keyword">case</span> _: <br>                <span class="hljs-keyword">raise</span> RuntimeError(<span class="hljs-string">&#x27;Illegal&#x27;</span>)<br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">add_task</span>(<span class="hljs-params">self, coroutine</span>):<br>        self.schedule_coroutines.append((-<span class="hljs-number">1</span>, coroutine))<br>        <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self, coroutine</span>):<br>        self.add_task(coroutine)<br>        <span class="hljs-keyword">while</span> self.schedule_coroutines:<br>            self._do_loop()<br>            time.sleep(<span class="hljs-number">0.033</span>) <span class="hljs-comment"># for PyQt, use no blocking run, like a QTimer duration, or</span><br>        <br>MyEventLoop.get_event_loop().run(async_fun())<br></code></pre></div></td></tr></table></figure>
+<p>虽然这个看上去非常不 trivial，但它其实非常 trivial……实际上一个很重要的事情是——<strong>只实现 SLEEP 一个原语，让我的实现被 SLEEP 的特殊性带跑了，我没有抓住一个更广泛的东西——对事件的抽象</strong>。但这篇笔记就这样了。</p>
+<hr>
+<p>下面的是 24 年的学习笔记，记在 logseq 上了。</p>
+<h1 id="关于-Python-的生成器（协程）的yield，以及yield-from的心智模型"><a href="#关于-Python-的生成器（协程）的yield，以及yield-from的心智模型" class="headerlink" title="关于 Python 的生成器（协程）的yield，以及yield from的心智模型"></a>关于 Python 的生成器（协程）的<code>yield</code>，以及<code>yield from</code>的心智模型</h1><p><code>yield</code>应当认为是<strong>非原子的</strong>，它是一个<strong>两步</strong>的操作：<strong>向调用者返回一个值（或 None）；暂停期待调用者的唤起</strong>。在唤起之前，生成器中当前执行的代码始终是<code>yield XXX</code>，<strong>协程在<code>yield</code>内部暂停</strong>。</p>
+<p><strong>调用者唤起协程时，会向协程传递特定的值或者异常，然后控制权交给协程去继续执行；倘若是传递特定的值，则该值会作为<code>yield</code>语句的返回值返回过来；倘若是传递异常，则异常会直接从<code>field</code>语句位置抛出</strong>。</p>
+<p>唤起协程有三种方式——协程的<code>send</code>和<code>throw</code>方法，以及<code>next</code>函数：</p>
+<ul>
+<li><code>send</code>：传递给协程一个值，执行直到遇到下一个<code>yield</code>或完成执行，倘若是前者，返回下一个<code>yield</code>传过来的值。</li>
+<li><code>throw</code>：接受异常或异常类型，让协程在<code>yield</code>内部抛出异常，期待生成器的捕获，并继续执行（同<code>send</code>），使用生成器函数定义上下文管理器时内置库会使用该操作。</li>
+<li><code>next</code>：等价于<code>send(None)</code>。</li>
+<li><code>close</code>：等价于抛出<code>GeneratorExit</code>异常，这个异常相当基础（甚至不是 Exception 的子类），一般来说不能被捕获到，同时它也不会在调用方产生异常。</li>
+</ul>
+<p>此外，刚创建的生成器不能执行<code>send（非 None 值）</code>，这是符合逻辑的——没有人去接受它。但能抛出异常……此时生成器无法捕获它，它会立刻被传播回调用者，很有趣的设计。创建协程后第一次执行<code>next</code>时会激活协程，这一步称为<strong>预激</strong>（prime），一些框架提供装饰器会在创建时自动预激协程，但<code>yield from</code>语法是会自动预激协程的……？</p>
+<p>协程结束执行后，<strong>它 return 的值会作为所抛出的 StopIteration 异常的 value 字段</strong>，注意 return 的值是无法通过 next 获取到的，<strong>因此它也不会出现在 for 中</strong>。</p>
+<p><code>yield from</code>原本是在生成器中直接使用其它生成器，它的原理可以表示为：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> x<br><span class="hljs-comment"># 等价于</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> x:<br>    <span class="hljs-keyword">yield</span> i<br></code></pre></div></td></tr></table></figure>
+<p>但考虑到协程是可以喂给它值的，现在事情变得复杂了。<code>yield from</code>现在应当理解为，<strong>委派（delegate）</strong>工作给<strong>子生成器</strong>，这个委派和其他语言的委派概念一样——<strong>实际工作不是我干的，我只接受它的结果，操作我就是操作我委派的那家伙</strong>。<strong>同时，<code>yield from</code>的返回值即为子生成器 return 的值</strong>。</p>
+<p>实际上，<code>yield from</code>，其行为就<strong>等于把子生成器的代码原样拷过来一份，并把最后的 return 返回出来</strong>。<code>yield</code>无法直接地实现<code>yield from</code>，<strong>后者允许用户喂进来的值以及产出的值直接跨越嵌套的子生成器</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">co</span>(<span class="hljs-params">name: <span class="hljs-built_in">str</span></span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        x = <span class="hljs-keyword">yield</span><br>        <span class="hljs-built_in">print</span>(name + <span class="hljs-string">&#x27; coroutine received &#x27;</span> + x)<br>    <span class="hljs-keyword">return</span> name + <span class="hljs-string">&#x27; DONE!&#x27;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">f</span>():<br>    a: <span class="hljs-built_in">str</span> = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> co(<span class="hljs-string">&#x27;me&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;me finished, response: &#x27;</span>, a)<br>    b: <span class="hljs-built_in">str</span> = <span class="hljs-keyword">yield</span> <span class="hljs-keyword">from</span> co(<span class="hljs-string">&#x27;you&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;you finished, response: &#x27;</span>, b)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;wtf&#x27;</span><br><br>c = f()<br><span class="hljs-built_in">next</span>(c)<br>c.send(<span class="hljs-string">&#x27;hello&#x27;</span>) <span class="hljs-comment"># me coroutine received hello</span><br>c.send(<span class="hljs-string">&#x27;world&#x27;</span>) <span class="hljs-comment"># me coroutine received world</span><br>c.send(<span class="hljs-string">&#x27;abc&#x27;</span>) <span class="hljs-comment"># me coroutine received abc</span><br><span class="hljs-comment"># me finished, response:  me DONE!</span><br><br>c.send(<span class="hljs-string">&#x27;hello&#x27;</span>) <span class="hljs-comment"># me coroutine received hello</span><br>c.send(<span class="hljs-string">&#x27;world&#x27;</span>) <span class="hljs-comment"># me coroutine received world</span><br>c.send(<span class="hljs-string">&#x27;abc&#x27;</span>) <span class="hljs-comment"># me coroutine received abc</span><br><span class="hljs-comment"># StopIteration: wtf</span><br></code></pre></div></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/05-17LLM%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B03%E2%80%94%E2%80%94LangChain%E5%92%8CRAG%E7%B2%97%E6%8E%A2.html">
+                        <span class="hidden-mobile">LLM 学习笔记 3——LangChain 和 RAG 粗探</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
