@@ -20,19 +20,19 @@
   
     <meta name="description" content="关于 HashMap，并发，GC，Spring 底层的复习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java开发小小复习2——Java和Spring底层">
+<meta property="og:title" content="Java 开发小小复习 2——Java 和 Spring 底层">
 <meta property="og:url" content="http://example.com/2026-2/05-05Java%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B0%8F%E5%A4%8D%E4%B9%A02%E2%80%94%E2%80%94Java%E5%92%8CSpring%E5%BA%95%E5%B1%82.html">
 <meta property="og:site_name" content="那尔">
 <meta property="og:description" content="关于 HashMap，并发，GC，Spring 底层的复习">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-05T15:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-16T10:24:38.174Z">
+<meta property="article:modified_time" content="2026-06-14T14:04:40.511Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>Java开发小小复习2——Java和Spring底层 - 那尔</title>
+  <title>Java 开发小小复习 2——Java 和 Spring 底层 - 那尔</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -193,7 +193,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Java开发小小复习2——Java和Spring底层">
+            <span class="h2" id="subtitle" title="Java 开发小小复习 2——Java 和 Spring 底层">
               
             </span>
 
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      9.9k 字
+      10k 字
     </span>
   
 
@@ -245,7 +245,7 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Java开发小小复习2——Java和Spring底层</h1>
+            <h1 style="display: none">Java 开发小小复习 2——Java 和 Spring 底层</h1>
             
             <div class="markdown-body">
               <p>再来一次。</p>
@@ -307,7 +307,7 @@
 <h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p>ThreadLocal，其实就是<strong>线程特定的全局变量</strong>，常用在设置 session 信息中，比如 Spring MVC，底下的 Filter 看请求来了读取用户信息然后保存到 ThreadLocal 变量中供后续客户端代码使用，偶尔也可以真的在自己的业务中拿来当全局变量——在多个函数中共享一个参数。</p>
 <p>ThreadLocal 本身不存储值，它只是一个引用 ThreadLocalMap 的工具类，<strong>而这个 ThreadLocalMap，它存在于 Thread 对象中</strong>。ThreadLocal 用自己当 key 去从 ThreadLocalMap 中做索引。</p>
 <p>ThreadLocalMap 对 ThreadLocal 是弱引用的，这让 ThreadLocal 可以被 GC 掉——显然这发生在使用局部的 ThreadLocal 的时候。但 ThreadLocal 所存储的值是被<code>Entry-&gt;ThreadLocalMap-&gt;Thread</code>强引用的，所以只要 Thread 还活着它存储的值就是持久的。这会出现问题——Spring MVC 中，处理用户请求的是一个线程池，某个线程在上个请求中如果没有清空数据，会导致下一次请求时仍看到这个数据，所以必须 remove。</p>
-<h2 id="线程池-7-4"><a href="#线程池-7-4" class="headerlink" title="线程池 7 + 4"></a>线程池 7 + 4</h2><p>这个之前复习过了，我想想……线程池先丢到核心线程，再非核心线程，再阻塞队列，再拒绝……非核心线程在空闲一定时间后会被杀掉……</p>
+<h2 id="线程池-7-4"><a href="#线程池-7-4" class="headerlink" title="线程池 7 + 4"></a>线程池 7 + 4</h2><p>这个之前复习过了，我想想……线程池先丢到核心线程，再阻塞队列（创建线程很昂贵），再非核心线程，再拒绝……非核心线程在空闲一定时间后会被杀掉……</p>
 <p>所以参数有：核心线程数，最大线程数，阻塞队列，拒绝策略，线程工厂，非核心线程存活时间和单位。</p>
 <p>拒绝策略有 4 种：本线程执行，本线程抛异常，直接丢弃，丢弃队列中最老任务。</p>
 <h2 id="利用线程池的生产者-消费者模式"><a href="#利用线程池的生产者-消费者模式" class="headerlink" title="利用线程池的生产者-消费者模式"></a>利用线程池的生产者-消费者模式</h2><p>要实现经典的生产者-消费者模式，且允许我们精确控制消费过程，我们需要自己创建阻塞队列而非使用线程池内部的。</p>
@@ -325,6 +325,8 @@
 <p>而年轻代进一步细分——Eden 和 Survivor；Survivor 是双缓冲区结构，两块缓冲区分别叫 from 和 to（相对的名字）。新对象分配到 Eden，每次 Minor GC 时，Eden 和 from Suvrivor 复制到 to Survivor，然后两个 Survivor 角色互换。</p>
 <p>Survivor 的双缓冲保证不产生内存碎片（每次 GC 都是直接将全部活对象都放到 to Survivor，而非是简单地从一块内存中清掉一部分，留下一个孔），而且速度够快（年轻代存活的对象一般少），<strong>代价是空间浪费一倍</strong>。</p>
 <p>一个对象的一生——分配后进入 Eden，Minor GC 时在 Survivor 区来回倒腾；年龄超过一个阈值后送入老年代，老年代满后做 Full GC。</p>
+<p>一般来说，<code>Eden:SurvivorA:SurvivorB=8:1:1</code>。这时候我想问一个问题——为什么要 Eden？为什么不直接两个 Survivor，去标记当前的 Survivor，把对象分配进去？</p>
+<p>可以说，主要原因是内存效率问题——注意到上面的 Eden 远大于 Survivor，因为确实大部分对象都是朝生夕灭，死的飞快，有 Eden 区，我们能分配的内存就有 80%，但如果只有两个 Survivor，我们能分配的内存就小于 50%——“当前” Survivor 本来就不是空的。</p>
 <p>进行 GC 的那个实体叫所谓<strong>收集器</strong>。一般来说，收集器对 Minor GC（年轻代）的 GC 算法是复制，Full GC（老年代）的 GC 算法是标记-整理。这是因为：</p>
 <ul>
 <li>年轻代存活率低，超过 90%的对象可回收，复制代价低且无碎片</li>

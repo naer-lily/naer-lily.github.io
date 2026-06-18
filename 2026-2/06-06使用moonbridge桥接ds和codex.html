@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="AI 总结的利用 moonbridge 将 deepseek 适配到 codex，同时使用 kimi-2.5 去提供多模态能力，codex 坑也不少！这里也处理了其 powershell 中文乱码等问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 moonbridge 桥接 ds 和 codex">
+<meta property="og:url" content="http://example.com/2026-2/06-06%E4%BD%BF%E7%94%A8moonbridge%E6%A1%A5%E6%8E%A5ds%E5%92%8Ccodex.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="AI 总结的利用 moonbridge 将 deepseek 适配到 codex，同时使用 kimi-2.5 去提供多模态能力，codex 坑也不少！这里也处理了其 powershell 中文乱码等问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-06-06T07:30:00.000Z">
+<meta property="article:modified_time" content="2026-06-07T01:36:08.298Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>使用 moonbridge 桥接 ds 和 codex - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="使用 moonbridge 桥接 ds 和 codex">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-06-06 15:30" pubdate>
+        2026年6月6日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      11k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">使用 moonbridge 桥接 ds 和 codex</h1>
+            
+            <div class="markdown-body">
+              <p><strong>AI 生成</strong>，倒是也包含了很多折腾 codex 的部分（他自己在 win 上 bug 也不少啊！）。</p>
+<p>这里实际上建议直接使用 CC Switch！moonbridge有各种让人恼火的问题。</p>
+<p>这里实际上建议还是直接上claude desktop（</p>
+<h1 id="DeepSeek-Kimi-K2-5-→-Codex-CLI-完整配置指南"><a href="#DeepSeek-Kimi-K2-5-→-Codex-CLI-完整配置指南" class="headerlink" title="DeepSeek + Kimi K2.5 → Codex CLI 完整配置指南"></a>DeepSeek + Kimi K2.5 → Codex CLI 完整配置指南</h1><blockquote>
+<p>通过 Moon Bridge 让 Codex CLI 使用 DeepSeek V4（推理）+ Kimi K2.5（多模态识图）</p>
+</blockquote>
+<h2 id="架构总览"><a href="#架构总览" class="headerlink" title="架构总览"></a>架构总览</h2><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">Codex CLI ──POST /v1/responses──▶ Moon Bridge (:38440)<br>                                      │<br>                                      ├── DeepSeek V4 Pro/Flash   （主推理模型，Anthropic 协议）<br>                                      │<br>                                      └── Kimi K2.5               （视觉代理，OpenAI Chat 协议）<br>                                           ↑ 当主模型调用 visual_brief/visual_qa 工具时触发<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li><strong>主模型</strong> DeepSeek V4 负责文本推理和工具调用</li>
+<li><strong>视觉代理</strong> Kimi K2.5 在 DeepSeek 需要看图时介入，分析结果回传给 DeepSeek 继续对话</li>
+<li>整个过程对 Codex 用户完全透明</li>
+</ul>
+<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>依赖</th>
+<th>版本要求</th>
+<th>检查命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Go</td>
+<td>1.25+</td>
+<td><code>go version</code></td>
+</tr>
+<tr>
+<td>Codex CLI</td>
+<td>最新</td>
+<td><code>codex --version</code></td>
+</tr>
+<tr>
+<td>DeepSeek API Key</td>
+<td>—</td>
+<td><a target="_blank" rel="noopener" href="https://platform.deepseek.com">platform.deepseek.com</a></td>
+</tr>
+<tr>
+<td>Kimi (Moonshot) API Key</td>
+<td>—</td>
+<td><a target="_blank" rel="noopener" href="https://platform.moonshot.cn">platform.moonshot.cn</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="第一步：编译-Moon-Bridge"><a href="#第一步：编译-Moon-Bridge" class="headerlink" title="第一步：编译 Moon Bridge"></a>第一步：编译 Moon Bridge</h2><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> git@github.com:ZhiYi-R/moon-bridge.git<br><span class="hljs-built_in">cd</span> moon-bridge<br>go build -o moonbridge.exe ./cmd/moonbridge    <span class="hljs-comment"># Windows</span><br><span class="hljs-comment"># go build -o moonbridge ./cmd/moonbridge      # Linux/macOS</span><br></code></pre></div></td></tr></table></figure>
+<h2 id="第二步：创建配置文件"><a href="#第二步：创建配置文件" class="headerlink" title="第二步：创建配置文件"></a>第二步：创建配置文件</h2><p>在项目根目录创建 <code>config.yml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">mode:</span> <span class="hljs-string">&quot;Transform&quot;</span><br><br><span class="hljs-attr">log:</span><br>  <span class="hljs-attr">level:</span> <span class="hljs-string">&quot;info&quot;</span><br>  <span class="hljs-attr">format:</span> <span class="hljs-string">&quot;text&quot;</span><br><br><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">addr:</span> <span class="hljs-string">&quot;127.0.0.1:38440&quot;</span><br><br><span class="hljs-attr">persistence:</span><br>  <span class="hljs-attr">active_provider:</span> <span class="hljs-string">db_sqlite</span><br><br><span class="hljs-attr">extensions:</span><br>  <span class="hljs-attr">deepseek_v4:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">reinforce_instructions:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">reinforce_prompt:</span> <span class="hljs-string">&quot;[System Reminder]: Please pay close attention to the system</span><br><span class="hljs-string">        instructions, AGENTS.md files, and any other context provided. Follow them</span><br><span class="hljs-string">        carefully and completely in your response.\n[User]:&quot;</span><br><br>  <span class="hljs-comment"># Kimi K2.5 作为视觉后端</span><br>  <span class="hljs-attr">visual:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">provider:</span> <span class="hljs-string">&quot;kimi&quot;</span><br>      <span class="hljs-attr">model:</span> <span class="hljs-string">&quot;kimi-k2.5&quot;</span><br>      <span class="hljs-attr">max_rounds:</span> <span class="hljs-number">4</span><br>      <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">2048</span><br><br>  <span class="hljs-attr">kimi_workaround:</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">max_tool_rounds:</span> <span class="hljs-number">50</span><br>      <span class="hljs-attr">convergence_margin:</span> <span class="hljs-number">0.8</span><br><br>  <span class="hljs-attr">db_sqlite:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">path:</span> <span class="hljs-string">./data/moonbridge.db</span><br>      <span class="hljs-attr">wal:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">busy_timeout_ms:</span> <span class="hljs-number">5000</span><br>      <span class="hljs-attr">max_open_conns:</span> <span class="hljs-number">1</span><br><br>  <span class="hljs-attr">metrics:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">config:</span><br>      <span class="hljs-attr">default_limit:</span> <span class="hljs-number">100</span><br>      <span class="hljs-attr">max_limit:</span> <span class="hljs-number">1000</span><br><br><span class="hljs-attr">cache:</span><br>  <span class="hljs-attr">mode:</span> <span class="hljs-string">&quot;explicit&quot;</span><br>  <span class="hljs-attr">ttl:</span> <span class="hljs-string">&quot;5m&quot;</span><br>  <span class="hljs-attr">prompt_caching:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">automatic_prompt_cache:</span> <span class="hljs-literal">false</span><br>  <span class="hljs-attr">explicit_cache_breakpoints:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">allow_retention_downgrade:</span> <span class="hljs-literal">false</span><br>  <span class="hljs-attr">max_breakpoints:</span> <span class="hljs-number">4</span><br>  <span class="hljs-attr">min_cache_tokens:</span> <span class="hljs-number">1024</span><br>  <span class="hljs-attr">expected_reuse:</span> <span class="hljs-number">2</span><br>  <span class="hljs-attr">minimum_value_score:</span> <span class="hljs-number">2048</span><br>  <span class="hljs-attr">min_breakpoint_tokens:</span> <span class="hljs-number">1024</span><br><br><span class="hljs-attr">defaults:</span><br>  <span class="hljs-attr">model:</span> <span class="hljs-string">&quot;moonbridge&quot;</span><br>  <span class="hljs-attr">max_tokens:</span> <span class="hljs-number">65536</span><br><br><span class="hljs-attr">trace:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br><br><span class="hljs-attr">models:</span><br>  <span class="hljs-attr">kimi-k2.5:</span><br>    <span class="hljs-attr">context_window:</span> <span class="hljs-number">262144</span><br>    <span class="hljs-attr">max_output_tokens:</span> <span class="hljs-number">8192</span><br>    <span class="hljs-attr">display_name:</span> <span class="hljs-string">&quot;Kimi K2.5 Vision&quot;</span><br>    <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;Kimi K2.5 多模态视觉识别模型&quot;</span><br><br>  <span class="hljs-attr">deepseek-v4-pro:</span><br>    <span class="hljs-attr">context_window:</span> <span class="hljs-number">1000000</span><br>    <span class="hljs-attr">max_output_tokens:</span> <span class="hljs-number">384000</span><br>    <span class="hljs-attr">display_name:</span> <span class="hljs-string">&quot;DeepSeek V4 Pro (Kimi Vision)&quot;</span><br>    <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;DeepSeek V4 + Kimi 多模态视觉代理&quot;</span><br>    <span class="hljs-attr">default_reasoning_level:</span> <span class="hljs-string">&quot;high&quot;</span><br>    <span class="hljs-attr">supported_reasoning_levels:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">effort:</span> <span class="hljs-string">&quot;high&quot;</span><br>        <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;高推理强度&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">effort:</span> <span class="hljs-string">&quot;xhigh&quot;</span><br>        <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;超高推理强度&quot;</span><br>    <span class="hljs-attr">supports_reasoning_summaries:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">default_reasoning_summary:</span> <span class="hljs-string">&quot;auto&quot;</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;auto&quot;</span><br>    <span class="hljs-attr">extensions:</span><br>      <span class="hljs-attr">deepseek_v4:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">visual:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">input_modalities:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;text&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;image&quot;</span><br>    <span class="hljs-attr">supports_image_detail_original:</span> <span class="hljs-literal">true</span><br><br>  <span class="hljs-attr">deepseek-v4-flash:</span><br>    <span class="hljs-attr">context_window:</span> <span class="hljs-number">1000000</span><br>    <span class="hljs-attr">max_output_tokens:</span> <span class="hljs-number">384000</span><br>    <span class="hljs-attr">display_name:</span> <span class="hljs-string">&quot;DeepSeek V4 Flash (Kimi Vision)&quot;</span><br>    <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;DeepSeek V4 Flash + Kimi 多模态视觉代理&quot;</span><br>    <span class="hljs-attr">default_reasoning_level:</span> <span class="hljs-string">&quot;high&quot;</span><br>    <span class="hljs-attr">supported_reasoning_levels:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">effort:</span> <span class="hljs-string">&quot;high&quot;</span><br>        <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;高推理强度&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">effort:</span> <span class="hljs-string">&quot;xhigh&quot;</span><br>        <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;超高推理强度&quot;</span><br>    <span class="hljs-attr">supports_reasoning_summaries:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">default_reasoning_summary:</span> <span class="hljs-string">&quot;auto&quot;</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;auto&quot;</span><br>    <span class="hljs-attr">extensions:</span><br>      <span class="hljs-attr">deepseek_v4:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">visual:</span><br>        <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">input_modalities:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;text&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;image&quot;</span><br>    <span class="hljs-attr">supports_image_detail_original:</span> <span class="hljs-literal">true</span><br><br><span class="hljs-attr">providers:</span><br>  <span class="hljs-attr">deepseek:</span><br>    <span class="hljs-attr">base_url:</span> <span class="hljs-string">&quot;https://api.deepseek.com/anthropic&quot;</span><br>    <span class="hljs-attr">api_key:</span> <span class="hljs-string">&quot;sk-你的 DeepSeek 密钥&quot;</span><br>    <span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2023-06-01&quot;</span><br>    <span class="hljs-attr">user_agent:</span> <span class="hljs-string">&quot;moonbridge/1.0&quot;</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;auto&quot;</span><br>    <span class="hljs-attr">offers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">model:</span> <span class="hljs-string">deepseek-v4-pro</span><br>        <span class="hljs-attr">pricing:</span><br>          <span class="hljs-attr">input_price:</span> <span class="hljs-number">2</span><br>          <span class="hljs-attr">output_price:</span> <span class="hljs-number">8</span><br>          <span class="hljs-attr">cache_write_price:</span> <span class="hljs-number">1</span><br>          <span class="hljs-attr">cache_read_price:</span> <span class="hljs-number">0.2</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">model:</span> <span class="hljs-string">deepseek-v4-flash</span><br>        <span class="hljs-attr">pricing:</span><br>          <span class="hljs-attr">input_price:</span> <span class="hljs-number">1</span><br>          <span class="hljs-attr">output_price:</span> <span class="hljs-number">2</span><br>          <span class="hljs-attr">cache_write_price:</span> <span class="hljs-number">1</span><br>          <span class="hljs-attr">cache_read_price:</span> <span class="hljs-number">0.02</span><br><br>  <span class="hljs-attr">kimi:</span><br>    <span class="hljs-attr">base_url:</span> <span class="hljs-string">&quot;https://api.moonshot.cn/v1&quot;</span><br>    <span class="hljs-attr">api_key:</span> <span class="hljs-string">&quot;sk-你的 Kimi 密钥&quot;</span><br>    <span class="hljs-attr">protocol:</span> <span class="hljs-string">&quot;openai-chat&quot;</span><br>    <span class="hljs-attr">user_agent:</span> <span class="hljs-string">&quot;moonbridge/1.0&quot;</span><br>    <span class="hljs-attr">offers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">model:</span> <span class="hljs-string">kimi-k2.5</span><br><br><span class="hljs-attr">routes:</span><br>  <span class="hljs-attr">moonbridge:</span><br>    <span class="hljs-attr">model:</span> <span class="hljs-string">deepseek-v4-pro</span><br>    <span class="hljs-attr">provider:</span> <span class="hljs-string">deepseek</span><br></code></pre></div></td></tr></table></figure>
+<p><strong>只需替换两处：</strong> <code>api_key</code> 各填上 DeepSeek 和 Kimi 的真实密钥。</p>
+<h2 id="第三步：准备数据目录并启动"><a href="#第三步：准备数据目录并启动" class="headerlink" title="第三步：准备数据目录并启动"></a>第三步：准备数据目录并启动</h2><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p data<br><br><span class="hljs-comment"># 前台运行（调试用）</span><br>./moonbridge.exe --config config.yml<br><br><span class="hljs-comment"># 后台运行</span><br><span class="hljs-built_in">nohup</span> ./moonbridge.exe --config config.yml &gt; moonbridge.log 2&gt;&amp;1 &amp;<br></code></pre></div></td></tr></table></figure>
+<p>看到日志 <code>HTTP 服务器监听中 addr=127.0.0.1:38440</code> 即成功。</p>
+<p><strong>验证连通性：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">curl http://127.0.0.1:38440/v1/models<br><span class="hljs-comment"># 应返回 deepseek-v4-pro, deepseek-v4-flash, kimi-k2.5, moonbridge</span><br></code></pre></div></td></tr></table></figure>
+<h2 id="第四步：配置-Codex-CLI"><a href="#第四步：配置-Codex-CLI" class="headerlink" title="第四步：配置 Codex CLI"></a>第四步：配置 Codex CLI</h2><blockquote>
+<p><strong>重要：</strong> 如果你的 <code>~/.codex</code> 目录已有旧的 <code>config.toml</code> 和 <code>models_catalog.json</code>，必须清空：<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># Windows</span><br>del /Q %USERPROFILE%\.codex\config.toml %USERPROFILE%\.codex\models_catalog.json 2&gt;nul<br><span class="hljs-comment"># Linux/macOS</span><br><span class="hljs-built_in">rm</span> -f ~/.codex/config.toml ~/.codex/models_catalog.json<br></code></pre></div></td></tr></table></figure></p>
+</blockquote>
+<p>然后生成 Codex 配置（<strong>用 <code>&gt;</code> 覆盖写入，不是追加</strong>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># Windows</span><br>./moonbridge.exe --config config.yml ^<br>  -print-codex-config moonbridge ^<br>  -codex-base-url <span class="hljs-string">&quot;http://127.0.0.1:38440/v1&quot;</span> ^<br>  -codex-home <span class="hljs-string">&quot;%USERPROFILE%\.codex&quot;</span> ^<br>  &gt; <span class="hljs-string">&quot;%USERPROFILE%\.codex\config.toml&quot;</span><br><br><span class="hljs-comment"># Linux/macOS</span><br>./moonbridge --config config.yml \<br>  -print-codex-config moonbridge \<br>  -codex-base-url <span class="hljs-string">&quot;http://127.0.0.1:38440/v1&quot;</span> \<br>  -codex-home <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/.codex&quot;</span> \<br>  &gt; <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/.codex/config.toml&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>生成后 <code>~/.codex/</code> 下应有两个文件：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config.toml</code></td>
+<td>声明模型 <code>moonbridge</code>，指向 Moon Bridge 地址</td>
+</tr>
+<tr>
+<td><code>models_catalog.json</code></td>
+<td>模型能力描述（context window、推理档位、input_modalities 含 image）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 检查 config.toml（首行应为 model = &quot;moonbridge&quot;）</span><br><span class="hljs-built_in">head</span> -3 ~/.codex/config.toml<br><br><span class="hljs-comment"># 检查 models_catalog.json（deepseek 模型应有 &quot;image&quot; modality）</span><br>python3 -c <span class="hljs-string">&quot;import json; d=json.load(open(&#x27;.codex/models_catalog.json&#x27;)); [print(m[&#x27;slug&#x27;], m[&#x27;input_modalities&#x27;]) for m in d[&#x27;models&#x27;]]&quot;</span><br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>注意：<code>models_catalog.json</code> 中 deepseek 模型的 <code>input_modalities</code> 必须包含 <code>&quot;image&quot;</code>，否则 Codex 不会允许图片附件。</p>
+</blockquote>
+<h2 id="第五步：启动-Codex"><a href="#第五步：启动-Codex" class="headerlink" title="第五步：启动 Codex"></a>第五步：启动 Codex</h2><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">codex --<span class="hljs-built_in">cd</span> /path/to/your/project<br></code></pre></div></td></tr></table></figure>
+<p>Codex 启动后会向 Moon Bridge 发起模型列表请求。Moon Bridge 终端出现 <code>POST /v1/responses</code> 日志即表示对接成功。</p>
+<h2 id="模型切换"><a href="#模型切换" class="headerlink" title="模型切换"></a>模型切换</h2><p>修改 <code>config.toml</code> 中的第一行即可切换模型：</p>
+<figure class="highlight toml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs toml"><span class="hljs-attr">model</span> = <span class="hljs-string">&quot;moonbridge&quot;</span>              <span class="hljs-comment"># DeepSeek V4 Pro + Kimi Vision（推荐）</span><br><span class="hljs-attr">model</span> = <span class="hljs-string">&quot;deepseek-v4-pro&quot;</span>         <span class="hljs-comment"># 同上，显式名称</span><br><span class="hljs-attr">model</span> = <span class="hljs-string">&quot;deepseek-v4-flash&quot;</span>       <span class="hljs-comment"># DeepSeek V4 Flash + Kimi Vision（更快更便宜）</span><br></code></pre></div></td></tr></table></figure>
+<h2 id="推理档位"><a href="#推理档位" class="headerlink" title="推理档位"></a>推理档位</h2><p>DeepSeek V4 支持两级推理：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>high</code></td>
+<td>高推理强度（默认）</td>
+</tr>
+<tr>
+<td><code>xhigh</code></td>
+<td>超高推理强度（映射为 DeepSeek max，更慢更贵）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Codex 模型中自动可见这两个选项。</p>
+<h2 id="多模态工作原理"><a href="#多模态工作原理" class="headerlink" title="多模态工作原理"></a>多模态工作原理</h2><p>当你向 Codex 发送图片时：</p>
+<ol>
+<li>Moon Bridge 从消息中剥离图片，替换为占位文本 <code>[Image #1 attached]</code></li>
+<li>注入 <code>visual_brief</code> 和 <code>visual_qa</code> 两个工具定义</li>
+<li>DeepSeek 决定是否需要看图 → 调用工具</li>
+<li>Moon Bridge 拦截工具调用 → 将图片 + 分析提示发给 Kimi K2.5</li>
+<li>Kimi 返回图片分析结果 → 作为 tool_result 注入 DeepSeek 对话</li>
+<li>DeepSeek 基于分析结果继续推理和回复</li>
+</ol>
+<p>整个过程不需用户干预，一次请求完成。</p>
+<h2 id="看门狗（自动重启）"><a href="#看门狗（自动重启）" class="headerlink" title="看门狗（自动重启）"></a>看门狗（自动重启）</h2><p>Moon Bridge 意外退出时自动拉起：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">python scripts/moonbridge_watchdog.py<br></code></pre></div></td></tr></table></figure>
+<p>此脚本会监控 <code>http://127.0.0.1:38440/v1/models</code>，发现不可达时自动重启 Moon Bridge。支持 Windows / Linux / macOS。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 后台运行看门狗</span><br>python scripts/moonbridge_watchdog.py &amp;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>详细用法见下节「看门狗脚本」。</p>
+</blockquote>
+<h2 id="Windows-用户特别注意事项"><a href="#Windows-用户特别注意事项" class="headerlink" title="Windows 用户特别注意事项"></a>Windows 用户特别注意事项</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>go build</code> 超时</td>
+<td>首次编译需下载依赖，等待 2-5 分钟</td>
+</tr>
+<tr>
+<td><code>data/moonbridge.db</code> 无法创建</td>
+<td>确保项目目录有写权限，<code>mkdir data</code> 后再启动</td>
+</tr>
+<tr>
+<td><code>curl</code> 不可用</td>
+<td>用浏览器访问 <code>http://127.0.0.1:38440/v1/models</code></td>
+</tr>
+<tr>
+<td>Codex 切换模型不生效</td>
+<td>删除 <code>%USERPROFILE%\.codex\config.toml</code> 和 <code>models_catalog.json</code>，重新运行第四步</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="故障排查"><a href="#故障排查" class="headerlink" title="故障排查"></a>故障排查</h2><h3 id="真实踩坑记录"><a href="#真实踩坑记录" class="headerlink" title="真实踩坑记录"></a>真实踩坑记录</h3><p>以下是实际使用中遇到的坑，如果你碰到同样的问题可以快速定位。</p>
+<h4 id="0-Web-Search-工具注入导致输出乱码或工具调用失败"><a href="#0-Web-Search-工具注入导致输出乱码或工具调用失败" class="headerlink" title="0. Web Search 工具注入导致输出乱码或工具调用失败"></a>0. Web Search 工具注入导致输出乱码或工具调用失败</h4><p><strong>症状：</strong> DeepSeek 输出的对话内容被替换成原始的 <code>&lt;响应 tool_calls&gt;</code> 格式，或出现 “Model tried to call unavailable tool ‘web_search’” 错误。</p>
+<p><strong>原因：</strong> Moon Bridge 在 <code>web_search.support: &quot;auto&quot;</code> 模式下会自动探测并注入 <code>web_search</code> 工具定义到请求中。DeepSeek 可能调用该工具，但下游客户端（Codex/OpenCode）的可用工具列表中不包含 <code>web_search</code>，导致工具调用以原始格式泄漏到输出中。</p>
+<p><strong>解决：</strong> 将配置中所有 <code>web_search.support</code> 改为 <code>&quot;disabled&quot;</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-comment"># config.yml — 检查这三处</span><br><span class="hljs-attr">providers:</span><br>  <span class="hljs-attr">deepseek:</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;disabled&quot;</span>    <span class="hljs-comment"># ← 改这里</span><br><br><span class="hljs-attr">models:</span><br>  <span class="hljs-attr">deepseek-v4-pro:</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;disabled&quot;</span>    <span class="hljs-comment"># ← 改这里</span><br>  <span class="hljs-attr">deepseek-v4-flash:</span><br>    <span class="hljs-attr">web_search:</span><br>      <span class="hljs-attr">support:</span> <span class="hljs-string">&quot;disabled&quot;</span>    <span class="hljs-comment"># ← 改这里</span><br></code></pre></div></td></tr></table></figure>
+<h4 id="1-切换到-WSL-后-Codex-弹出登录页面——分两种情况"><a href="#1-切换到-WSL-后-Codex-弹出登录页面——分两种情况" class="headerlink" title="1. 切换到 WSL 后 Codex 弹出登录页面——分两种情况"></a>1. 切换到 WSL 后 Codex 弹出登录页面——分两种情况</h4><p><strong>情况 A：Codex Desktop 切到 WSL 模式</strong></p>
+<p>Codex Desktop 在 WSL 模式下<strong>仍然读取</strong> Windows 用户目录的 <code>.codex</code>（<code>C:\Users\&lt;用户名&gt;\.codex\</code>）。但 WSL 里的 app-server 需要通过 <code>/mnt/...</code> 路径访问 Windows 文件。Codex 会自动翻译大部分路径（如 <code>marketplaces</code>），但 <strong>不会翻译</strong> <code>model_catalog_json</code>。</p>
+<p><strong>解决：</strong> 手动将 <code>model_catalog_json</code> 改为 WSL 兼容格式：</p>
+<figure class="highlight toml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs toml"><span class="hljs-attr">model_catalog_json</span> = <span class="hljs-string">&quot;/mnt/c/Users/Administrator/.codex/models_catalog.json&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>不需要在 WSL 里单独维护一套 <code>.codex</code>。</p>
+<p><strong>情况 B：直接在 WSL 里跑 Codex CLI</strong></p>
+<p>Codex CLI 在 WSL 里读的是 WSL 自己的 <code>~/.codex/</code>，和 Windows 的 <code>%USERPROFILE%\.codex\</code> 完全独立。而且 Linux 和 Windows 的 <code>.codex</code> 内部格式不完全一致（如路径分隔符、marketplace 引用方式等），不能直接把 Windows 的拷过去用。</p>
+<p><strong>解决：</strong> 在 WSL 里单独生成一份配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/.codex<br><br><span class="hljs-comment"># 进入 moon-bridge 目录（Windows D 盘在 WSL 里的挂载点）</span><br><span class="hljs-built_in">cd</span> /mnt/d/DESKTOP/AGENT_WORKSPACES/moon-bridge<br><br><span class="hljs-comment"># 用 moonbridge 生成 Codex 配置（-codex-home 写 models_catalog.json）</span><br>./moonbridge.exe --config config.yml \<br>  -print-codex-config moonbridge \<br>  -codex-base-url <span class="hljs-string">&quot;http://10.19.76.2:38440/v1&quot;</span> \<br>  -codex-home ~/.codex \<br>  &gt; ~/.codex/config.toml<br><br><span class="hljs-comment"># 去掉第一行日志（如果混进去了）</span><br>sed -i <span class="hljs-string">&#x27;/^time=/d&#x27;</span> ~/.codex/config.toml<br></code></pre></div></td></tr></table></figure>
+<p><code>注意：moonbridge.exe 是 Windows 二进制，在 WSL 里通过 interop 运行。如果遇到路径解析问题，可以直接手写 config.toml：</code></p>
+<figure class="highlight toml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs toml"><span class="hljs-comment"># ~/.codex/config.toml</span><br><span class="hljs-attr">model</span> = <span class="hljs-string">&quot;moonbridge&quot;</span><br><span class="hljs-attr">model_provider</span> = <span class="hljs-string">&quot;moonbridge&quot;</span><br><span class="hljs-attr">model_context_window</span> = <span class="hljs-number">1000000</span><br><span class="hljs-attr">model_max_output_tokens</span> = <span class="hljs-number">384000</span><br><span class="hljs-attr">model_catalog_json</span> = <span class="hljs-string">&quot;/home/naer/.codex/models_catalog.json&quot;</span><br><br><span class="hljs-section">[model_providers.moonbridge]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;Moon Bridge&quot;</span><br><span class="hljs-attr">base_url</span> = <span class="hljs-string">&quot;http://10.19.76.2:38440/v1&quot;</span><br><span class="hljs-attr">wire_api</span> = <span class="hljs-string">&quot;responses&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>再把 <code>models_catalog.json</code> 从 Windows 侧拷一份到 WSL。</p>
+<h4 id="2-切换到-WSL-后网络环境变化"><a href="#2-切换到-WSL-后网络环境变化" class="headerlink" title="2. 切换到 WSL 后网络环境变化"></a>2. 切换到 WSL 后网络环境变化</h4><p><strong>症状：</strong> 在 Windows Native 模式下一切正常，切换到 WSL 模式后 Codex 弹出登录页面（同坑 1）。</p>
+<p><strong>原因：</strong> WSL 是一个独立的网络命名空间。</p>
+<ul>
+<li>Windows 侧 <code>127.0.0.1</code> 指向 Windows 本机</li>
+<li>WSL 侧 <code>127.0.0.1</code> 指向 WSL 自己，<strong>不是</strong> Windows</li>
+</ul>
+<p>如果 <code>config.toml</code> 里写的是 <code>127.0.0.1</code>，WSL 里的 Codex 根本访问不到 Windows 上的 Moon Bridge。</p>
+<p><strong>解决：</strong> 让 Moon Bridge 监听一个 Windows 和 WSL 都能访问的 IP（如虚拟网卡 IP <code>10.19.76.2</code>），然后在两端都用这个 IP：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-comment"># config.yml</span><br><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">addr:</span> <span class="hljs-string">&quot;10.19.76.2:38440&quot;</span>   <span class="hljs-comment"># 不要用 127.0.0.1</span><br></code></pre></div></td></tr></table></figure>
+<p>如果没有虚拟 IP，可以在 WSL 里用宿主机 IP：<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 在 WSL 里获取 Windows 宿主 IP</span><br><span class="hljs-built_in">cat</span> /etc/resolv.conf | grep nameserver | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br><span class="hljs-comment"># 输出例如 172.25.128.1</span><br></code></pre></div></td></tr></table></figure></p>
+<p>然后用这个 IP 生成 Codex 的 WSL 侧配置。</p>
+<p>另外，<strong>WSL 侧需要单独一套 <code>.codex</code> 配置</strong>（Windows 的 <code>%USERPROFILE%\.codex\</code> 和 WSL 的 <code>~/.codex/</code> 是两个独立的目录）：<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 在 WSL 里</span><br><span class="hljs-built_in">mkdir</span> -p ~/.codex<br><span class="hljs-built_in">cd</span> /mnt/d/DESKTOP/AGENT_WORKSPACES/moon-bridge<br>./moonbridge --config config.yml \<br>  -print-codex-config moonbridge \<br>  -codex-base-url <span class="hljs-string">&quot;http://10.19.76.2:38440/v1&quot;</span> \<br>  -codex-home ~/.codex \<br>  &gt; ~/.codex/config.toml<br></code></pre></div></td></tr></table></figure></p>
+<h4 id="3-Windows-Native-模式下-PowerShell-中文乱码"><a href="#3-Windows-Native-模式下-PowerShell-中文乱码" class="headerlink" title="3. Windows Native 模式下 PowerShell 中文乱码"></a>3. Windows Native 模式下 PowerShell 中文乱码</h4><p><strong>症状：</strong> Codex Desktop 在 Windows Native 模式下使用 PowerShell 执行命令，处理中文文件或输出时出现乱码。</p>
+<p><strong>原因：</strong> Codex 默认使用 Windows 内置的 PowerShell 5，其 UTF-8 编码行为不一致。</p>
+<p><strong>解决：安装 PowerShell 7。</strong> 从 <a target="_blank" rel="noopener" href="https://github.com/PowerShell/PowerShell">github.com/PowerShell/PowerShell</a> 下载安装。Codex 会自动检测并使用 PowerShell 7 替代内置的 5 版本，7 版本没有中文乱码问题。</p>
+<p>实际上推荐使用 PowerShell 7 + Windows Native——WSL 在网络、文件路径等方面仍有一些水土不服。</p>
+<hr>
+<h3 id="其他故障"><a href="#其他故障" class="headerlink" title="其他故障"></a>其他故障</h3><h3 id="DeepSeek-401-错误"><a href="#DeepSeek-401-错误" class="headerlink" title="DeepSeek 401 错误"></a>DeepSeek 401 错误</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 测试 API key</span><br>curl https://api.deepseek.com/anthropic/v1/messages \<br>  -H <span class="hljs-string">&quot;x-api-key: sk-你的密钥&quot;</span> \<br>  -H <span class="hljs-string">&quot;anthropic-version: 2023-06-01&quot;</span> \<br>  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \<br>  -d <span class="hljs-string">&#x27;&#123;&quot;model&quot;:&quot;deepseek-chat&quot;,&quot;max_tokens&quot;:10,&quot;messages&quot;:[&#123;&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;hi&quot;&#125;]&#125;&#x27;</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="Kimi-401-错误"><a href="#Kimi-401-错误" class="headerlink" title="Kimi 401 错误"></a>Kimi 401 错误</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># Kimi 可能不支持 api.kimi.com/coding 端点，改用 moonshot.cn</span><br>curl https://api.moonshot.cn/v1/models \<br>  -H <span class="hljs-string">&quot;Authorization: Bearer sk-你的密钥&quot;</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="Visual（多模态）不工作"><a href="#Visual（多模态）不工作" class="headerlink" title="Visual（多模态）不工作"></a>Visual（多模态）不工作</h3><p>检查三点：</p>
+<ol>
+<li><code>extensions.visual.config.provider</code> 对应的 Provider 在 <code>providers</code> 段存在</li>
+<li>视觉 Provider 的 <code>protocol</code> 和 <code>base_url</code> 正确</li>
+<li>主模型上 <code>extensions.visual.enabled: true</code></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/AI/">AI</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026-2/06-13%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8Docker%E9%95%9C%E5%83%8F%E9%83%A8%E7%BD%B2%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">简单使用 Docker 镜像部署生产环境</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/05-30%E6%89%8B%E5%86%99OpenAI%E5%AE%A2%E6%88%B7%E7%AB%AF2%E2%80%94%E2%80%94%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%8C%E4%B8%AD%E6%96%AD%EF%BC%8C%E5%B7%A5%E5%85%B7%E6%8A%BD%E8%B1%A1.html">
+                        <span class="hidden-mobile">手写 OpenAI 客户端 2——迭代器和生成器，中断，工具抽象</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>

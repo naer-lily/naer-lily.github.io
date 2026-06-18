@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="其实创作和维护软件项目也类似">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meteora——像写代码一样写小说">
+<meta property="og:url" content="http://example.com/2026-2/06-18Meteora%E2%80%94%E2%80%94%E5%83%8F%E5%86%99%E4%BB%A3%E7%A0%81%E4%B8%80%E6%A0%B7%E5%86%99%E5%B0%8F%E8%AF%B4.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="其实创作和维护软件项目也类似">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/naer-lily/meteora">
+<meta property="article:published_time" content="2026-06-18T10:20:00.000Z">
+<meta property="article:modified_time" content="2026-06-18T10:09:52.510Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="SillyTavern">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://github.com/naer-lily/meteora">
+  
+  
+  <title>Meteora——像写代码一样写小说 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Meteora——像写代码一样写小说">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-06-18 18:20" pubdate>
+        2026年6月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Meteora——像写代码一样写小说</h1>
+            
+            <div class="markdown-body">
+              <p><img src="https://github.com/naer-lily/meteora" alt="Meteora"> 是我 vibe coding 的，基于 Pi 的，迭代式的文字创作……环境，它的重点在于，Meteora 是你的 co-author——你和她协作进行创作，你们可以讨论，定调，写样章，修改既有内容……<strong>像编写代码一样编写小说</strong>，可谓是把 Pi 变成创作 Agent 而非原本的 Coding Agent 了。这里记一下我对 Meteora 这个点子的心路历程吧，虽然是个很 trivial 的东西，但我确实没见过其他人这么干过，实际上我在事后才发现，这又是我心里的建构论在作妖。</p>
+<h1 id="为什么不是-SillyTavern"><a href="#为什么不是-SillyTavern" class="headerlink" title="为什么不是 SillyTavern"></a>为什么不是 SillyTavern</h1><p>在创建 Meteora 之前，我其实用了三四个月的 ST，也发了数篇小说到 p 站，赚了一些赞。我都忠实地把 AI 生成的标签给勾上了，实际上我感觉有些作者的文风有一股 AI 味却没有标 AI 生成，无论我的感觉是否靠谱，在这点上我不想骗人。</p>
+<p>ST 的一个最本质，最根本的问题在于 LLM 的角色定位问题——ST 设计之初就是为了角色扮演——用户扮演“我”，ST 扮演一个角色和“我”对话，这从 ST 的术语名字就看得出来——角色卡。这里在于 ST 是如何进行角色扮演的——<strong>LLM 沉浸式地扮演这个角色，LLM 的输出，就是这个角色所说出的话本身</strong>。</p>
+<p>ST 设计的这种初衷（这是我的一家之言哈！我没详细研究过 ST 的设计哲学，甚至没有仔细翻过它的文档），就让市面上的许多应用场景显得有一些割裂——一个“角色卡”为什么要承载一个世界，承载一个故事？一个“角色卡”为什么会自己去进行动作，神态，环境描写？虽然说着是“角色卡”，但我们其实是在让 LLM 扮演我们之外的一切，扮演着世界。</p>
+<p>好吧，虽然这么说，但 ST 实践过程其实还好，通过恰当的提示词，ST 拿来玩角色扮演是足够的，你扮演着自己，LLM 负责回应你，在很多时候，主要是 ghs 的时候，它就够用了。但偏偏对我的场景，它不太够用：</p>
+<ol>
+<li>……这个理由我不提，总之和 XP 相关，但 LLM 总是不尽如人意，我总是希望能通过暗示让 LLM get 到我的意思，去自己很好地把握好剧情的流向，但，这总是不尽如人意</li>
+<li>我心中有个小说梦，我不想单纯做角色扮演，我想像创作小说一样，去把握叙事节奏，流向，去强调，表达某些东西，而非是 ghs 流水账，以及一个至关重要地——修改已经发生的事情，但 ST 可不让我能方便这么玩</li>
+</ol>
+<p>这就引出来 ST 根本性的问题（并非缺陷，但对我来说是大问题）：<strong>LLM 不是扮演着故事讲述者的角色，LLM（的输出）就是故事本身</strong>。</p>
+<p>这就导致了数个问题：</p>
+<ol>
+<li>它总是现在进行时，叙事节奏难以控制，远距、中距描写，插叙，回忆……这些它很难写</li>
+<li>要求它做总结，定故事基调，人物弧光等情况时，总是得打断它的工作流，向它强调现在你的工作不是续写……而且 AI 并不总是听话，因为系统提示词就在那里</li>
+<li>无法让 AI 去修改既有的对话，只能重放当前轮的对话或者从之前的某轮对话中 fork，或者你手动改它的响应</li>
+</ol>
+<p>这就让我非常痛苦。我尝试过诸多手段想让事情按我的期望进行：</p>
+<ol>
+<li>使用 <code>&lt;director/&gt;</code>，<code>&lt;meta/&gt;</code> 等标签去暂时脱离我所扮演的角色，去指导 AI 接下来的故事应该的流向，提供恰当的元信息供 AI 参考<ol>
+<li>这很多时候很管用，但更多时候总是让我这里那里不满意，我能做的只有调整我的提示词并祈祷这次 AI 的响应能如我所愿</li>
+<li>而且，至少 deepseek 很喜欢 meta 笑话，在续写中直接写出“导演”，“元信息”！想想我就服气了</li>
+</ol>
+</li>
+<li>在故事的刚开头（我习惯使用一个专门的写卡的角色卡去生成开场白和角色信息），我会写要求让 AI 不再续写，而是定整个故事文风，大纲，基调，爽点，每个角色的人物弧光……然后把这些信息塞到世界书里，供 AI 续写时参考，但还是同样地——AI 把握不好节奏<ol>
+<li>同样地，这个在 ST 社区中有很多解决方案，典型的是带数值切换状态的世界书</li>
+</ol>
+</li>
+<li>特意把“我”自己设置为导演角色，但……很别扭</li>
+<li>扮演一个具体的，全能的长颈鹿一样的角色，去手动搭建这命运的舞台，同样还是有点别扭</li>
+</ol>
+<p><strong>说到底，AI 没有 sense</strong>——我创作并非是想写 ghs 流水账，我想满足一些精神需求，我想张弛有度，使用各种叙事技巧（即使是小儿科般的，只是为了控制节奏地），去弱化一些东西，去强调一些东西，去表达一些东西，我希望我的文字真的有一定价值，只是题材正好是 ghs 而已，但 AI 真没有这种 sense，它只是预测，生成，它大概率得到的是“平均”的东西，但偏偏我要的不是平均，而是“主见”。</p>
+<h1 id="为什么是-Pi"><a href="#为什么是-Pi" class="headerlink" title="为什么是 Pi"></a>为什么是 Pi</h1><p>在使用 ST 的时候，我其实就痛苦地认识到我似乎更适合当导演而非投入角色扮演中，三四个月前我因为实在感觉恶心（实在玩太多了），退坑了 ST。但我心里其实一直都想要一个我更能发挥自己的工具。</p>
+<p>二月份的时候我开始接触到 Agent，我第一次使用的是 Cherry Studio（这也是令人感叹，当时我还感觉 tool 是魔法呢，现在已经把 AI 工具用的如臂使指了），但我究竟什么时候意识到 Agent 工具可以拿来搞创作，我确实没有印象了，或许是我偶尔对它们发发牢骚或让它们评价我的文章的时候，意识到它们也能干编程以外的事情？</p>
+<p>但当我开始有这个想法的时候，我就在一直去思考——opencode 能不能拿来创作？claude code 能不能拿来创作？但我知道，这里有一个很大的 1 问题——<strong>进行创作，尤其是关于 ghs，需要系统提示词的破甲，这很可能要求我必须复写它既有的提示词</strong>，而这些 Agent 工具，实际上它们的卖点就是它们的上下文工程……</p>
+<p>但 Pi 不一样——Pi 极轻量，极可拓展，它的出厂设置里甚至 todo 列表，MCP 都不支持，它提供的初始的工具也就 4 个——读写覆盖文件和 bash，做个比喻，它就像一堆重型 IDE 里突然蹦出来一个 VS Code。我其实也在尝试自己写一个 <a target="_blank" rel="noopener" href="https://github.com/naer-lily/naive-llm">LLM 客户端</a>，目前还在龟速前进中，但 Pi 偏偏满足我的所有需要——它虽然轻量，但可扩展性近乎无限，最重要的是——<strong>Pi 的系统提示词可以完全定制</strong>，这允许我做 Pi 的作者可能从来没有想过的事情——拿 coding assistant 去 ghs，而且你别说，整的还挺好。</p>
+<p>我用Opencode去开发了Meteora——我参考了ST里所使用的破甲的提示词，并让Opencode进行了修改以更加适配我们的需求——我和LLM协作去对小说进行创作，把小说当作代码项目去对待。</p>
+<p>在Meteora的架构下，LLM不再是故事本身——LLM这次真的成为了我的copilot，我和她协作去去定调子，商讨文风，氛围，定角色卡，写样章，迭代旧的内容……这里完全没有任何固定的东西，我写着写着就可以去加一个设定，而她会检索之前的全部内容去进行修改保证我的这个新设定得到贯彻……</p>
+<p>这和编程，和处理一个代码项目何其相似？你看吧，Agent也挺适合创作嘛！</p>
+<h1 id="再次的建构论"><a href="#再次的建构论" class="headerlink" title="再次的建构论"></a>再次的建构论</h1><p>这里我不说太多，就是我从使用Meteora第一次编写小说的实践中，我再次意识到了我的建构论——我事先其实根本不知道我要什么，我要的东西在持续的实践中最终被建构出来。那种概念-大纲-内容式的创作，真的不符合我的习惯。这里不提太多。</p>
+<h1 id="话说-Meteora-可以拿来角色扮演吗？"><a href="#话说-Meteora-可以拿来角色扮演吗？" class="headerlink" title="话说 Meteora 可以拿来角色扮演吗？"></a>话说 Meteora 可以拿来角色扮演吗？</h1><p>TODO 这个问题留待将来回答。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/SillyTavern/">SillyTavern</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-2/06-13%E7%83%AD%E9%87%8F%E7%BC%BA%E5%8F%A3%E5%92%8C%E7%87%83%E8%84%82%E5%8C%BA%E9%97%B4.html">
+                        <span class="hidden-mobile">热量缺口和燃脂区间</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>
