@@ -25,13 +25,11 @@
 <meta property="og:site_name" content="那尔">
 <meta property="og:description" content="其实创作和维护软件项目也类似">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://github.com/naer-lily/meteora">
 <meta property="article:published_time" content="2026-06-18T10:20:00.000Z">
-<meta property="article:modified_time" content="2026-06-18T10:09:52.510Z">
+<meta property="article:modified_time" content="2026-06-25T12:45:23.594Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="SillyTavern">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://github.com/naer-lily/meteora">
   
   
   <title>Meteora——像写代码一样写小说 - 那尔</title>
@@ -250,7 +248,7 @@
             <h1 style="display: none">Meteora——像写代码一样写小说</h1>
             
             <div class="markdown-body">
-              <p><img src="https://github.com/naer-lily/meteora" alt="Meteora"> 是我 vibe coding 的，基于 Pi 的，迭代式的文字创作……环境，它的重点在于，Meteora 是你的 co-author——你和她协作进行创作，你们可以讨论，定调，写样章，修改既有内容……<strong>像编写代码一样编写小说</strong>，可谓是把 Pi 变成创作 Agent 而非原本的 Coding Agent 了。这里记一下我对 Meteora 这个点子的心路历程吧，虽然是个很 trivial 的东西，但我确实没见过其他人这么干过，实际上我在事后才发现，这又是我心里的建构论在作妖。</p>
+              <p><a target="_blank" rel="noopener" href="https://github.com/naer-lily/meteora">Meteora</a> 是我 vibe coding 的，基于 Pi 的，迭代式的文字创作……环境，它的重点在于，Meteora 是你的 co-author——你和她协作进行创作，你们可以讨论，定调，写样章，修改既有内容……<strong>像编写代码一样编写小说</strong>，可谓是把 Pi 变成创作 Agent 而非原本的 Coding Agent 了。这里记一下我对 Meteora 这个点子的心路历程吧，虽然是个很 trivial 的东西，但我确实没见过其他人这么干过，实际上我在事后才发现，这又是我心里的建构论在作妖。</p>
 <h1 id="为什么不是-SillyTavern"><a href="#为什么不是-SillyTavern" class="headerlink" title="为什么不是 SillyTavern"></a>为什么不是 SillyTavern</h1><p>在创建 Meteora 之前，我其实用了三四个月的 ST，也发了数篇小说到 p 站，赚了一些赞。我都忠实地把 AI 生成的标签给勾上了，实际上我感觉有些作者的文风有一股 AI 味却没有标 AI 生成，无论我的感觉是否靠谱，在这点上我不想骗人。</p>
 <p>ST 的一个最本质，最根本的问题在于 LLM 的角色定位问题——ST 设计之初就是为了角色扮演——用户扮演“我”，ST 扮演一个角色和“我”对话，这从 ST 的术语名字就看得出来——角色卡。这里在于 ST 是如何进行角色扮演的——<strong>LLM 沉浸式地扮演这个角色，LLM 的输出，就是这个角色所说出的话本身</strong>。</p>
 <p>ST 设计的这种初衷（这是我的一家之言哈！我没详细研究过 ST 的设计哲学，甚至没有仔细翻过它的文档），就让市面上的许多应用场景显得有一些割裂——一个“角色卡”为什么要承载一个世界，承载一个故事？一个“角色卡”为什么会自己去进行动作，神态，环境描写？虽然说着是“角色卡”，但我们其实是在让 LLM 扮演我们之外的一切，扮演着世界。</p>
@@ -283,7 +281,7 @@
 <p><strong>说到底，AI 没有 sense</strong>——我创作并非是想写 ghs 流水账，我想满足一些精神需求，我想张弛有度，使用各种叙事技巧（即使是小儿科般的，只是为了控制节奏地），去弱化一些东西，去强调一些东西，去表达一些东西，我希望我的文字真的有一定价值，只是题材正好是 ghs 而已，但 AI 真没有这种 sense，它只是预测，生成，它大概率得到的是“平均”的东西，但偏偏我要的不是平均，而是“主见”。</p>
 <h1 id="为什么是-Pi"><a href="#为什么是-Pi" class="headerlink" title="为什么是 Pi"></a>为什么是 Pi</h1><p>在使用 ST 的时候，我其实就痛苦地认识到我似乎更适合当导演而非投入角色扮演中，三四个月前我因为实在感觉恶心（实在玩太多了），退坑了 ST。但我心里其实一直都想要一个我更能发挥自己的工具。</p>
 <p>二月份的时候我开始接触到 Agent，我第一次使用的是 Cherry Studio（这也是令人感叹，当时我还感觉 tool 是魔法呢，现在已经把 AI 工具用的如臂使指了），但我究竟什么时候意识到 Agent 工具可以拿来搞创作，我确实没有印象了，或许是我偶尔对它们发发牢骚或让它们评价我的文章的时候，意识到它们也能干编程以外的事情？</p>
-<p>但当我开始有这个想法的时候，我就在一直去思考——opencode 能不能拿来创作？claude code 能不能拿来创作？但我知道，这里有一个很大的 1 问题——<strong>进行创作，尤其是关于 ghs，需要系统提示词的破甲，这很可能要求我必须复写它既有的提示词</strong>，而这些 Agent 工具，实际上它们的卖点就是它们的上下文工程……</p>
+<p>但当我开始有这个想法的时候，我就在一直去思考——opencode 能不能拿来创作？claude code 能不能拿来创作？但我知道，这里有一个很大的问题——<strong>进行创作，尤其是关于 ghs，需要系统提示词的破甲，这很可能要求我必须覆写它既有的提示词</strong>，而这些 Agent 工具，实际上它们的卖点就是它们的上下文工程……</p>
 <p>但 Pi 不一样——Pi 极轻量，极可拓展，它的出厂设置里甚至 todo 列表，MCP 都不支持，它提供的初始的工具也就 4 个——读写覆盖文件和 bash，做个比喻，它就像一堆重型 IDE 里突然蹦出来一个 VS Code。我其实也在尝试自己写一个 <a target="_blank" rel="noopener" href="https://github.com/naer-lily/naive-llm">LLM 客户端</a>，目前还在龟速前进中，但 Pi 偏偏满足我的所有需要——它虽然轻量，但可扩展性近乎无限，最重要的是——<strong>Pi 的系统提示词可以完全定制</strong>，这允许我做 Pi 的作者可能从来没有想过的事情——拿 coding assistant 去 ghs，而且你别说，整的还挺好。</p>
 <p>我用Opencode去开发了Meteora——我参考了ST里所使用的破甲的提示词，并让Opencode进行了修改以更加适配我们的需求——我和LLM协作去对小说进行创作，把小说当作代码项目去对待。</p>
 <p>在Meteora的架构下，LLM不再是故事本身——LLM这次真的成为了我的copilot，我和她协作去去定调子，商讨文风，氛围，定角色卡，写样章，迭代旧的内容……这里完全没有任何固定的东西，我写着写着就可以去加一个设定，而她会检索之前的全部内容去进行修改保证我的这个新设定得到贯彻……</p>
@@ -316,6 +314,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026-3/07-18%E6%91%A9%E6%89%98%E8%BD%A6%E7%A7%91%E4%B8%80%E7%A7%91%E5%9B%9B%E6%98%93%E9%94%99%E7%82%B9.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">摩托车科一科四易错点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
