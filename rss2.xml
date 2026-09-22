@@ -15,13 +15,32 @@
     <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>あなたからもらったなにもかも，道しるべにしてきたよ</description>
-    <pubDate>Tue, 08 Sep 2026 16:03:02 GMT</pubDate>
+    <pubDate>Tue, 22 Sep 2026 23:53:36 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
+      <title>学习路径没有最优解</title>
+      <link>http://example.com/2026-3/09-23%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E6%B2%A1%E6%9C%89%E6%9C%80%E4%BC%98%E8%A7%A3.html</link>
+      <guid>http://example.com/2026-3/09-23%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E6%B2%A1%E6%9C%89%E6%9C%80%E4%BC%98%E8%A7%A3.html</guid>
+      <pubDate>Tue, 22 Sep 2026 23:50:00 GMT</pubDate>
+      
+      <description>实际的学习路径会像一颗动态生成的有向无环图，你面前总是有无数种选择，你不知道哪种选择是最优的，你不知道做完这个选择后后面会看到什么，你唯一能做的，就是找到一个看着可以走下去的路，然后走下去</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p>几个稍加思考就能认识到的事实：</p><ol><li>对别人来说效率 100% 的路，对你来说效率不一定（或者说，一定不）是 100%</li><li><code>0% x 0 = 100% x 0 &lt;&lt; 50% x 100</code>，效率 100% 却让你止步不前的路，等于效率为 0%，效率 50% 却能让你一直走下去的路远好于此</li><li>在走一条路之前，你是不知道它的效率几何的，而在开始走之后，你还能调整方向</li><li>实际上，根本就没有效率 100% 的路，这只是理论存在，你绝无可能彻底找到它，你倘若硬是要追求它，你几乎必定会耽搁走路</li></ol><p>实际的学习路径会像一颗动态生成的有向无环图（想想杀戮尖塔这类游戏的地图），你面前总是有无数种选择，你不知道哪种选择是最优的，你不知道做完这个选择后后面会看到什么，你唯一能做的，就是找到一个看着可以走下去的路，然后走下去。</p><p>在我们的心智模型中，这是一个图，而非树——你和终点（即使那对你也只是一个模糊的印象）之间是有无数条路的，没有一个选择会彻底决定你的成败，暂时走远了路，你也可以在后续绕回来。</p><p>但话又说回来，岔路对你同样有意义，知道这条路不能走，知道这么走会发生这种情况，这本身也对你的学习有意义。重点是和自己比，在这颗动态生成的图里面，唯有你过去走过的路是彻底清晰的。</p><blockquote><p>但倒也不能一概而论，绘画按照 V 大的理论是很螺旋上升的，我也认同这一点，但这可以说是视角不同了，可以说我的视角其实是聚焦于我在图中的一个具体的节点，我面前有无数条路，我该往那条路走，还是驻足不前反复研究，我回答的是这么一个具体的问题。最关键的还是，走下去。</p></blockquote>]]></content:encoded>
+      
+      
+      
+      
+      <comments>http://example.com/2026-3/09-23%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E6%B2%A1%E6%9C%89%E6%9C%80%E4%BC%98%E8%A7%A3.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
       <title>嵌入式的既往笔记</title>
-      <link>http://example.com/2026-3/09-18%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html</link>
-      <guid>http://example.com/2026-3/09-18%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html</guid>
+      <link>http://example.com/2026-3/09-08%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html</link>
+      <guid>http://example.com/2026-3/09-08%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html</guid>
       <pubDate>Tue, 08 Sep 2026 15:44:00 GMT</pubDate>
       
       <description>那时我还很瘦</description>
@@ -33,7 +52,7 @@
       
       
       
-      <comments>http://example.com/2026-3/09-18%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html#disqus_thread</comments>
+      <comments>http://example.com/2026-3/09-08%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%9A%84%E6%97%A2%E5%BE%80%E7%AC%94%E8%AE%B0/index.html#disqus_thread</comments>
       
     </item>
     
