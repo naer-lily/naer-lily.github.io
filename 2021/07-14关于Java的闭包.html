@@ -26,7 +26,7 @@
 <meta property="og:description" content="之前对 java 的闭包理解不深刻，现在进行一个学。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-07-14T07:28:55.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.285Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.373Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -249,11 +249,9 @@
             
             <div class="markdown-body">
               <!--Hello, Happy World-->
-
 <p>之前未能理解 Java 对闭包的说明中“effective final”的意思，现在对其进行了一番针对性学习。</p>
 <p>这个词（实际上的 final）应当这样理解——在闭包中不能改变外界变量的“值”，这个“值”对基本类型来说是值，对引用类型来说是引用。这个问题的影响其实并不大——如果需要对变量的值进行改变，将其传入一个数组即可。</p>
 <figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java">Supplier&lt;Integer&gt; <span class="hljs-title function_">Counter</span><span class="hljs-params">()</span> &#123; <span class="hljs-comment">// 也可使用 IntSupplier</span><br>  <span class="hljs-type">int</span>[] count = &#123;<span class="hljs-number">0</span>&#125;;<br>  <span class="hljs-keyword">return</span> () -&gt; &#123;<br>    count[<span class="hljs-number">0</span>]++; <span class="hljs-comment">// 捕获</span><br>    <span class="hljs-keyword">return</span> count[<span class="hljs-number">0</span>];<br>  &#125;;<br>&#125;<br><span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>  Supplier&lt;Integer&gt; counter = Counter();<br>  System.out.println(counter.getAsInt());<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <p>为什么不能改变外界变量的值？这里可以这样解释（事实上也大概就是如此）——Java 的闭包并非真正捕获外界变量（这种捕获是捕获了 C++风格的真正的<strong>引用</strong>，js，scheme 等语言的闭包都是如此，对这些语言来说，它们所定义的函数看待上层作用域中的变量，就像 if，for 块看待外层块作用域的时候一样），而是把对象的值<strong>复制</strong>（对基本类型是值，对对象来说是指针）并保存为自身的一个属性，所以如果原值改变，捕获值和原值就不同了，这就和闭包性质所要求的不一致了（这时候的性质类似函数调用，作为函数参数传入），因此禁止了被捕获对象的重新赋值。</p>
 <blockquote>
 <p>Java 中的 lambda 表达式是残废的——要使用它必须先定义相应函数式接口，而不能像 kotlin，ts 等语言有所谓函数类型，可以直接应用，且对其的应用（apply）必须要通过其方法，这是比较麻烦的。</p>
@@ -261,16 +259,18 @@
 <p>而 Java 的 lambda 的最大缺陷在于——其只能抛出在签名中指明能够抛出的异常！也就是说，如果用户自定义的 lambda 表达式可能出现异常，他必须进行 try-catch！这是极为不便的，目前的解决方案唯有定义自己的函数式接口用于抛出异常！这可不是我们想要的答案——对集合类型的 map-filter-reduce 操作中如果有异常，就必须要 try-catch，无法改变！这是无法理喻的，特别是当我们在 Spring 环境下工作，依赖全局异常处理来进行异常的时候，或者说将异常当作一种别样的控制流来处理的时候。</p>
 </blockquote>
 <p>Java8 提供的<code>java.util.function</code>包包含了许多可以直接应用的函数式接口，可以应付绝大部分简单业务情况——（下表引用于网络）</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>1</th>
-<th><strong>BiConsumer&lt;T,U&gt;</strong> 代表了一个接受两个输入参数的操作，并且不返回任何结果</th>
+<th><strong>BiConsumer<T,U></strong> 代表了一个接受两个输入参数的操作，并且不返回任何结果</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>2</td>
-<td><strong>BiFunction&lt;T,U,R&gt;</strong> 代表了一个接受两个输入参数的方法，并且返回一个结果</td>
+<td><strong>BiFunction<T,U,R></strong> 代表了一个接受两个输入参数的方法，并且返回一个结果</td>
 </tr>
 <tr>
 <td>3</td>
@@ -278,7 +278,7 @@
 </tr>
 <tr>
 <td>4</td>
-<td><strong>BiPredicate&lt;T,U&gt;</strong> 代表了一个两个参数的 boolean 值方法</td>
+<td><strong>BiPredicate<T,U></strong> 代表了一个两个参数的 boolean 值方法</td>
 </tr>
 <tr>
 <td>5</td>
@@ -322,7 +322,7 @@
 </tr>
 <tr>
 <td>15</td>
-<td><strong>Function&lt;T,R&gt;</strong> 接受一个输入参数，返回一个结果。</td>
+<td><strong>Function<T,R></strong> 接受一个输入参数，返回一个结果。</td>
 </tr>
 <tr>
 <td>16</td>
@@ -410,7 +410,7 @@
 </tr>
 <tr>
 <td>37</td>
-<td><strong>ToDoubleBiFunction&lt;T,U&gt;</strong> 接受两个输入参数，返回一个 double 类型结果</td>
+<td><strong>ToDoubleBiFunction<T,U></strong> 接受两个输入参数，返回一个 double 类型结果</td>
 </tr>
 <tr>
 <td>38</td>
@@ -418,7 +418,7 @@
 </tr>
 <tr>
 <td>39</td>
-<td><strong>ToIntBiFunction&lt;T,U&gt;</strong> 接受两个输入参数，返回一个 int 类型结果。</td>
+<td><strong>ToIntBiFunction<T,U></strong> 接受两个输入参数，返回一个 int 类型结果。</td>
 </tr>
 <tr>
 <td>40</td>
@@ -426,7 +426,7 @@
 </tr>
 <tr>
 <td>41</td>
-<td><strong>ToLongBiFunction&lt;T,U&gt;</strong> 接受两个输入参数，返回一个 long 类型结果。</td>
+<td><strong>ToLongBiFunction<T,U></strong> 接受两个输入参数，返回一个 long 类型结果。</td>
 </tr>
 <tr>
 <td>42</td>
@@ -436,7 +436,9 @@
 <td>43</td>
 <td><strong>UnaryOperator<T></strong> 接受一个参数为类型 T, 返回值类型也为 T。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 
             </div>
             <hr>

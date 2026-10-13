@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://docs.nestjs.com/assets/Controllers_1.png">
 <meta property="article:published_time" content="2022-11-02T15:30:22.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.304Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.392Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="JS全栈">
 <meta name="twitter:card" content="summary_large_image">
@@ -251,119 +251,124 @@
             
             <div class="markdown-body">
               <p>Nest is a framework for building efficient and scalable Nodejs server-side applications, It supports Typescript, and combines with OOP, FP and FRP paradigm. Nest is based on low-level HTTP Server framework (Express or Fastify), but provides a higher level of abstraction and many interesting features like Dependency Injection, module (for better responsibility division), controller definement (based on decorator) and etc for better biz coding.</p>
-<p>There are several concept in Nest—Controller, Provider, Module, Middleware, Exception Filter, Pipe, Custom Decorator, Guard, Interceptor—To learn these concept (and relationships between them) is to learn Nest.</p>
+<p>There are several concept in Nest—-Controller, Provider, Module, Middleware, Exception Filter, Pipe, Custom Decorator, Guard, Interceptor—-To learn these concept (and relationships between them) is to learn Nest.</p>
 <hr>
 <p>Controllers are responsible for handling incoming requests and returning response to the client, just like RESTful Controller in Spring MVC. <strong>Routing</strong> mechanism will controls which controller handle which requests. Frequently each controller has multiple routes and different routes can perform different actions.</p>
-<p><img src="https://docs.nestjs.com/assets/Controllers_1.png"></p>
+<p><img src="https://docs.nestjs.com/assets/Controllers_1.png" alt=""></p>
 <h1 id="routes"><a href="#routes" class="headerlink" title="routes"></a>routes</h1><p><code>@Controller()</code> decorator is required to define a basic controller, it can accept a optional string as prefix to group a set of related routes. We can use decorators like <code>@Get()</code>, <code>@Post()</code>(named HTTP request method decorator) to define endpoint for HTTP request, which corresponds HTTP request method and route paths, such a route path is determined by concatenating controller’s prefix and path specified in method’s decorator. method decorated by such HTTP request method decorator is called request handler.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Post</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;<br><br><span class="hljs-meta">@Controller</span>(<span class="hljs-string">&#x27;cats&#x27;</span>)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CatsController</span> &#123;<br>  <span class="hljs-meta">@Get</span>() <span class="hljs-comment">// mapping GET /cats</span><br>  <span class="hljs-title function_">findAll</span>(): <span class="hljs-built_in">string</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;This action returns all cats&#x27;</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Post</span>(<span class="hljs-string">&#x27;add&#x27;</span>) <span class="hljs-comment">// mapping POST /cats/add</span><br>  <span class="hljs-title function_">addCat</span>(): <span class="hljs-built_in">string</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;This action add new cat&#x27;</span>;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-<h1 id="two-ways-to-manipulating-response"><a href="#two-ways-to-manipulating-response" class="headerlink" title="two ways to manipulating response"></a>two ways to manipulating response</h1><p>When a request is made to this endpoint(such like ‘&#x2F;cats’), Nest will route the request to the user-defined method <code>findAll()</code>. Method name is completely arbitrary.</p>
+<h1 id="two-ways-to-manipulating-response"><a href="#two-ways-to-manipulating-response" class="headerlink" title="two ways to manipulating response"></a>two ways to manipulating response</h1><p>When a request is made to this endpoint(such like ‘/cats’), Nest will route the request to the user-defined method <code>findAll()</code>. Method name is completely arbitrary.</p>
 <p>This method will return 200 status code and the plain response <code>&#39;This action returns all cats&#39;</code>, It may seems strange from the viewpoint of low-level HTTP framework like Express. It’s because that Nest employs two different option to manipulating response: Standard (recommended) or Library-specific.</p>
 <p>Standard approach make use of request handler’s return value. when it returns a javascript object or array, it will be automatically serialized to JSON. when it returns primitive types like string, number, boolean, Nest will send just the value. status code is always 200 and POST requests will use 201, but this behavior can be modified by <code>@HttpCode(...)</code> decorator at handler-level (i.e. method level, <code>@Controller</code> is class-level).</p>
 <p>If request handler use either <code>@Res()</code> or <code>@Next()</code>, Library-specific option will be chosen. Library-specific option use library’s native response object to handle response, which can be injected using <code>@Res()</code> decorator (e.g. <code>findAll(@Res() response: Response)</code>). With this approach, you have the ability to use native response handling methods exposed by the object, like <code>response.status(200).send()</code>.</p>
 <p><strong>Return value also can be either Promise or Observable</strong>, It means that Nest supports and works well with Javascript asynchronous programming model.</p>
 <h1 id="request-object"><a href="#request-object" class="headerlink" title="request object"></a>request object</h1><p>It’s often to access request details like query param and request body, we can access the request directly by instructing Nest to inject request object using <code>@Req()</code> decorator.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Req</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Request</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;express&#x27;</span>;<br><span class="hljs-meta">@Controller</span>(<span class="hljs-string">&#x27;cats&#x27;</span>)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CatsController</span> &#123;<br>  <span class="hljs-meta">@Get</span>()<br>  <span class="hljs-title function_">findAll</span>(<span class="hljs-meta">@Req</span>() <span class="hljs-attr">request</span>: <span class="hljs-title class_">Request</span>): <span class="hljs-built_in">object</span> &#123;<br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-attr">query</span>: request.<span class="hljs-property">query</span>,<br>      <span class="hljs-attr">body</span>: request.<span class="hljs-property">body</span>,<br>    &#125;;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <p>There are several dedicating decorators to grab specific properties from request object, It should be mentioned that request body is deserialized as JSON by default, and header name is case insensitive:</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">Decorator</th>
-<th align="left">corresponding object&#x2F;field</th>
-<th align="center">type</th>
+<th style="text-align:left">Decorator</th>
+<th style="text-align:left">corresponding object/field</th>
+<th style="text-align:center">type</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><code>@Request()</code>,<code>@Req()</code></td>
-<td align="left"><code>req</code></td>
-<td align="center"><code>Request</code></td>
+<tbody>
+<tr>
+<td style="text-align:left"><code>@Request()</code>,<code>@Req()</code></td>
+<td style="text-align:left"><code>req</code></td>
+<td style="text-align:center"><code>Request</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Response()</code>, <code>@Res()</code></td>
-<td align="left"><code>res</code></td>
-<td align="center"><code>Response</code></td>
+<td style="text-align:left"><code>@Response()</code>, <code>@Res()</code></td>
+<td style="text-align:left"><code>res</code></td>
+<td style="text-align:center"><code>Response</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Nest()</code></td>
-<td align="left"><code>next</code></td>
-<td align="center"><code>Function</code></td>
+<td style="text-align:left"><code>@Nest()</code></td>
+<td style="text-align:left"><code>next</code></td>
+<td style="text-align:center"><code>Function</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Session()</code></td>
-<td align="left"><code>req.session</code></td>
-<td align="center"></td>
+<td style="text-align:left"><code>@Session()</code></td>
+<td style="text-align:left"><code>req.session</code></td>
+<td style="text-align:center"></td>
 </tr>
 <tr>
-<td align="left"><code>@Param()</code></td>
-<td align="left"><code>req.params</code></td>
-<td align="center"><code>Record&lt;string, string&gt;</code></td>
+<td style="text-align:left"><code>@Param()</code></td>
+<td style="text-align:left"><code>req.params</code></td>
+<td style="text-align:center"><code>Record&lt;string, string&gt;</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Param(key: string)</code></td>
-<td align="left"><code>req.params[key]</code></td>
-<td align="center"><code>undefined | string</code></td>
+<td style="text-align:left"><code>@Param(key: string)</code></td>
+<td style="text-align:left"><code>req.params[key]</code></td>
+<td style="text-align:center">`undefined \</td>
+<td>string`</td>
 </tr>
 <tr>
-<td align="left"><code>@Body()</code></td>
-<td align="left"><code>req.body</code></td>
-<td align="center"><code>object</code></td>
+<td style="text-align:left"><code>@Body()</code></td>
+<td style="text-align:left"><code>req.body</code></td>
+<td style="text-align:center"><code>object</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Body(key: string)</code></td>
-<td align="left"><code>req.body[key]</code></td>
-<td align="center"><code>unknown</code></td>
+<td style="text-align:left"><code>@Body(key: string)</code></td>
+<td style="text-align:left"><code>req.body[key]</code></td>
+<td style="text-align:center"><code>unknown</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Query()</code></td>
-<td align="left"><code>req.query</code></td>
-<td align="center"><code>Record&lt;string, string | string[]&gt;</code></td>
+<td style="text-align:left"><code>@Query()</code></td>
+<td style="text-align:left"><code>req.query</code></td>
+<td style="text-align:center">`Record&lt;string, string \</td>
+<td>string[]&gt;`</td>
 </tr>
 <tr>
-<td align="left"><code>@Query(key: string)</code></td>
-<td align="left"><code>req.query[key]</code></td>
-<td align="center"><code>undefined | string | string[]</code></td>
+<td style="text-align:left"><code>@Query(key: string)</code></td>
+<td style="text-align:left"><code>req.query[key]</code></td>
+<td style="text-align:center">`undefined \</td>
+<td>string \</td>
+<td>string[]`</td>
 </tr>
 <tr>
-<td align="left"><code>@Headers()</code></td>
-<td align="left"><code>req.headers</code></td>
-<td align="center"><code>Record&lt;string, string&gt;</code></td>
+<td style="text-align:left"><code>@Headers()</code></td>
+<td style="text-align:left"><code>req.headers</code></td>
+<td style="text-align:center"><code>Record&lt;string, string&gt;</code></td>
 </tr>
 <tr>
-<td align="left"><code>@Headers(key: string)</code></td>
-<td align="left"><code>req.headers</code></td>
-<td align="center"><code>undefined | string</code></td>
+<td style="text-align:left"><code>@Headers(key: string)</code></td>
+<td style="text-align:left"><code>req.headers</code></td>
+<td style="text-align:center">`undefined \</td>
+<td>string`</td>
 </tr>
 <tr>
-<td align="left"><code>@Ip()</code></td>
-<td align="left"><code>req.ip</code></td>
-<td align="center"><code>string</code></td>
+<td style="text-align:left"><code>@Ip()</code></td>
+<td style="text-align:left"><code>req.ip</code></td>
+<td style="text-align:center"><code>string</code></td>
 </tr>
 <tr>
-<td align="left"><code>@HostParam()</code></td>
-<td align="left"><code>req.hosts</code></td>
-<td align="center"><code>object</code></td>
+<td style="text-align:left"><code>@HostParam()</code></td>
+<td style="text-align:left"><code>req.hosts</code></td>
+<td style="text-align:center"><code>object</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>There is a tiny example below, It should be warned that type signature of parameters of request handler makes nonsense at runtime, thus type constraint should be guaranteed by programmers themselves (But we can use <code>ValidationPipe</code> to do this declaratively):</p>
 <figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Body</span>, <span class="hljs-title class_">Controller</span>, <span class="hljs-title class_">Get</span>, <span class="hljs-title class_">Param</span>, <span class="hljs-title class_">Query</span>, <span class="hljs-title class_">Req</span>, <span class="hljs-title class_">Res</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Request</span>, <span class="hljs-title class_">Response</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;express&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; z &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;zod&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">AppService</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./app.service&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Numeric</span>, <span class="hljs-title class_">ZodValidator</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./configuration/ZodValidator&#x27;</span>;<br><br><span class="hljs-keyword">type</span> <span class="hljs-title class_">SomeBody</span> = &#123;<br>  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;<br>  <span class="hljs-attr">age</span>: <span class="hljs-built_in">number</span>;<br>&#125;;<br><br><span class="hljs-meta">@Controller</span>(<span class="hljs-string">&#x27;/learn&#x27;</span>)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppController</span> &#123;<br>  <span class="hljs-comment">// constructor injection</span><br>  <span class="hljs-comment">// can use @Inject to indicate Token</span><br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> appService: AppService</span>) &#123;&#125;<br><br>  <span class="hljs-comment">// Get, Post, Delete...</span><br>  <span class="hljs-comment">// return primitive value</span><br>  <span class="hljs-meta">@Get</span>()<br>  <span class="hljs-title function_">getHello</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;hello&#x27;</span>;<br>  &#125;<br><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/hello&#x27;</span>) <span class="hljs-comment">// define subroute</span><br>  <span class="hljs-title function_">anotherHello</span>(): <span class="hljs-built_in">any</span>[] &#123;<br>    <span class="hljs-comment">// array and object return as JSON</span><br>    <span class="hljs-keyword">return</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;hello&#x27;</span>];<br>  &#125;<br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/req&#x27;</span>)<br>  <span class="hljs-comment">// use Req, Request to inject Request Object, use Res, Response to inject Response Object</span><br>  <span class="hljs-title function_">getReq</span>(<span class="hljs-meta">@Req</span>() <span class="hljs-attr">req</span>: <span class="hljs-title class_">Request</span>): <span class="hljs-built_in">object</span> &#123;<br>    <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">params</span>: req.<span class="hljs-property">query</span> &#125;;<br>  &#125;<br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/res&#x27;</span>)<br>  <span class="hljs-title function_">getRes</span>(<span class="hljs-meta">@Res</span>() <span class="hljs-attr">res</span>: <span class="hljs-title class_">Response</span>): <span class="hljs-built_in">string</span> &#123;<br>    res.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;send data by hand&#x27;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;ss&#x27;</span>; <span class="hljs-comment">// will be ignore cause it&#x27;s library-specific option now</span><br>  &#125;<br>  <span class="hljs-comment">// other Decorator: Next, Session, Param, Body, Query, Headers, Ip...</span><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/param/:name&#x27;</span>)<br>  <span class="hljs-comment">// typesafe should be maintained by hand</span><br>  <span class="hljs-title function_">param</span>(<br>    <span class="hljs-meta">@Param</span>(<span class="hljs-string">&#x27;name&#x27;</span>) <span class="hljs-attr">param</span>: <span class="hljs-built_in">string</span>,<br>    <span class="hljs-meta">@Query</span>() <span class="hljs-attr">allQueryParam</span>: <span class="hljs-title class_">Record</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span> | <span class="hljs-built_in">string</span>[]&gt;, <span class="hljs-comment">// get All Query Param</span><br>    <span class="hljs-meta">@Query</span>(<span class="hljs-string">&#x27;param&#x27;</span>) name?: <span class="hljs-built_in">string</span>,<br>  ): <span class="hljs-built_in">object</span> &#123;<br>    <span class="hljs-keyword">return</span> &#123; param, name, allQueryParam &#125;;<br>  &#125;<br><br>  <span class="hljs-comment">// NO TYPE VALIDATION! It will accept any JSON object</span><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/body&#x27;</span>)<br>  <span class="hljs-title function_">body</span>(<span class="hljs-params"><span class="hljs-meta">@Body</span>() body: SomeBody</span>) &#123;<br>    <span class="hljs-keyword">return</span> body;<br>  &#125;<br><br>  <span class="hljs-keyword">static</span> <span class="hljs-title class_">BodySchema</span> = z.<span class="hljs-title function_">object</span>(&#123;<br>    <span class="hljs-attr">name</span>: z.<span class="hljs-title function_">string</span>(),<br>    <span class="hljs-attr">age</span>: <span class="hljs-title class_">Numeric</span>(),<br>  &#125;);<br>  <span class="hljs-comment">// use pipe as Validation</span><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/validBody&#x27;</span>)<br>  <span class="hljs-title function_">validBody</span>(<span class="hljs-params"></span><br><span class="hljs-params">    <span class="hljs-meta">@Body</span>(ZodValidator(AppController.BodySchema))</span><br><span class="hljs-params">    body: z.infer&lt;<span class="hljs-keyword">typeof</span> AppController.BodySchema&gt;,</span><br><span class="hljs-params">  </span>) &#123;<br>    <span class="hljs-keyword">return</span> body;<br>  &#125;<br><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/id/:id&#x27;</span>)<br>  <span class="hljs-comment">// it will accept param like &#x27;123abc&#x27;</span><br>  <span class="hljs-title function_">paramType</span>(<span class="hljs-params"><span class="hljs-meta">@Param</span>(<span class="hljs-string">&#x27;id&#x27;</span>) id: <span class="hljs-built_in">number</span></span>) &#123;<br>    <span class="hljs-keyword">return</span> id + <span class="hljs-number">1</span>;<br>  &#125;<br><br>  <span class="hljs-comment">// promise and rxjs is supported</span><br>  <span class="hljs-meta">@Get</span>(<span class="hljs-string">&#x27;/async&#x27;</span>)<br>  <span class="hljs-keyword">async</span> <span class="hljs-title function_">asyncFn</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">2000</span>));<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rua&#x27;</span>;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <p>With the above controller fully defined, Nest still doesn’t know that CatsController exists and as a result won’t create an instance of this class. There is no such a <code>@ComponentScan</code> in Nest :).</p>
 <p>In Nest, Controllers always belong to a module, which is included in <code>controllers</code> array within <code>@Module()</code> decorator and we should include <code>CatsController</code> in any Modules as below.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">Module</span>, <span class="hljs-title class_">NestModule</span>, <span class="hljs-title class_">MiddlewareConsumer</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@nestjs/common&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">CatsController</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cats.controller&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">LoggerMiddleware</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./LoggerMiddleware&#x27;</span>;<br><br><span class="hljs-meta">@Module</span>(&#123;<br>  <span class="hljs-attr">controllers</span>: [<span class="hljs-title class_">CatsController</span>],<br>&#125;)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CatsModule</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">NestModule</span> &#123;<br>  <span class="hljs-title function_">configure</span>(<span class="hljs-params">consumer: MiddlewareConsumer</span>) &#123;<br>    consumer.<span class="hljs-title function_">apply</span>(<span class="hljs-title class_">LoggerMiddleware</span>).<span class="hljs-title function_">forRoutes</span>(<span class="hljs-string">&#x27;/&#x27;</span>);<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用英语写笔记是一个尝试，最开始的时候肯定是大范围地照抄文档，但也要不断学习更多表述，并不断尝试复述，先把量堆上去。</p>
 <ul>
 <li>is responsible for, 负责</li>
 </ul>
 <p>Controller is responsible for handling incoming request and returning responses to the client.</p>
 <ul>
-<li>sth’s purpose is to do sth, …的用途是…</li>
+<li>sth’s purpose is to do sth, …的用途是… </li>
 </ul>
 <p>A controller’s purpose is to receive specific requests for the application.</p>
 <ul>
-<li>The main idea of … is that …，……的用途&#x2F;意义&#x2F;特点是……</li>
+<li>The main idea of … is that …，……的用途/意义/特点是……</li>
 </ul>
 <p>The main idea of Provider is that it can be injected as a dependency.</p>
 <ul>
@@ -372,10 +377,10 @@
 <p><code>@Controller</code> decorator is required to define a basic controller.</p>
 <ul>
 <li>perform action, 执行操作</li>
-<li>corresponds to&#x2F;with, 同…相一致</li>
+<li>corresponds to/with, 同…相一致</li>
 <li>corresponding，对应的</li>
-<li>is determined by, 由什么决定&#x2F;得出</li>
-<li>sth specified in, 在…里给定的，同 given from&#x2F;by？</li>
+<li>is determined by, 由什么决定/得出</li>
+<li>sth specified in, 在…里给定的，同 given from/by？</li>
 </ul>
 <p>Route path is determined by concatenating controller’s prefix and path specified in method’s decorator.</p>
 <ul>
@@ -384,7 +389,7 @@
 <p>Nest will employ two different option to manipulating response.</p>
 <ul>
 <li>behavior，行为；feature，特性；mechanism，机制；function，功能</li>
-<li>with this approach, 使用这种方式&#x2F;在这种情况下……</li>
+<li>with this approach, 使用这种方式/在这种情况下……</li>
 <li>with …，随着，之后</li>
 </ul>
 <p>with the above controller fully defined, …</p>

@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://example.com/images/oss/20210821235744.png">
 <meta property="og:image" content="http://example.com/images/oss/20210814203458.jpg">
 <meta property="article:published_time" content="2021-08-21T16:31:37.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.287Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.375Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Graphviz">
 <meta name="twitter:card" content="summary_large_image">
@@ -253,11 +253,9 @@
             
             <div class="markdown-body">
               <!--Hello, Happy World-->
-
 <p>最近学习编译原理，苦于使用 draw.io 这样的软件绘制示意图的时候特别麻烦，于是试图找到更为简单的方案，而 <a target="_blank" rel="noopener" href="https://graphviz.org/">graphviz</a> 就是一个很舒爽的解决方案——它提供了一个名为 dot 的 DSL 用以生成 svg，png 以及其他图像格式的文件。所以这里对它进行一些学习。这软件或许在其他地方也能够使用，比如绘制流程图，状态转移图之类的时候。</p>
 <p>先尝尝鲜——下面是一个表示<code>(19+2)*2</code>的语法树的 dot 代码——</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dot">// 单行和多行注释同 Java<br>// graph 定义无向图<br>graph &#123;<br>    // 节点可以预先定义，也可以直接进行使用，这时其显示的内容就是其名称<br>    MUL [label=&quot;*&quot;]; // [] 中的内容对节点进行描述，显然这里定义了节点所显示的标签<br>    PLUS [label=&quot;+&quot;];<br>    NUM2 [label=2];<br>    NUM2_1 [label=2];<br>	<br>    PLUS -- NUM2; // --标识相连，绘制树的话，左边深度较浅<br>    PLUS -- 19;  // 直接定义和描述了一个新节点<br>    MUL -- &#123;PLUS NUM2_1&#125;; // 等价于 MUL -- PLUS; MUL -- NUM2_1;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <p>其使用 dot 生成的对应的图如下——</p>
 <svg width="170pt" height="188pt" viewBox="0.00 0.00 170.00 188.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
@@ -316,6 +314,7 @@
 </svg>
 
 <p>说使用 dot 生成，是因为 graphviz 实际上提供了多种命令来生成图，其代表各种不同的<strong>布局引擎</strong>，其各有特点——</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -323,7 +322,8 @@
 <th>特性</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>dot</td>
 <td>渲染的图具有明确方向性。</td>
 </tr>
@@ -347,13 +347,14 @@
 <td>sfdp</td>
 <td>渲染大型的图，图片缺乏方向性。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>下面通过一些实例和注释描述其使用。</p>
-<h1 id="List"><a href="#List" class="headerlink" title="List"></a>List</h1><p>这里试图展示 Lisp 中的 cons&#x2F;list 的结构。一般来说这种结构使用所谓的“箱子表示法 ”（box notation），如下图来自《ANSI Common Lisp》。</p>
-<p><img src="/images/oss/20210821222756.png"></p>
+<h1 id="List"><a href="#List" class="headerlink" title="List"></a>List</h1><p>这里试图展示 Lisp 中的 cons/list 的结构。一般来说这种结构使用所谓的“箱子表示法 ”（box notation），如下图来自《ANSI Common Lisp》。</p>
+<p><img src="/images/oss/20210821222756.png" alt=""></p>
 <p>这里，每一个 node 都有两个“箱子”（之后都这么称呼），dot 中使用 record 类型的 shape 可以让 node 如此展示。其使用方法如下。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dot">digraph g &#123;<br>    node [shape = record]; // 可以使用这种方法设定所有 node 的属性<br>    node0[label = &quot;&#123;\&lt;interface\&gt; \n AInterface| |+ hello():void&#125;&quot;];  // 可以使用一些标识符<br>    node1[label = &quot;&lt;f0&gt; A|&lt;f1&gt; BCD&quot;]; <br>    node0 -&gt; node1:f0;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
 <svg width="112pt" height="173pt" viewBox="0.00 0.00 112.19 173.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 169.2)">
 <title>g</title>
@@ -389,13 +390,12 @@
 <p>其中，|可以认为是各个箱子的分隔符；{}则是对特定数量箱子起作用，其将更改箱子排列的方向（这个元符号用以构造结构更为复杂的箱子）。&lt;&gt;用来定义“锚点”，使可以被 edge 所引用。</p>
 <p>为实现箱型表示法，还有一点需要实现——默认排列是从上到下的，需要改成从左到右，这是通过 graph 的 rankdir 属性实现的。需要注意的是，rankdir 会改变 record 的默认方向。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dot">digraph g &#123;<br>    rankdir=LR;	// 方向<br>    node [shape = record]; // 默认所有 node 都是 record<br>    edge [tailclip=false]; // edge 不会被 clip——这是为了保证箭头从内部伸出<br>    node0[label = &quot;&#123;a | &lt;A&gt;&#125;&quot;]; <br>    node1_0[label = &quot;&#123;&lt;A&gt;|&lt;B&gt;&#125;&quot;];<br>    node1_1[label = &quot;&#123;b|&lt;B&gt;&#125;&quot;];<br>    node2[label = &quot;&#123;c|nil&#125;&quot;];<br>    node3[label = &quot;&#123;d|nil&#125;&quot;];<br>    node0:A:c -&gt; node1_0; // :c 是 node 默认提供的“锚点”，表示从中心开始<br>    node1_0:A:c -&gt; node1_1;<br>    node1_1:A:c -&gt; node2;<br>    node1_0:B:c -&gt; node3;<br>    // &#123;rank=same;node1_0;node1_1;&#125; 这玩意有 bug，对 record 会报错！<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-<p><img src="/images/oss/20210821235744.png"></p>
+<p><img src="/images/oss/20210821235744.png" alt=""></p>
 <p>……看起来要表达规则的图形的时候这玩意并不太适合。</p>
 <blockquote>
 <p>  先就这样吧……这玩意出现的 bug 浇灭了我继续的兴趣。反正当前学到的东西足够画 AST 了。</p>
 </blockquote>
-<p><img src="/images/oss/20210814203458.jpg"></p>
+<p><img src="/images/oss/20210814203458.jpg" alt=""></p>
 
             </div>
             <hr>

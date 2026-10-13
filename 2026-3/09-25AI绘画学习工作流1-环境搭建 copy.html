@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="那尔">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="farewell...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI绘画学习工作流1——环境搭建">
+<meta property="og:url" content="http://example.com/2026-3/09-25AI%E7%BB%98%E7%94%BB%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C%E6%B5%811-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%20copy.html">
+<meta property="og:site_name" content="那尔">
+<meta property="og:description" content="farewell...">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-25T15:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-25T15:05:53.556Z">
+<meta property="article:author" content="那尔">
+<meta property="article:tag" content="AI 绘画">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>AI绘画学习工作流1——环境搭建 - 那尔</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/atom-one-dark.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":100},"lazyload":{"enable":false,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/rss2.xml" title="那尔" type="application/rss+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>那尔的blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/naer-lily">
+                <i class="iconfont icon-github-fill"></i>
+                Github
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://space.bilibili.com/21111308">
+                <i class="iconfont icon-bilibili-fill"></i>
+                Bilibili
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="AI绘画学习工作流1——环境搭建">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-09-25 23:00" pubdate>
+        2026年9月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.3k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">AI绘画学习工作流1——环境搭建</h1>
+            
+            <div class="markdown-body">
+              <p><strong>给自己做一个强调——我应当假装我在学习 Spring Boot 框架而非学习 Java 语言，这是一个庞然大物，不是精巧的箱庭，遇到什么学什么，通过学习，猜测和实验渐进地建立心智模型</strong>，不要太早就触碰底层，那对实践意义不大——学习时发现一个 <code>@RestController</code> 里的接口调不通，你会去查源码找接口是哪里注册和绑定的吗？bullshit，先百度和看文档。</p>
+<hr>
+<p>一个点子——我画完，画到我的极限，定出来我自己的问题，然后丢给 AI，让 AI 保持风格或破坏风格地重绘，我再对比我的画和 AI 的画，确认我的不足。</p>
+<p>我认为，根本上来说，我这一套操作是在让 AI 对我进行<strong>反馈</strong>，只不过这反馈其实也是经由我自己的 sense——对 AI 的作品，我以我自己的审美，挑选明显观感优于我的，<strong>更接近我原本想达到的效果</strong>的图。所以，我把这套流程称为 AI 反馈工作流。</p>
+<p>想到这个点子，也是出于实际情况——没有一个能让我彻底信服的，且能持续一对一和我对的老师，我只能自己来，这也是这里最大的风险点——全靠我自己的 sense 了。</p>
+<p>但我先不思考那么多，我先尝试搭起来，先试验一下，做个原型，实践只能发生在现实中而非脑海中。</p>
+<hr>
+<p>从我的目的出发——我最终想当的是漫画家，风格很可能是……我操，在漫画上我想要的风格是怎样的？想想不对，先不是漫画，漫画上我还不恰当……OK，我首先不抓漫画，我追 toshi 那种——快速捕捉出来人物，细节恰到好处，但我得明确每一笔的意义（这一句可能有原则性错误——可能我得看 pattern，一行汇编代码是和其他汇编代码去协调工作去完成一个语句的任务的）。</p>
+<p>OK，我回想起来了，toshi 老师和博老师是我倾向的两个风格，考虑到细节的丰富性，我以博老师</p>
+<ol>
+<li>我给我的有瑕疵的速写图，能生成：<ol>
+<li>细节丰富且恰当的，瑕疵以及其他问题被修复的图，以一个“平均的风格”，这种用于检查是否有事实上的错误——透视，比例，动态等</li>
+<li>同上，但以博老师或 toshi 老师具体的风格，这种主要是检查我能否在风格上重现</li>
+</ol>
+</li>
+</ol>
+<hr>
+<p>上面的内容是 8 月 12 日写的，后面让 AI 去做了调研，它给了我一份 step by step 的教程作为我的学习材料，但明显在细节之处还欠打磨，我后面根据这份教程和它交互式地去学习。</p>
+<p>这里首先是对这整套东西有个认知，整个的脉络啥的，不要上来钻进细节里。</p>
+<h1 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h1><p>AI 生图有哪些 pattern，淘宝电商是 AI 生图，让 AI 画色图也是 AI 生图，这里究竟有哪些区分？思考半天后我认为这里只有一条坐标轴——生成图像是受控的白盒还是不受控的黑盒，摸奖：</p>
+<ol>
+<li>不受控：大多数闭源模型，如 Midjourney、GPT-Image、Nano Banana、即梦，能做的就是只能和 AI 对话去进行生成，无法微调，无法重现……</li>
+<li>受控：大多数开源模型，（和闭源的 NovelAI），如 SD，FLUX，Z-Image……虽然使用上有微妙差别，但一般来说你能控制大部分和全部的生成，包括调整工作流，使用骨架，线稿，图像等去进行约束，并且结果可复现，可微调；实际上，能看的过去的 AI 生成的插画全是靠这一边来的，不受控的那一边，主要是服务于电商，设计和 fake news</li>
+</ol>
+<p>我只关注受控这边的。</p>
+<p>这里有很多选择，AI 写了一个表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>模型（代表 · 家族）</th>
+<th>权重 · 8G</th>
+<th>许可</th>
+<th>语料 · 提示词范式</th>
+<th>风格控制</th>
+<th>ControlNet（含 Pose?)</th>
+<th>LoRA 训练</th>
+<th>NSFW</th>
+<th>生态 · 下载</th>
+<th>处置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★ <strong>NoobAI-XL v1.1</strong>(SDXL 标签系；同族 Illustrious / Animagine / WAI / Pony / 各 NSFW merge)</td>
+<td><strong>6.62</strong> · ✅<strong>全精度直跑</strong></td>
+<td>非商用</td>
+<td>Danbooru+e621 <strong>≈1300 万图</strong> · 纯标签</td>
+<td><code>artist: 名</code> 加权 + <strong>IP-Adapter ✅</strong></td>
+<td>✅ Chenkin 8 合 1 含 OpenPose, <strong>有社区双人实践</strong></td>
+<td>✅ kohya(10 全流程）</td>
+<td>✅ 原生</td>
+<td>538 · 120,571</td>
+<td><strong>主力</strong></td>
+</tr>
+<tr>
+<td><strong>Anima</strong>（黑马；CircleStone × Comfy Org, 基座 NVIDIA Cosmos-Predict2-2B)</td>
+<td>3.90+编码器 1.2 · ✅推断</td>
+<td>非商用 (<strong>产出图可商用</strong>)</td>
+<td>数百万动漫图+80 万艺术图，<strong>无合成数据</strong> · <strong>标签与自然语言混合</strong></td>
+<td><code>@artist</code>(<strong>必须带 @</strong>)</td>
+<td>❌ 几乎无 (156 下载实验件）</td>
+<td>✅ sd-scripts / diffusion-pipe</td>
+<td>✅ 原生四级</td>
+<td>270 · <strong>1,172,755</strong></td>
+<td><strong>只能观察</strong>（缺骨架）</td>
+</tr>
+<tr>
+<td><strong>Z-Image</strong>(Turbo/base/Edit)</td>
+<td>22.93(<strong>fp32</strong>)→bf16≈11.5 · ❌需量化</td>
+<td><strong>Apache-2.0</strong></td>
+<td>写实+中英文字渲染 (<strong>非动漫母语</strong>) · 自然语言</td>
+<td>IP-Adapter ❌ / <strong>LoRA ✅ 活跃</strong></td>
+<td>✅ 97,704（含 Pose; 另有 base 版）</td>
+<td>✅ musubi-tuner</td>
+<td>⚠️清洗→社区版已出</td>
+<td>≥1000 · 617,115</td>
+<td>备选</td>
+</tr>
+<tr>
+<td><strong>FLUX.2</strong>(klein 4B / 9B / dev 32B)</td>
+<td>4B 合计 14.7 · ❌需 GGUF;dev 24G+</td>
+<td>klein <strong>Apache</strong> / dev 非商用</td>
+<td>自然语言 + 指令编辑</td>
+<td>IP-Adapter ❌ / LoRA ✅</td>
+<td>✅ 7,253（含 Pose, 很新）</td>
+<td>✅ musubi-tuner</td>
+<td>⚠️清洗→换编码器<strong>可能可解</strong>（未证）</td>
+<td>180 · 403,340</td>
+<td><strong>W2 通道</strong></td>
+</tr>
+<tr>
+<td>FLUX.1(dev/schnell/Krea-dev)</td>
+<td>22.17 · ❌需 GGUF</td>
+<td>schnell <strong>Apache</strong> / dev 非商用</td>
+<td>自然语言</td>
+<td><strong>IP-Adapter ✅</strong> XLabs 52,526</td>
+<td>✅ 32,023</td>
+<td>✅ kohya</td>
+<td>⚠️清洗→社区微调</td>
+<td>≥1000 · 700,626</td>
+<td>12B 吃紧</td>
+</tr>
+<tr>
+<td><strong>Qwen-Image</strong>(2.1 / 2512 / Edit)</td>
+<td>≈41.8 · ❌</td>
+<td>base Apache / 2.1 other</td>
+<td>自然语言、<strong>双语文字渲染</strong></td>
+<td>IP-Adapter ❌</td>
+<td>✅ InstantX / DiffSynth</td>
+<td>✅ musubi-tuner</td>
+<td>审核→Uncensored-GGUF <strong>715,906</strong></td>
+<td>639 · 298,956</td>
+<td><strong>W3 云端</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我选 NoobAI，主要还是硬件要求吧，然后我实际上不太需要自然语言描述可能……动作，角色啥的我通过 ControlNet，LoRA 和 IP-Adapter 去做。</p>
+<p>在 ComfyUI 中，正向、负向提示词，ControlNet，LoRA，IP-Adapter 均称为 CONDITIONING……这个太宽泛了，我还是按我自己的说法吧——ControlNet 叫结构控制（在哪里画什么），LoRA 和 IP-Adapter 叫风格控制（怎么画），结构定大框架，风格定细节。虽然在以前的教程里还会把 ControlNet 和 LoRA 啥的当成进阶概念，但从我们的视角来说，这是上来就要的。</p>
+<h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><p>快速把东西搭起来。用 ComfyUI，而我的心智模型也都将基于 ComfyUI。把模型都下好，然后从官方的工作流示例开始去生成一张图片，这一篇的任务就结束了，理解背后发生了什么是下一步的事情。</p>
+<p>我 4060，ComfyUI 用便携版避免处理 python 版本问题：</p>
+<ul>
+<li>ComfyUI: <a target="_blank" rel="noopener" href="https://github.com/Comfy-Org/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia_cu126.7z">https://github.com/Comfy-Org/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia_cu126.7z</a></li>
+<li>NoobAI（模型）: <a target="_blank" rel="noopener" href="https://hf-mirror.com/Laxhar/noobai-XL-1.1/resolve/main/NoobAI-XL-v1.1.safetensors">https://hf-mirror.com/Laxhar/noobai-XL-1.1/resolve/main/NoobAI-XL-v1.1.safetensors</a></li>
+<li>Chenkin-UniControl-XL（ControlNet）：<a target="_blank" rel="noopener" href="https://hf-mirror.com/ChenkinNoob/Chenkin-UniControl-XL/resolve/main/Chenkin-UniControl-XL.safetensors">https://hf-mirror.com/ChenkinNoob/Chenkin-UniControl-XL/resolve/main/Chenkin-UniControl-XL.safetensors</a></li>
+</ul>
+<p>解压 ComfyUI 后，把模型放到：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm">ComfyUI/models/checkpoints/NoobAI-<span class="hljs-built_in">XL</span>-v1<span class="hljs-number">.1</span>.safetensors<br>ComfyUI/models/controlnet/Chenkin-UniControl-<span class="hljs-built_in">XL</span>.safetensors<br></code></pre></div></td></tr></table></figure>
+<p>在<code>ComfyUI/custom_nodes/</code>下拉取相应节点：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/Fannovel16/comfyui_controlnet_aux.git<br>git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/pythongosssss/ComfyUI-WD14-Tagger.git<br>git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/chinoll/ComfyUI-Advanced-ControlNet.git<br></code></pre></div></td></tr></table></figure>
+<p>然后，安装这些节点的依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">./python_embeded/python.exe -m pip install -r ComfyUI/manager_requirements.txt<br>./python_embeded/python.exe -m pip install -r ComfyUI/custom_nodes/comfyui_controlnet_aux/requirements.txt<br>./python_embeded/python.exe -m pip install -r ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/requirements.txt<br>./python_embeded/python.exe -m pip install -r ComfyUI/custom_nodes/ComfyUI-Advanced-ControlNet/requirements.txt<br></code></pre></div></td></tr></table></figure>
+<p>顺便改环境变量，嵌入的 python 的配置也改一下改成国内源：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 加到系统环境变量去</span><br><span class="hljs-built_in">export</span> HF_ENDPOINT=https://hf-mirror.com<br><br><span class="hljs-comment"># 设置国内源（然而注意到这个其实设置了全局的pip……）</span><br>./python_embeded/python.exe -m pip config <span class="hljs-built_in">set</span> global.index-url https://pypi.tuna.tsinghua.edu.cn/simple<br></code></pre></div></td></tr></table></figure>
+<p>然后，给 <code>run_nvidia_gpu.bat</code> 的相应命令后缀一个 <code>--enable-manager</code> ，然后去把它跑起来！</p>
+<p>Checkin 提供的工作流示例：<a target="_blank" rel="noopener" href="https://hf-mirror.com/ChenkinNoob/Chenkin-UniControl-XL/resolve/main/example/controlnet-fuse.json">https://hf-mirror.com/ChenkinNoob/Chenkin-UniControl-XL/resolve/main/example/controlnet-fuse.json</a> ，下载它，把它拖入到ComfyUI窗口。</p>
+<p>这里会遇上一个坑，让我一窥ComfyUI中的节点的参数是怎么存的——Load ControlNet那个节点，control_type这个下拉框的枚举有改动，之前的名字没了，因此直接运行会报错，需要调整一下它为fuse再执行。</p>
+<!--
+
+# 饼
+
+- [ ] 把我的结构有问题的图丢给 AI，看：
+  - [ ] 它能不能直接修复掉我的问题去让我看到差异以明确我的问题？（存疑）
+  - [ ] 它能不能顺着我的结构画一张高完成度的图，让我能通过常识看到差异，以明确我的问题
+
+-->
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/AI-%E7%BB%98%E7%94%BB/">AI 绘画</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-NC-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026-4/10-13%E5%85%B3%E4%BA%8E%E8%B7%9F%E7%94%BB%E7%9A%84%E5%BF%83%E7%90%86%E5%BB%BA%E8%AE%BE.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于跟画的心理建设</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026-3/09-25AI%E7%BB%98%E7%94%BB%E5%AD%A6%E4%B9%A0%E5%B7%A5%E4%BD%9C%E6%B5%812-HelloWorld.html">
+                        <span class="hidden-mobile">AI绘画学习工作流2——Hello World</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<!-- hexo injector body_end start -->
+<script src="/assets/prism-bundle.js"></script>
+<script src="/assets/prism-plus.js" data-pjax=""></script>
+<!-- hexo injector body_end end --></body>
+</html>

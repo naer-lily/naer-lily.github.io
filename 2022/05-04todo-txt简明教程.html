@@ -26,7 +26,7 @@
 <meta property="og:description" content="研究一下 todo.txt，之后整活">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-05-04T06:47:08.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.298Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.387Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Foo">
 <meta name="twitter:card" content="summary_large_image">
@@ -300,10 +300,8 @@
 <p>项目使用<code>+</code>语法去表示，上下文通过<code>@</code>语法去表示，两者都接受非空字符串作为名称，两者都可以出现任意次数。</p>
 <p>比如，下面指定一个最高优先级的，处在学习项目的，上下文为下班后的 TODO：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs todo.txt">(A) @下班后 +学习 Spring MVC<br></code></pre></div></td></tr></table></figure>
-
 <blockquote>
-<p>我感觉这并非是一个最佳实践——这个 TODO 太大了：学习？学哪个部分？使用还是原理？我认为，项目应当是“+learnSpringMVC”，描述应该是 “中的 blablala”，即：</p>
-<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">(<span class="hljs-selector-tag">A</span>) @下班后 +learnSpringMVC RestController<br></code></pre></div></td></tr></table></figure>
+<p>我感觉这并非是一个最佳实践——这个 TODO 太大了：学习？学哪个部分？使用还是原理？我认为，项目应当是“+learnSpringMVC”，描述应该是 “中的 blablala”，即：<br><figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">(<span class="hljs-selector-tag">A</span>) @下班后 +learnSpringMVC RestController<br></code></pre></div></td></tr></table></figure></p>
 </blockquote>
 <p>然后是 KV tag，这是供开发者去使用的 metadata，语法是<code>key:value</code>。</p>
 <p><code>todo.txt</code>就这些东西…简单，但优雅。</p>
@@ -313,7 +311,6 @@
 <p>然后进行测试，输入<code>todo add &#39;Hello, Happy World!&#39;</code>，并检查<code>~/.todo/todo.txt</code>是否有数据。</p>
 <h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>先创建测试“数据”，直接编辑<code>todo.txt</code>或者通过<code>todo add</code>命令：</p>
 <figure class="highlight gherkin"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gherkin">(A) +健身 <span class="hljs-meta">@早晨</span> <span class="hljs-meta">@晚上</span> <span class="hljs-meta">@楼下</span> 各跳绳 500 个<br>(C) +英语 <span class="hljs-meta">@晚上</span> 完成扇贝阅读一篇文章<br>(A) +吉他 yousician 30 分钟<br>(B) +吉他 +辨识 200 个 note<br>+吉他 完成练习二<br></code></pre></div></td></tr></table></figure>
-
 <ul>
 <li><p>列出所有 TODO：<br><code>todo list</code>（或者<code>todo ls</code>）</p>
 </li>

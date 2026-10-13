@@ -26,7 +26,7 @@
 <meta property="og:description" content="这篇文章对组合的解释和比喻实在太好了，转载一番。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-15T15:42:00.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.288Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.376Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="转载">
 <meta name="twitter:card" content="summary_large_image">
@@ -249,14 +249,12 @@
             
             <div class="markdown-body">
               <p>原文链接：<a target="_blank" rel="noopener" href="https://www.kbasm.com/blog/cn/oop-prefer-composition-over-inheritance">https://www.kbasm.com/blog/cn/oop-prefer-composition-over-inheritance</a></p>
-<h1 id="面向对象随想-–-多用组合来代替继承"><a href="#面向对象随想-–-多用组合来代替继承" class="headerlink" title="面向对象随想 – 多用组合来代替继承"></a>面向对象随想 – 多用组合来代替继承</h1><p>面向对象设计中，很多时候用组合来代替继承会更好。本文主要讨论了组合和继承的对比以及各自的优缺点。</p>
+<h1 id="面向对象随想-—-多用组合来代替继承"><a href="#面向对象随想-—-多用组合来代替继承" class="headerlink" title="面向对象随想 — 多用组合来代替继承"></a>面向对象随想 — 多用组合来代替继承</h1><p>面向对象设计中，很多时候用组合来代替继承会更好。本文主要讨论了组合和继承的对比以及各自的优缺点。</p>
 <h2 id="什么是继承和组合"><a href="#什么是继承和组合" class="headerlink" title="什么是继承和组合"></a>什么是继承和组合</h2><p>让我们先来简单看看什么是继承和组合。只是例子，不是概念。<br> 假设有三个特性（模块）， ModuleA, ModuleB, ModuleC。有两个类 ClassA 和 ClassB 需要使用它们。ClassA 会用到 ModuleA 和 ModuleB，ClassB  会用到全部三个特性。而且我们还假设现在全部 A，B 和 C 模块会只被 ClassA 和 ClassB 用到。  </p>
 <p>继承：</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassA</span> &#123;  <br>    functions of ModuleA;  <br>    functions of ModuleB;  <br>&#125;;  <br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassB</span> extends ClassA &#123;  <br>    functions of ModuleC;  <br>&#125;;  <br></code></pre></div></td></tr></table></figure>
-
 <p>组合：</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ModuleA</span> &#123;&#125;;  <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ModuleB</span> &#123;&#125;;  <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ModuleC</span> &#123;&#125;;  <br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassA</span> &#123;  <br>    ModuleA ma;  <br>    ModuleB mb;  <br>&#125;;  <br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassB</span> &#123;  <br>    ModuleA ma;  <br>    ModuleB mb;  <br>    ModuleC mc;  <br>&#125;;  <br><br><span class="hljs-comment">//或者：  </span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassB</span> &#123;  <br>    ClassA ca;  <br>    ModuleC mc;  <br>&#125;;  <br></code></pre></div></td></tr></table></figure>
-
 <p>两种方法都重用了模块。</p>
 <p>对于组合，我们一般把模块叫做组件。<br>在游戏开发中，这样的组合又叫做基于组件的实体系统。  </p>
 <h2 id="组合比继承有哪些优势？"><a href="#组合比继承有哪些优势？" class="headerlink" title="组合比继承有哪些优势？"></a>组合比继承有哪些优势？</h2><ol>

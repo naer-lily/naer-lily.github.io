@@ -26,7 +26,7 @@
 <meta property="og:description" content="随便写写，只做笔记，不是做教程">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-10T09:05:15.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.289Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.377Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="FP">
 <meta name="twitter:card" content="summary_large_image">
@@ -265,24 +265,22 @@
 <p>  显然，lambda 演算中的 abstraction 是比数学中的函数更加抽象，一般化的——它的输入值是没有任何限定的，无论输入值是一个数字，字符串，或是另一个函数，它都能作为入参并进行替换。</p>
 </blockquote>
 <p>绑定（bind），当我们对函数应用一个参数的时候，函数体中的每一个 x 都会被替换成该参数。也可以说，x 绑定在该参数上了。参数的值为何，x 就会被替换为何值。被绑定的 x 变量称为约束变量。</p>
-<p>约束变量的名字是可以随意替换的，比如<code>𝜆x.x</code>，可以替换成<code>𝜆y.y</code>，<code>𝜆z.z</code>。这是显然的——x，y，z 只是名字，代号而已，它们会被具体的值替换，因此命名如何无关紧要。这种性质称为** alpha 等价**。</p>
+<p>约束变量的名字是可以随意替换的，比如<code>𝜆x.x</code>，可以替换成<code>𝜆y.y</code>，<code>𝜆z.z</code>。这是显然的——x，y，z 只是名字，代号而已，它们会被具体的值替换，因此命名如何无关紧要。这种性质称为<strong> alpha 等价</strong>。</p>
 <p>这里的 abstraction <code>𝜆x.x</code>没有名字 ，因此它是一个匿名函数（anonymous function）。</p>
 <p>abstraction 之所以叫 abstraction，是因为它进行了一定的抽象——通过<strong>让名字代表具体的值</strong>来抽象出特定形式；在应用中<strong>以具体的值替换名字</strong>——从而让一定的形式能具有更加广泛的意义。如果离开了这种替换，形如<code>x + 1</code>这种形式的表达式是没有任何意义的，因为 x 只是一个奇怪的符号而已。</p>
-<p>这里的“应用”也有自己的语法——(M N)，其中 M 为应当为 abstraction，而 N 为一个任意 lambda 元素（项）。比如<code>(𝜆x.(x + 1) 2)</code>就是一个应用，2 将作为参数应用到该 abstraction，将 x 替换为 2，最终得到 (2 + 1) 这个表达式。这称为** Beta 化简**。显然这是将 abstraction 转换成表达式的基础。</p>
+<p>这里的“应用”也有自己的语法——(M N)，其中 M 为应当为 abstraction，而 N 为一个任意 lambda 元素（项）。比如<code>(𝜆x.(x + 1) 2)</code>就是一个应用，2 将作为参数应用到该 abstraction，将 x 替换为 2，最终得到 (2 + 1) 这个表达式。这称为<strong> Beta 化简</strong>。显然这是将 abstraction 转换成表达式的基础。</p>
 <p>parameter 和 argument——定义的语境称作 parameter，应用的语境称为 argument。绑定的是 parameter，接受的是 argument。实践中这两个词通常可以混用，都冠以“参数”为名。但 argument 更倾向于表示传递给函数的<strong>值</strong>。</p>
 <blockquote>
 <p>  这里的 1，2，+应该考虑为某种标识符，或某种变量名，不考虑它的具体语义。</p>
 </blockquote>
 <p>对<code>𝜆x.x</code>，将其应用到入参<code>1</code>和<code>𝜆y.y</code>，能够得到<code>1</code>和<code>𝜆y.y</code>。下面列出了<code>(𝜆𝑦.𝑦)</code>求解过程，其中<code>[𝑥 ∶= (𝜆𝑦.𝑦)]</code>表示 x 将替换为<code>(𝜆𝑦.𝑦)</code>，或者说 x 和这个值绑定了。</p>
 <figure class="highlight gcode"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gcode"><span class="hljs-comment">(𝜆𝑥.𝑥)</span><span class="hljs-comment">(𝜆𝑦.𝑦)</span><br>[𝑥 ∶= <span class="hljs-comment">(𝜆𝑦.𝑦)</span>]<br>𝜆𝑦.𝑦<br></code></pre></div></td></tr></table></figure>
-
 <p>又比如对<code>(𝜆𝑥.𝑥)(𝜆𝑦.𝑦)𝑧</code>，能容易看出来其结果为 z。<code>(𝜆𝑥.𝑥)</code>显然为 identity 函数。容易得到 const 函数——<code>(𝜆x.𝜆y.x)</code>。</p>
 <p>变量绑定和替换就是 lambda 演算的核心规则。在 lambda 演算里，变量只是名字，函数只是一个等待替换输入参数并返回一个表达式的“模版”。对 lambda 表达式进行化简的过程称为解析（resolve）。解析将在无法再次进行 Beta 化简时停止，即找不到 abstraction，或者找不到参数。无法进行 Beta 化简的表达式称为<code>beta normal form</code>。这种形式是计算完全的表达式。</p>
 <p>但是并非所有表达式都能转化为 beta normal form，比如这个——<code>(𝜆x.xx)(𝜆x.xx)</code>，对其进行 Beta 化简会得到它本身，因而能够无限地化简下去。这种表达式是<code>diverge</code>发散的。很好奇这是否涉及到停机问题。</p>
 <p>同时出现在函数头和函数体的名字称为约束变量，而未出现在函数头却出现在函数体中的名字称为自由变量。编程中自由变量是常见的——引用的上层作用域或全局作用域的变量。</p>
 <p>函数是单参数的，就如 Haskell 的函数定义一样，但也同 haskell 一样允许使用“语法糖”——形如<code>𝜆xy.xy</code>的函数实质上是<code>𝜆x.(𝜆y.xy)</code>。顺便，这里的<code>xy</code>没有任何意义，只是两个名字放在一起罢了，具体语义没有被定义。可以认为类似数学上那种乘法表述，<code>f(x)=2x</code>。但若是 x 被应用到了另一个函数，这将成为一次函数的应用。</p>
 <figure class="highlight scss"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scss">𝜆xy<span class="hljs-selector-class">.xy</span> (𝜆z.a) <span class="hljs-number">1</span><br>(𝜆x(𝜆y.xy)) (𝜆z.a) <span class="hljs-number">1</span><br><span class="hljs-selector-attr">[x := (𝜆z.a)]</span><br>(𝜆y.(𝜆z.a)y) <span class="hljs-number">1</span><br><span class="hljs-selector-attr">[z := y]</span><br>(𝜆y.a) <span class="hljs-number">1</span><br><span class="hljs-selector-attr">[y := 1]</span><br><span class="hljs-selector-tag">a</span> <br></code></pre></div></td></tr></table></figure>
-
 <p>当然，对于多参数的应用，大可以直接一次性全部替换。只是这种替换对人脑友好，对计算机不友好罢了。</p>
 <p>lambda 演算中的计算（evaluation）就是化简。这对一个只有纯函数形式的“语言”来说是显然的。</p>
 <p><strong>组合子</strong>（Combinator）是没有自由变量的 lambda 项。它代表一类这样的 lambda——它只能对它的 argument 进行组合。</p>

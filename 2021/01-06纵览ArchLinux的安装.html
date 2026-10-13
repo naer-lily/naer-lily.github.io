@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/01/06/FINUuBoKXZymb7E.png">
 <meta property="article:published_time" content="2021-01-06T00:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.282Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.370Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -216,7 +216,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3k 字
+      2.9k 字
     </span>
   
 
@@ -251,7 +251,6 @@
             
             <div class="markdown-body">
               <!--Hello, Happy World-->
-
 <p>回到家里，决定把之前使用的系统（win10 和 Fedora）删掉，把硬盘的分区表改成 GPT 并安装 ArchLinux 和图形界面。打算把安装过程好好记录一下，同时也是概括一下，让之后再安装 ArchLinux 的时候不会只死跟着安装指南，不但要知其然，还要知其所以然嘛。<del>同时也联系一下我之前学过的一点关于开机引导的知识，网络配置的知识等，从而让我能够有一个感性（但是系统）的认识。总之什么相关的都涉及一下。</del>（摸了）</p>
 <p>顺便也要去了解一下图形界面的安装……还有常用的一些工具，如中文字体，fctix 框架，wine（如果有必要的话）等的安装。</p>
 <p>这里使用 VirtualBox 虚拟机来安装以方便截图和记录之类的……</p>
@@ -280,50 +279,36 @@
 <h2 id="配置网络连接"><a href="#配置网络连接" class="headerlink" title="配置网络连接"></a>配置网络连接</h2><p>首先使用<code>ping baidu.com</code>检查是否能 ping 通（在虚拟机下这玩意是开箱即用的），如果不能 ping 通，则需手动配置网络。有线……谁知道呢，直接使用<code>dhcpcd</code>命令试试？（这之前或许要把网卡打开之类的），对于无线，应当通过<code>iwctl</code>来连接。</p>
 <h2 id="建立磁盘分区"><a href="#建立磁盘分区" class="headerlink" title="建立磁盘分区"></a>建立磁盘分区</h2><p>使用<code>fdisk</code>命令来建立磁盘分区。</p>
 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ fdisk /dev/sda<br></code></pre></div></td></tr></table></figure>
-
 <p>首先输入 g，创建 GPT 分区表，然后使用 n 分别创建三个分区——UEFI System 分区（1G 大小），交换分区和根分区。并使用 t 更改这三个分区的 type。分区结果如图——</p>
-<p><img src="https://i.loli.net/2021/01/06/FINUuBoKXZymb7E.png"></p>
+<p><img src="https://i.loli.net/2021/01/06/FINUuBoKXZymb7E.png" alt=""></p>
 <p>记得使用 w 保存。</p>
 <blockquote>
 <p>在输入 last sector 的时候，使用+xG 这样的形式能够非常容易地规划分区的大小。</p>
 </blockquote>
-<h2 id="格式化各分区并挂载"><a href="#格式化各分区并挂载" class="headerlink" title="格式化各分区并挂载"></a>格式化各分区并挂载</h2><p>UEFI System 分区是 FAT32 格式，交换分区是交换分区格式，根分区这里使用 xfs 格式。使用如下命令对这些分区进行格式化。</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkfs.fat -F32 /dev/sda1 <span class="hljs-comment"># EFI 系统分区</span><br>mkswap /dev/sda2 <span class="hljs-comment"># 交换分区</span><br>swapon /dev/sda2<br>mkfs.xfs /dev/sda3 <span class="hljs-comment"># 根分区</span><br></code></pre></div></td></tr></table></figure>
-
-<p>然后使用如下命令进行挂载。要注意的是，应先挂载根分区，再挂载 efi 分区。</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mount /dev/sda3 /mnt      <span class="hljs-comment"># 挂载根分区</span><br><span class="hljs-built_in">mkdir</span> /mnt/boot<br>mount /dev/sda1 /mnt/boot <span class="hljs-comment"># 挂载 efi 分区</span><br></code></pre></div></td></tr></table></figure>
-
-<h2 id="配置源，安装系统"><a href="#配置源，安装系统" class="headerlink" title="配置源，安装系统"></a>配置源，安装系统</h2><p>应编辑&#x2F;etc&#x2F;pacman.conf，取消注释 multilib 源，并添加 archlinuxcn 源。</p>
+<h2 id="格式化各分区并挂载"><a href="#格式化各分区并挂载" class="headerlink" title="格式化各分区并挂载"></a>格式化各分区并挂载</h2><p>UEFI System 分区是 FAT32 格式，交换分区是交换分区格式，根分区这里使用 xfs 格式。使用如下命令对这些分区进行格式化。<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkfs.fat -F32 /dev/sda1 <span class="hljs-comment"># EFI 系统分区</span><br>mkswap /dev/sda2 <span class="hljs-comment"># 交换分区</span><br>swapon /dev/sda2<br>mkfs.xfs /dev/sda3 <span class="hljs-comment"># 根分区</span><br></code></pre></div></td></tr></table></figure></p>
+<p>然后使用如下命令进行挂载。要注意的是，应先挂载根分区，再挂载 efi 分区。<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mount /dev/sda3 /mnt      <span class="hljs-comment"># 挂载根分区</span><br><span class="hljs-built_in">mkdir</span> /mnt/boot<br>mount /dev/sda1 /mnt/boot <span class="hljs-comment"># 挂载 efi 分区</span><br></code></pre></div></td></tr></table></figure></p>
+<h2 id="配置源，安装系统"><a href="#配置源，安装系统" class="headerlink" title="配置源，安装系统"></a>配置源，安装系统</h2><p>应编辑/etc/pacman.conf，取消注释 multilib 源，并添加 archlinuxcn 源。</p>
 <p>使用 pacstrap 安装必须的软件包。这里连带着把 KDE 图形界面的东西也安装了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">pacstrap /mnt base linux linux-firmware networkmanager vim sudo xorg xorg-xinit plasma kde-applications xdg-user-dirs grub efibootmgr fcitx<br><span class="hljs-comment"># 这里还应当安装中文输入法，中文字体等</span><br></code></pre></div></td></tr></table></figure>
-
 <blockquote>
 <p>linux-firmware 是固件相关的软件包，里面有很多必须的驱动。</p>
 </blockquote>
 <p>然后生成 fstab 并 chroot 到新系统中。</p>
 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">genfstab -U /mnt &gt;&gt; /mnt/etc/fstab<br><span class="hljs-comment"># 这个工具……</span><br>arch-chroot /mnt<br></code></pre></div></td></tr></table></figure>
-
 <h2 id="对系统进行配置"><a href="#对系统进行配置" class="headerlink" title="对系统进行配置"></a>对系统进行配置</h2><p>配置主要有设置时区，修改 hostname，设置 root 账号的 password，创建新用户等。</p>
-<p>设置时区——</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ln</span> -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>hwclock --systohc<br></code></pre></div></td></tr></table></figure>
-
-<p>编辑&#x2F;etc&#x2F;hostname 和&#x2F;etc&#x2F;hosts 文件——</p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># /etc/hostname</span><br>myhostname<br><br><span class="hljs-comment"># /etc/hosts</span><br>127.0.0.1	localhost<br>::1		localhost<br>127.0.1.1	myhostname.localdomain	myhostname<br></code></pre></div></td></tr></table></figure>
-
-<p>**编辑&#x2F;etc&#x2F;locale.gen 文件，取消注释 en_US.UTF-8 和 zh_CN. *行。然后调用 locale-gen 程序**。</p>
+<p>设置时区——<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">ln</span> -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>hwclock --systohc<br></code></pre></div></td></tr></table></figure></p>
+<p>编辑/etc/hostname 和/etc/hosts 文件——<br><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># /etc/hostname</span><br>myhostname<br><br><span class="hljs-comment"># /etc/hosts</span><br>127.0.0.1	localhost<br>::1		localhost<br>127.0.1.1	myhostname.localdomain	myhostname<br></code></pre></div></td></tr></table></figure></p>
+<p><strong>编辑/etc/locale.gen 文件，取消注释 en_US.UTF-8 和 zh_CN. *行。然后调用 locale-gen 程序</strong>。</p>
 <p><strong>使用 passwd 命令修改 root 的密码</strong>。</p>
 <h3 id="设置-startx"><a href="#设置-startx" class="headerlink" title="设置 startx"></a>设置 startx</h3><p>我决定不使用显示管理器，而是在 tty 中直接使用 startx 登录图形界面。</p>
-<p>设置 startx 应当编辑&#x2F;etc&#x2F;X11&#x2F;xinit&#x2F;xinitrc（当然，如果~&#x2F;.xinitrc 存在，会优先执行它）。这里对它进行备份，然后使它中只有一行内容<code>exec startplasma-x11</code>。</p>
+<p>设置 startx 应当编辑/etc/X11/xinit/xinitrc（当然，如果~/.xinitrc 存在，会优先执行它）。这里对它进行备份，然后使它中只有一行内容<code>exec startplasma-x11</code>。</p>
 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">mv</span> /etc/X11/xinit/xinitrc /etc/X11/xinit/xinitrc.bak<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;exec startplasma-x11&#x27;</span> &gt; /etc/X11/xinit/xinitrc<br></code></pre></div></td></tr></table></figure>
-
 <h3 id="创建新用户"><a href="#创建新用户" class="headerlink" title="创建新用户"></a>创建新用户</h3><figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">useradd -m <span class="hljs-string">&#x27;aoymykn&#x27;</span> <span class="hljs-comment"># -m 意思是创建用户主目录</span><br>passwd aoymykn <span class="hljs-comment"># 修改密码</span><br></code></pre></div></td></tr></table></figure>
-
 <p>使用<code>visudo</code>命令编辑 sudoers，将该用户添加到 sudo 中。这里需要取消注释<code>Default targetpw</code>和<code>ALL ALL=(ALL) ALL</code>两行。</p>
 <h2 id="安装系统引导"><a href="#安装系统引导" class="headerlink" title="安装系统引导"></a>安装系统引导</h2><p>使用该命令安装系统引导——</p>
 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB<br><br>grub-mkconfig -o /boot/grub/grub.cfg  <span class="hljs-comment"># 自动生成配置文件</span><br></code></pre></div></td></tr></table></figure>
-
 <p>重启！</p>
-<h3 id="BIOS-x2F-UEFI，MBR-x2F-GPT-以及-GRUB-的关系"><a href="#BIOS-x2F-UEFI，MBR-x2F-GPT-以及-GRUB-的关系" class="headerlink" title="BIOS&#x2F;UEFI，MBR&#x2F;GPT 以及 GRUB 的关系"></a>BIOS&#x2F;UEFI，MBR&#x2F;GPT 以及 GRUB 的关系</h3><p>TODO: 摸了</p>
+<h3 id="BIOS-UEFI，MBR-GPT-以及-GRUB-的关系"><a href="#BIOS-UEFI，MBR-GPT-以及-GRUB-的关系" class="headerlink" title="BIOS/UEFI，MBR/GPT 以及 GRUB 的关系"></a>BIOS/UEFI，MBR/GPT 以及 GRUB 的关系</h3><p>TODO: 摸了</p>
 <h2 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h2><p>TODO: 摸了</p>
 <blockquote>
 <p>写这篇文章前前后后安装了 3 次，都快能默写了 www</p>

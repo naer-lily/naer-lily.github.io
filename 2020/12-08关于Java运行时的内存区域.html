@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/12/09/5Ngx1dvKGaIpZ3V.png">
 <meta property="og:image" content="https://i.loli.net/2020/12/10/TZJIqwKVWfnA7pY.png">
 <meta property="article:published_time" content="2020-12-08T08:17:33.000Z">
-<meta property="article:modified_time" content="2023-11-12T03:44:40.279Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.368Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="JVM">
@@ -221,7 +221,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.2k 字
+      5k 字
     </span>
   
 
@@ -256,10 +256,9 @@
             
             <div class="markdown-body">
               <!--Hello, Happy World-->
-
 <p>每运行一个 Java 程序，它就要启动一个 Java 虚拟机的实例，所以说，Java 虚拟机的生命周期是和进程相同的（或许这里顺序该交换一下），一个 Java 虚拟机维护一个进程。</p>
 <p>Java 虚拟机会将其管理的内存划分为若干不同的数据区域——</p>
-<p><img src="https://i.loli.net/2020/12/08/eMzuqLdg4sJCWQS.png"></p>
+<p><img src="https://i.loli.net/2020/12/08/eMzuqLdg4sJCWQS.png" alt=""></p>
 <p>可以看到，Java 运行时管理的内存区域包括程序计数器（PC），虚拟机栈（VM Stack），本地方法栈（Native Method Stack），堆（Heap），方法区和直接内存。</p>
 <p>其中，每个线程都拥有（且<strong>私有</strong>）——</p>
 <ul>
@@ -277,8 +276,6 @@
 <h2 id="Java-虚拟机栈（VM-Stack）"><a href="#Java-虚拟机栈（VM-Stack）" class="headerlink" title="Java 虚拟机栈（VM Stack）"></a>Java 虚拟机栈（VM Stack）</h2><p>Java 内存可以粗糙地区分为<strong>堆内存</strong>（heap）和<strong>栈内存</strong>（stack）。其中，<strong>每一个线程的虚拟机栈就是这里的栈，或者说是这里的栈中局部变量表部分</strong>（局部变量表存储当前函数的局部变量，包括编译期可知的 8 个基本数据类型和对象引用）。其作用就如 C 语言中的函数调用栈。其存储一个个<strong>栈帧</strong>（Stack frame）。栈帧会在 return 语句或抛出异常后弹出。</p>
 <blockquote>
 <p>栈中只存储对象的引用，对象的实例一般来说存放在堆中。但是，如果某方法中使用的对象没有被返回，没有被外界调用，该对象是可以分配在栈上的。这种机制称为<strong>逃逸分析</strong>。</p>
-</blockquote>
-<blockquote>
 <p>每一个栈帧都拥有：局部变量表，操作数栈，动态链接，方法出口信息。（这啥啊……）</p>
 </blockquote>
 <p>Java 虚拟机栈会出现两种错误——<code>StackOverFlowError</code>和<code>OutOfMemoryError</code>。</p>
@@ -294,10 +291,10 @@
 <h2 id="堆（Heap）——存放对象实例"><a href="#堆（Heap）——存放对象实例" class="headerlink" title="堆（Heap）——存放对象实例"></a>堆（Heap）——存放对象实例</h2><blockquote>
 <p>这里的堆指的并非数据结构中的堆。其用的是 heap 的英文释义——<strong>（凌乱的）一堆；许多；大量</strong>。</p>
 </blockquote>
-<p>堆是 JVM 管理的最大的一块内存区域。其唯一的目的在于存放对象的实例。<strong>几乎所有</strong>的对象实例（和数组）都分配在堆中（一些技术，如 JIT，逃逸分析的成熟会导致一些微妙的变化——一些对象不分配在堆中而是栈中）。堆是垃圾收集器管理的主要区域，因此也被称作** GC 堆（Garbage Collected Heap）**。</p>
+<p>堆是 JVM 管理的最大的一块内存区域。其唯一的目的在于存放对象的实例。<strong>几乎所有</strong>的对象实例（和数组）都分配在堆中（一些技术，如 JIT，逃逸分析的成熟会导致一些微妙的变化——一些对象不分配在堆中而是栈中）。堆是垃圾收集器管理的主要区域，因此也被称作<strong> GC 堆（Garbage Collected Heap）</strong>。</p>
 <p>堆分为三部分——新生代（Young Generation），老年代（Old Generation）和永久代（Permanent Generation），JDK1.8 后，永久代被移除，取而代之的是元空间（MetaSpace）。或者说，方法区的实现由永久代改为了元空间。</p>
 <p>堆是各线程共享的。因而是线程不安全的。</p>
-<p><img src="https://i.loli.net/2020/12/09/j7AZXEqspLxhr2S.png"></p>
+<p><img src="https://i.loli.net/2020/12/09/j7AZXEqspLxhr2S.png" alt=""></p>
 <p>新生代包括 Eden（亚当，意义不言而喻）区和两个 Survivor 区（称为 s0，s1，或 from，to 区）。对象一般首先在 Eden 区分配，在经过一次<strong>新生代垃圾回收</strong>后，如果对象还存活，则进入 s0，s1，年龄加 1（或初始年龄设为 1），年龄增长到一定程度则晋升到老年代。</p>
 <p>堆中容易出现<code>OutOfMemoryError</code>错误。其主要有几种情况——</p>
 <ul>
@@ -322,35 +319,30 @@
 <p>常量池中存储对象的引用，实际对象仍旧存储在堆中。</p>
 <h2 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h2><p>直接内存不是虚拟机运行时数据区的一部分，但是其会经常被频繁使用。其也会抛出<code>OutOfMemoryError</code>错误。</p>
 <blockquote>
-<p>JDK1.4 中新加入的 <strong>NIO(New Input&#x2F;Output) 类</strong>，引入了一种基于<strong>通道（Channel）</strong> 与<strong>缓存区（Buffer）</strong> 的 I&#x2F;O 方式，它可以直接使用 Native 函数库直接分配堆外内存，然后通过一个存储在 Java 堆中的 DirectByteBuffer 对象作为这块内存的引用进行操作。这样就能在一些场景中显著提高性能，因为<strong>避免了在 Java 堆和 Native 堆之间来回复制数据</strong>。</p>
+<p>JDK1.4 中新加入的 <strong>NIO(New Input/Output) 类</strong>，引入了一种基于<strong>通道（Channel）</strong> 与<strong>缓存区（Buffer）</strong> 的 I/O 方式，它可以直接使用 Native 函数库直接分配堆外内存，然后通过一个存储在 Java 堆中的 DirectByteBuffer 对象作为这块内存的引用进行操作。这样就能在一些场景中显著提高性能，因为<strong>避免了在 Java 堆和 Native 堆之间来回复制数据</strong>。</p>
 <p>——同上</p>
 </blockquote>
 <h1 id="关于常量池"><a href="#关于常量池" class="headerlink" title="关于常量池"></a>关于常量池</h1><p><strong>只要使用 new 方法，便需要创建新的对象。</strong></p>
 <h2 id="String-类的常量池"><a href="#String-类的常量池" class="headerlink" title="String 类的常量池"></a>String 类的常量池</h2><h3 id="String-对象的两种创建方式"><a href="#String-对象的两种创建方式" class="headerlink" title="String 对象的两种创建方式"></a>String 对象的两种创建方式</h3><figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">s1</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;abcd&quot;</span>; <span class="hljs-comment">// 先检查常量池中有无&quot;abcd&quot;，若无则在常量池中创建对象，然后再让 s1 指向该对象，否则直接指向</span><br><span class="hljs-type">String</span> <span class="hljs-variable">s2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(<span class="hljs-string">&quot;abcd&quot;</span>); <span class="hljs-comment">// 在堆中创建</span><br><span class="hljs-type">String</span> <span class="hljs-variable">s3</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(<span class="hljs-string">&quot;abcd&quot;</span>); <span class="hljs-comment">// 在堆中创建</span><br><span class="hljs-type">String</span> <span class="hljs-variable">s4</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;abcd&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">s5</span> <span class="hljs-operator">=</span> s3.intern(); <span class="hljs-comment">// 检查常量池</span><br>System.out.println(s1==s2); <span class="hljs-comment">//false</span><br>System.out.println(s2==s3); <span class="hljs-comment">//false</span><br>System.out.println(s1==s4); <span class="hljs-comment">//true，它们指向同一个常量池中的对象</span><br></code></pre></div></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2020/12/09/C62kwnioRW5uFaO.png"></p>
+<p><img src="https://i.loli.net/2020/12/09/C62kwnioRW5uFaO.png" alt=""></p>
 <p>如图。当使用 new 创建的时候，则创建在堆中，通过字面量创建则创建在（或者指向）常量池中。当然，字符串常量池也在堆中。</p>
 <p>也可以使用 intern 方法，这是一个 Native 方法，它检查常量池，如果包含，则直接返回常量池中该字符串的引用，如果不包含，<strong>则在常量池中记录对该字符串的引用（此处存疑），并返回该引用</strong>。</p>
 <p>这里好像有问题，见如下代码——</p>
 <figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">s1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(<span class="hljs-string">&quot;hello&quot;</span>);<br><span class="hljs-type">String</span> <span class="hljs-variable">s2</span> <span class="hljs-operator">=</span> s1.intern();<br>System.out.println(s1 == s2); <span class="hljs-comment">// false</span><br></code></pre></div></td></tr></table></figure>
-
 <p>这里，如果 intern 的行为是在常量池中记录对该字符串的引用并返回的话，s2 理应和 s1 指向同一个对象，但是结果确是 false……怪东西。</p>
 <h3 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h3><p>字符串拼接会重新创建对象，所以应当尽量避免多个字符串的拼接，如果需要拼接，应当使用 StringBuilder（线程不安全）和 StringBuffer（线程安全，但性能较差）类。</p>
 <p>两个常量池中的对象拼接，其结果在常量池中，堆上创建的对象（与堆上的对象或常量池中对象）拼接则创建在堆中。</p>
 <figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">s1</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;str&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">s2</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;ing&quot;</span>;<br><br><span class="hljs-type">String</span> <span class="hljs-variable">s3</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;str&quot;</span> + <span class="hljs-string">&quot;ing&quot;</span>;<span class="hljs-comment">//常量池中的对象</span><br><span class="hljs-type">String</span> <span class="hljs-variable">s4</span> <span class="hljs-operator">=</span> s1 + s2; <span class="hljs-comment">//在堆上创建的新的对象      </span><br><span class="hljs-type">String</span> <span class="hljs-variable">s5</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;string&quot;</span>;<span class="hljs-comment">//常量池中的对象</span><br><span class="hljs-type">String</span> <span class="hljs-variable">s6</span> <span class="hljs-operator">=</span> s1 + <span class="hljs-string">&quot;ing&quot;</span>; <span class="hljs-comment">// 堆中对象和常量池中对象拼接，仍然在堆中创建</span><br>System.out.println(s3 == s4);<span class="hljs-comment">//false</span><br>System.out.println(s3 == s5);<span class="hljs-comment">//true</span><br>System.out.println(s4 == s5);<span class="hljs-comment">//false</span><br>System.out.println(s3 == s6);<span class="hljs-comment">//false</span><br></code></pre></div></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2020/12/09/5Ngx1dvKGaIpZ3V.png"></p>
+<p><img src="https://i.loli.net/2020/12/09/5Ngx1dvKGaIpZ3V.png" alt=""></p>
 <h3 id="new-String-“hello”-创建几个字符串对象？"><a href="#new-String-“hello”-创建几个字符串对象？" class="headerlink" title="new String(“hello”) 创建几个字符串对象？"></a>new String(“hello”) 创建几个字符串对象？</h3><p>答案是一个或两个。JVM 首先检查常量池中是否存在字符串常量”hello”。如果存在，则只在堆中创建一个字符串常量”hello”，如果不存在，则先在池中创建，再在堆中创建。因此是一个或两个。</p>
 <h2 id="包装类型的常量池"><a href="#包装类型的常量池" class="headerlink" title="包装类型的常量池"></a>包装类型的常量池</h2><p><strong>字符串常量池存在于堆中</strong>，<strong>而运行时常量池存在于方法区中</strong>。</p>
 <p>八种包装类型中，六种包装类型都实现了常量池技术。它们是四种整型 Byte，Short，Integer 和 Long，Boolean 和 Character，两种浮点数 Float 和 Double 没有实现。</p>
-<p>四种整型包装类创建了 [-128,127] 范围类的相应类型的缓存数据，Character 实现了数据在 [0, 127](从<code>\u0000</code>到<code>\u007f</code>）范围的缓存数据，Boolean 直接返回 True 和 False（也就是说，所有 Boolean 的变量，其值为 true 的都&#x3D;&#x3D;常量池中的 TRUE，其值为 false 的都&#x3D;&#x3D;常量池中的 FALSE)。</p>
+<p>四种整型包装类创建了 [-128,127] 范围类的相应类型的缓存数据，Character 实现了数据在 <a href="从`\u0000`到`\u007f`）范围的缓存数据，Boolean 直接返回 True 和 False（也就是说，所有 Boolean 的变量，其值为 true 的都==常量池中的 TRUE，其值为 false 的都==常量池中的 FALSE">0, 127</a>。</p>
 <p>在自动装箱（如通过字面量初始化）时，Java 在编译时会自动封装代码，从而使用常量池中的对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-type">Integer</span> <span class="hljs-variable">i1</span> <span class="hljs-operator">=</span> <span class="hljs-number">40</span>; <span class="hljs-comment">// 其将被编译成 Integer i1 = Integer.valueOf(40);</span><br><span class="hljs-type">Integer</span> <span class="hljs-variable">i2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>(<span class="hljs-number">40</span>); <span class="hljs-comment">// 不利用缓存，直接在堆中创建新对象</span><br>System.out.println(i1==i2);<span class="hljs-comment">//false</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Integer <span class="hljs-title function_">valueOf</span><span class="hljs-params">(<span class="hljs-type">int</span> i)</span> &#123;<br>    <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high) <br>        <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)]; <span class="hljs-comment">// 直接利用方法区中的缓存</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>(i);<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-<p>同时，需要明确，<strong>运算符和&#x3D;&#x3D;操作符不适用于包装类</strong>，因而其会被拆箱后进行运算。但是实际工作中，不应当依赖这种自动装箱机制，对于包装类，应当使用 equals 方法进行比较。</p>
+<p>同时，需要明确，<strong>运算符和==操作符不适用于包装类</strong>，因而其会被拆箱后进行运算。但是实际工作中，不应当依赖这种自动装箱机制，对于包装类，应当使用 equals 方法进行比较。</p>
 <figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-type">Integer</span> <span class="hljs-variable">i1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>(<span class="hljs-number">40</span>);<br><span class="hljs-type">Integer</span> <span class="hljs-variable">i2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>(<span class="hljs-number">2</span>);<br><span class="hljs-type">Integer</span> <span class="hljs-variable">i3</span> <span class="hljs-operator">=</span> <span class="hljs-number">42</span>;<br>System.out.println(i3 == i1 + i2); <span class="hljs-comment">// true, 其会被自动拆箱为 i3.intValue() == i1.intValue() + i2.intValue();</span><br></code></pre></div></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2020/12/10/TZJIqwKVWfnA7pY.png"></p>
+<p><img src="https://i.loli.net/2020/12/10/TZJIqwKVWfnA7pY.png" alt=""></p>
 
             </div>
             <hr>

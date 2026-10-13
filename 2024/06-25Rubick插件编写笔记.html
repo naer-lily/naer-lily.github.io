@@ -26,7 +26,7 @@
 <meta property="og:description" content="心有余而力不足">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-06-25T08:00:00.000Z">
-<meta property="article:modified_time" content="2024-06-28T07:55:05.502Z">
+<meta property="article:modified_time" content="2026-03-23T04:03:59.739Z">
 <meta property="article:author" content="那尔">
 <meta property="article:tag" content="Electron">
 <meta name="twitter:card" content="summary_large_image">
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.5k 字
+      2.4k 字
     </span>
   
 
@@ -258,22 +258,18 @@
 <p>系统插件在 rubick 启动后被自动加载，系统插件需 eport 一个函数，该函数返回一个<code>() =&gt; &#123;onReady: (ctx) =&gt; void&#125;</code>，rubick 会自动调用这里的 onReady 函数。ctx 无关紧要——它都是 electron 中提供的 API，可以自己 import。</p>
 <p>注意系统插件逻辑中如果抛出异常会直接阻止 rubick 启动，此时必须通过任务管理器强制关闭 rubick，因此妥善处理异常是必须的。</p>
 <h2 id="添加外部依赖"><a href="#添加外部依赖" class="headerlink" title="添加外部依赖"></a>添加外部依赖</h2><p>系统插件代码和预加载脚本中均能够使用第三方的 npm 库，只要保证该库存在于文件祖先路径中的 node_modules 中即可。</p>
-<h1 id="package-json-x2F-features"><a href="#package-json-x2F-features" class="headerlink" title="package.json &#x2F; features"></a>package.json &#x2F; features</h1><p>features 有六种：text, over, img, regex, file, img, window。其中 file 和 window 没研究出来怎么用，得后面翻源代码。</p>
+<h1 id="package-json-features"><a href="#package-json-features" class="headerlink" title="package.json / features"></a>package.json / features</h1><p>features 有六种：text, over, img, regex, file, img, window。其中 file 和 window 没研究出来怎么用，得后面翻源代码。</p>
 <p>注意每次修改 features 后需要在<code>开发者</code>中刷新插件并重启。</p>
 <h2 id="text"><a href="#text" class="headerlink" title="text"></a>text</h2><p>最基本的是 text，仅在<code>Alt + R</code>中可用，根据输入模糊匹配去调出插件：</p>
 <figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;cmds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;test&quot;</span><span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
-
 <p><strong>text 没有 payload</strong>……这个类型应当改名叫 keyword。</p>
 <h2 id="over"><a href="#over" class="headerlink" title="over"></a>over</h2><p>over 支持<code>Alt+R</code>和超级面板，over 在任何输入和选择上都会显示在列表上，根据和你给定的 label 的距离决定排序（？）：</p>
 <figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;cmds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;over&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;test_over&quot;</span> <span class="hljs-comment">// 用户的输入越接近 &quot;test_over&quot; 的话该选项就会越靠前……似乎是这样，至少在输入框中似乎是这样</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br><br></code></pre></div></td></tr></table></figure>
-
 <p>over 的 payload 为输入框或选择的内容。</p>
 <h2 id="img"><a href="#img" class="headerlink" title="img"></a>img</h2><p>img 可以通过 Ctrl+V 将剪切板内图片贴到输入框，在文件管理器中框选文件似乎也能够识别，但疑似是有 bug：</p>
 <figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><br><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;cmds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>          <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;img&quot;</span><span class="hljs-punctuation">,</span><br>          <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;test_img&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br>        <br></code></pre></div></td></tr></table></figure>
-
 <h2 id="regex"><a href="#regex" class="headerlink" title="regex"></a>regex</h2><p>regex 类似 over，但支持给定一个 js 语法的正则表达式，只有和当前输入框或选择匹配时才显示出来：</p>
 <figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;cmds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;regex&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;test_regex&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;match&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/一个 js 风格的正则/im&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></div></td></tr></table></figure>
-
 <p>regex 的 payload 为输入框或选择的内容。</p>
 <p><strong>遗憾的是，现在 regex 的代码有 bug，无法使用</strong>，见 <a target="_blank" rel="noopener" href="https://github.com/rubickCenter/rubick/pull/184">https://github.com/rubickCenter/rubick/pull/184</a>，已经是整整一年前的 issue 了，没人修吗？</p>
 <p><del>刚修，我提了 PR 后一瞬间就修了，虽然我的 PR 后来发现和它重复给 close 了，顺便得了个 5 分钟内撤回 PR 的成就，乐</del>。但至少<code>4.2.4</code>版本中该修复还未上线。</p>
